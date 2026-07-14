@@ -2,7 +2,7 @@
 
 export async function signedCloudinaryUpload({
   file,
-  folder = "vcm/admin",
+  folder = "APM/admin",
   resourceType = "image",
 }: {
   file: File;

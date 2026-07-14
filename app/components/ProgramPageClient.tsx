@@ -172,7 +172,7 @@ function SuccessScreen({ prog, onDashboard }: { prog: ProgramConfig; onDashboard
       </div>
       <h2 className="t-title1 mt-6 mb-2">Амжилттай!</h2>
       <p className="t-subhead mb-8" style={{ color: 'var(--label2)' }}>
-        Таны өргөдөл {prog.name}-д хүргэгдлээ. VCM-ийн баг 24 цагийн дотор холбогдох болно.
+        Таны өргөдөл {prog.name}-д хүргэгдлээ. APM-ийн баг 24 цагийн дотор холбогдох болно.
       </p>
       <div className="flex flex-col gap-3 w-full max-w-xs">
         <button onClick={onDashboard} className="btn btn-primary btn-full">
@@ -226,7 +226,7 @@ export function ProgramPageClient({ config }: { config: ProgramConfig }) {
             <div className="relative z-10 flex items-start gap-5">
               <span className="text-6xl flex-shrink-0">{config.emoji}</span>
               <div>
-                <div className="t-caption2 text-white/60 uppercase tracking-widest mb-1">{config.id} · VCM хөтөлбөр</div>
+                <div className="t-caption2 text-white/60 uppercase tracking-widest mb-1">{config.id} · APM хөтөлбөр</div>
                 <h1 className="t-title2 text-white leading-tight mb-3">{config.name}</h1>
                 <div className="flex flex-wrap gap-2">
                   <span className="text-[11px] font-bold text-white/85 bg-black/20 px-2.5 py-1 rounded-full backdrop-blur-sm flex items-center gap-1">

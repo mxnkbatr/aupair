@@ -31,7 +31,7 @@ export default function SignInForm() {
 
     const trimmedEmail = email.trim().toLowerCase();
     if (!trimmedEmail) {
-      setError("Gmail хаягаа оруулна уу.");
+      setError("И-мэйл хаягаа оруулна уу.");
       return;
     }
     if (!password) {
@@ -48,7 +48,7 @@ export default function SignInForm() {
         password,
       });
       if (signInError) {
-        throw new Error("Gmail эсвэл нууц үг буруу байна.");
+        throw new Error("И-мэйл эсвэл нууц үг буруу байна.");
       }
       await finishLogin();
     } catch (err: unknown) {
@@ -83,7 +83,7 @@ export default function SignInForm() {
   return (
     <AuthScreen
       title="Нэвтрэх"
-      subtitle="Gmail болон нууц үгээрээ нэвтэрнэ үү"
+      subtitle="И-мэйл болон нууц үгээрээ нэвтэрнэ үү"
       footer={
         <p className="text-[14px]" style={{ color: "var(--label2)" }}>
           Бүртгэлгүй юу?{" "}
@@ -103,7 +103,7 @@ export default function SignInForm() {
               autoComplete="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="Gmail хаяг"
+              placeholder="И-мэйл хаяг"
               disabled={busy}
             />
           </div>
@@ -146,7 +146,7 @@ export default function SignInForm() {
       <AuthDivider />
 
       <GoogleButton
-        label="Gmail-ээр нэвтрэх"
+        label="Google-ээр нэвтрэх"
         onClick={signInWithGoogle}
         disabled={busy}
       />

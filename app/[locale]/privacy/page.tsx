@@ -10,12 +10,12 @@ export async function generateMetadata({
   return {
     title:
       locale === "mn"
-        ? "Нууцлалын бодлого – Volunteer Mongolia"
-        : "Privacy Policy – Volunteer Mongolia",
+        ? "Нууцлалын бодлого – Au Pair Mongolia"
+        : "Privacy Policy – Au Pair Mongolia",
     description:
       locale === "mn"
-        ? "Volunteer Center Mongolia (VCM) апп болон вэбсайтын нууцлалын бодлого."
-        : "Privacy policy for the Volunteer Center Mongolia (VCM) app and website.",
+        ? "Au Pair Mongolia (APM) апп болон вэбсайтын нууцлалын бодлого."
+        : "Privacy policy for the Au Pair Mongolia (APM) app and website.",
   };
 }
 

@@ -83,7 +83,7 @@ export default function SettingsPage() {
 
         <PremiumSectionHeader
           title={locale === "mn" ? "Тохиргоо" : "Settings"}
-          subtitle={saving ? (locale === "mn" ? "Хадгалж байна…" : "Saving…") : "VCM app"}
+          subtitle={saving ? (locale === "mn" ? "Хадгалж байна…" : "Saving…") : "APM app"}
         />
 
         {/* Appearance */}
@@ -200,7 +200,7 @@ export default function SettingsPage() {
           <p className="sec-label">{locale === "mn" ? "Бусад" : "More"}</p>
           <div className="card p-2">
             {[
-              { icon: <Info size={16} />, label: locale === "mn" ? "VCM тухай" : "About VCM", href: "/about", color: "var(--blue)", bg: "var(--blue-dim)" },
+              { icon: <Info size={16} />, label: locale === "mn" ? "APM тухай" : "About APM", href: "/about", color: "var(--blue)", bg: "var(--blue-dim)" },
               { icon: <Shield size={16} />, label: locale === "mn" ? "Нууцлалын бодлого" : "Privacy Policy", href: "/privacy", color: "var(--orange)", bg: "var(--orange-dim)" },
             ].map((item, i, arr) => (
               <React.Fragment key={item.label}>
@@ -237,7 +237,7 @@ export default function SettingsPage() {
 
         {/* App version */}
         <p className="text-center text-[11px]" style={{ color: "var(--label4)" }}>
-          VCM v1.0.0 · {locale === "mn" ? "Монголын Сайн Дурынхны Төв" : "Volunteer Center Mongolia"}
+          APM v1.0.0 · {locale === "mn" ? "Монголын Au Pair Төв" : "Au Pair Mongolia"}
         </p>
 
       </div>

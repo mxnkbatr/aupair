@@ -66,7 +66,7 @@ export default function ShopClient({
         <motion.div variants={staggerItem}>
           <PremiumSectionHeader
             title={T.shopTitle[locale as keyof typeof T.shopTitle] || T.shopTitle.en}
-            subtitle="VCM merchandise"
+            subtitle="APM merchandise"
           />
         </motion.div>
 

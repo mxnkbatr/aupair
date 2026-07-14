@@ -1,8 +1,8 @@
 {
   "HomePage": {
     "metadata": {
-      "title": "Volunteer Center of Mongolia",
-      "description": "Empowering Mongolian youth through creative volunteerism, education, and community impact."
+      "title": "Au Pair Mongolia",
+      "description": "Mongolia's largest au pair agency — connecting families and au pairs through cultural exchange."
     }
   },
   "common": {
@@ -11,7 +11,7 @@
     "verified": "Verified",
     "openNow": "Open Now",
     "explore": "Explore",
-    "trusted": "Trusted by communities & volunteers nationwide.",
+    "trusted": "Trusted by families and au pairs across Mongolia.",
     "loading": "Loading Profile...",
     "action": "Action",
     "contact": "Contact",
@@ -28,7 +28,7 @@
     "explore": "Explore",
     "action": "Action",
     "contact": "Contact",
-    "rights": "© 2024 Volunteer Center Mongolia.",
+    "rights": "© 2024 Au Pair Mongolia.",
     "links": {
       "aboutUs": "About Us",
       "programs": "Volunteer Programs",
@@ -39,7 +39,7 @@
   },
   "EventsPage": {
     "metadata": {
-      "title": "Volunteering | Volunteer Center Mongolia",
+      "title": "Volunteering | Au Pair Mongolia",
       "description": "Discover upcoming volunteering opportunities, workshops, and community service."
     },
     "upcoming": "Volunteering Opportunities 2025",
@@ -68,7 +68,7 @@
   },
   "BookingPage": {
     "metadata": {
-      "title": "Book a Consultation | Volunteer Center Mongolia",
+      "title": "Book a Consultation | Au Pair Mongolia",
       "description": "Schedule a meeting with our program coordinators."
     },
     "badge": "Online Booking",
@@ -137,10 +137,10 @@
   },
   "NewsPage": {
     "metadata": {
-      "title": "News & Blog | Volunteer Center Mongolia",
+      "title": "News & Blog | Au Pair Mongolia",
       "description": "Stay updated with the latest news, tips, and stories from Europe."
     },
-    "badge": "VCM Blog",
+    "badge": "APM Blog",
     "heroTitle": "News &",
     "heroTitleHighlight": "Updates",
     "featured": "Read More",
@@ -155,10 +155,10 @@
   },
   "LessonsPage": {
     "metadata": {
-      "title": "Lessons | Volunteer Center Mongolia",
-      "description": "Access exclusive volunteering, language and skill-building lessons from VCM."
+      "title": "Lessons | Au Pair Mongolia",
+      "description": "Access exclusive volunteering, language and skill-building lessons from APM."
     },
-    "badge": "VCM Academy",
+    "badge": "APM Academy",
     "heroTitle": "Volunteering",
     "heroTitleHighlight": "Lessons",
     "heroDesc": "Courses designed to build your skills, knowledge and cultural understanding for our volunteering programs.",
@@ -178,7 +178,7 @@
   "BeforeLoginNews": {
     "badge": "News & Updates",
     "header": "Start Your Adventure Abroad!",
-    "subheader": "Welcome to Volunteer Center Mongolia! We make your path easier than ever before.",
+    "subheader": "Welcome to Au Pair Mongolia! We make your path easier than ever before.",
     "simple_title": "Simple & Guided",
     "simple_desc": "Our system guides you step-by-step through your application with smart hints.",
     "flex_title": "Full Flexibility",
@@ -213,28 +213,28 @@
   "UsSection": {
     "badge": "Our Mission",
     "sectionTitle": "About Our Mission",
-    "hero_desc": "Empowering Mongolia through creative volunteerism since 2007.",
-    "content": "Since 2007, the Mongolian Volunteer Center has pursued the noble goal of building a humane, democratic society through creative volunteerism. We have successfully implemented over 50 national projects focused on education, child protection, and sustainable livelihoods, creating and scaling model volunteer programs.",
+    "hero_desc": "Mongolia's largest au pair agency.",
+    "content": "Au Pair Mongolia connects host families with au pairs through childcare, cultural exchange, and international experience. We provide trusted matching, preparation training, and ongoing support so every family finds the right fit.",
     "valuesTitle": "Our Core Values",
-    "val1_title": "Volunteer Spirit",
-    "val1_desc": "Driven by the passion and dedication of volunteers at our core.",
-    "val2_title": "Global Impact",
-    "val2_desc": "Creating global change through impactful local action and partnership.",
-    "val3_title": "Community Building",
-    "val3_desc": "Strengthening bonds to build more resilient and supportive communities.",
-    "val4_title": "Passion & Care",
-    "val4_desc": "Infusing genuine passion and care into everything we undertake.",
+    "val1_title": "Family Trust",
+    "val1_desc": "Child safety and family confidence are at our core.",
+    "val2_title": "Cultural Exchange",
+    "val2_desc": "Bringing languages and cultures closer to every home.",
+    "val3_title": "Professional Matching",
+    "val3_desc": "Carefully matching the right au pair with the right family.",
+    "val4_title": "Ongoing Support",
+    "val4_desc": "Guidance, training, and help throughout the journey.",
     "cta": "Discover More",
     "stat_exp": "Experience",
-    "stat_participants": "Volunteers",
-    "stat_global": "Projects",
+    "stat_participants": "Au Pairs",
+    "stat_global": "Families",
     "stat_reliable": "Impact",
     "years": "Years"
   },
   "Marketplace": {
     "badge": "Marketplace",
     "title": "Explore Academy",
-    "subtitle": "Browse available courses, workshops, and exclusive access passes for our VCM community.",
+    "subtitle": "Browse available courses, workshops, and exclusive access passes for our APM community.",
     "item1_title": "Volunteer Training",
     "item1_desc": "Intensive skill-building workshop for new volunteers.",
     "item1_price": "Free",
@@ -268,7 +268,7 @@
   },
   "ContactPage": {
     "metadata": {
-      "title": "Contact Us | Volunteer Center Mongolia",
+      "title": "Contact Us | Au Pair Mongolia",
       "description": "Get in touch with our experts for any questions about our volunteering programs."
     },
     "badge": "Contact Us",
@@ -282,7 +282,7 @@
       },
       "email": {
         "label": "Email Us",
-        "value": "info@vcm.mn"
+        "value": "info@aupairmongolia.mn"
       },
       "address": {
         "label": "Visit Us",
@@ -293,7 +293,7 @@
     "copied": "Copied",
     "openLink": "Open Link",
     "followTitle": "Follow Our Journey",
-    "followHandle": "@VCMongolia",
+    "followHandle": "@aupairmongolia",
     "formTitle": "Contact Form",
     "formDesc": "Have a question? We will respond within 24 hours.",
     "successTitle": "Message Sent!",
@@ -312,7 +312,7 @@
   },
   "AndPage": {
     "metadata": {
-      "title": "AND Program | Community Care | VCM",
+      "title": "AND Program | Community Care | APM",
       "description": "Provide psychosocial support to children with special needs through our home-visit volunteer program."
     },
     "hero": {
@@ -344,7 +344,7 @@
   },
   "EduPage": {
     "metadata": {
-      "title": "EDU-Volunteer | Education Support | VCM",
+      "title": "EDU-Volunteer | Education Support | APM",
       "description": "Inspire the next generation by volunteering in schools and learning centers. Share your knowledge and skills."
     },
     "hero": {
@@ -376,7 +376,7 @@
   },
   "VClubPage": {
     "metadata": {
-      "title": "V-Club | Global Volunteer Community | VCM",
+      "title": "V-Club | Global Volunteer Community | APM",
       "description": "Join our vibrant community of change-makers. Connect, collaborate, and create lasting social impact."
     },
     "hero": {
@@ -408,7 +408,7 @@
   },
   "About": {
     "metadata": {
-      "title": "About Us | Volunteer Center Mongolia",
+      "title": "About Us | Au Pair Mongolia",
       "description": "Learn about our mission to empower youth through volunteering and community action."
     },
     "tag": "About Us",
@@ -437,7 +437,7 @@
     "card4_text": "Fostering personal and professional development through volunteerism."
   },
   "navbar": {
-    "logo": "VCM",
+    "logo": "Au Pair",
     "home": "Home",
     "about": "About Us",
     "program": "Our Programs",

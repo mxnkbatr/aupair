@@ -78,7 +78,7 @@ export default function CartClient({ locale }: { locale: string }) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           amount: payableTotal,
-          description: "VCM Shop Order",
+          description: "APM Shop Order",
           promoCode: appliedPromo?.code,
           items: items.map((i) => ({
             id: i._id,

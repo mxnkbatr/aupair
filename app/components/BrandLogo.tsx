@@ -11,7 +11,7 @@ type BrandLogoProps = {
   rounded?: boolean;
 };
 
-/** VCM app icon — header, splash, auth дээр ижил logo */
+/** APM app icon — header, splash, auth дээр ижил logo */
 export default function BrandLogo({
   size = 40,
   className = "",
@@ -27,7 +27,7 @@ export default function BrandLogo({
         width: size,
         height: size,
         borderRadius: radius,
-        boxShadow: "0 2px 10px rgba(8, 120, 212, 0.18), 0 0 0 0.5px rgba(0,0,0,0.06)",
+        boxShadow: "0 2px 10px rgba(196, 30, 58, 0.22), 0 0 0 0.5px rgba(0,0,0,0.06)",
       }}
     >
       <Image

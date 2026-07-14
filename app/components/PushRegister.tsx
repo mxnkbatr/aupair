@@ -34,10 +34,10 @@ async function registerNativePush() {
     }),
     PushNotifications.addListener("registrationError", () => {}),
     PushNotifications.addListener("pushNotificationReceived", () => {
-      window.dispatchEvent(new CustomEvent("vcm:notifications-changed"));
+      window.dispatchEvent(new CustomEvent("APM:notifications-changed"));
     }),
     PushNotifications.addListener("pushNotificationActionPerformed", () => {
-      window.dispatchEvent(new CustomEvent("vcm:notifications-changed"));
+      window.dispatchEvent(new CustomEvent("APM:notifications-changed"));
     }),
   ]);
 }
@@ -72,7 +72,7 @@ async function registerWebPush() {
   }
 
   onMessage(messaging, () => {
-    window.dispatchEvent(new CustomEvent("vcm:notifications-changed"));
+    window.dispatchEvent(new CustomEvent("APM:notifications-changed"));
   });
 
   return null;

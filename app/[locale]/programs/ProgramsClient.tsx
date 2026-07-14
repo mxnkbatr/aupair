@@ -31,7 +31,7 @@ const FALLBACK_PROGRAMS = [
       { I: BookOpen,       t: "Хэл, урлаг, технологи чиглэлийн хичээл заах" },
       { I: Users,          t: "Англи B1+ түвшин шаардлагатай" },
       { I: CalendarDays,   t: "Уян хатан цагийн хуваарь" },
-      { I: Star,           t: "VCM-ийн бүрэн дэмжлэг, ментор" },
+      { I: Star,           t: "APM-ийн бүрэн дэмжлэг, ментор" },
     ],
     why: "Монголын сургуулиудад мэдлэгийг дамжуулж, нийгмийн хөгжилд хувь нэмэр оруулах ховор боломж.",
   },
@@ -382,7 +382,7 @@ export default function ProgramsClient({ initialPrograms }: { initialPrograms?: 
               className="space-y-5 pt-2"
             >
               <PremiumSectionHeader
-                title="VCM Хөтөлбөрүүд"
+                title="APM Хөтөлбөрүүд"
                 subtitle="Танд тохирохоо сонгоорой"
               />
 

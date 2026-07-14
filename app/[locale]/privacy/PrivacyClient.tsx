@@ -21,11 +21,11 @@ const SECTIONS: Section[] = [
     },
     body: {
       mn: [
-        "Volunteer Center Mongolia (\"VCM\", \"бид\") нь Volunteer Mongolia апп болон холбогдох вэб үйлчилгээгээр дамжуулан цуглуулсан хувийн мэдээллийг хамгаалахыг эрхэмлэдэг.",
+        "Au Pair Mongolia (\"APM\", \"бид\") нь Au Pair Mongolia апп болон холбогдох вэб үйлчилгээгээр дамжуулан цуглуулсан хувийн мэдээллийг хамгаалахыг эрхэмлэдэг.",
         "Энэхүү нууцлалын бодлого нь бид ямар мэдээлэл цуглуулдаг, хэрхэн ашигладаг, хэнтэй хуваалцдаг, мөн таны эрхийг тайлбарлана.",
       ],
       en: [
-        "Volunteer Center Mongolia (\"VCM\", \"we\", \"us\") respects your privacy when you use the Volunteer Mongolia app and related web services.",
+        "Au Pair Mongolia (\"APM\", \"we\", \"us\") respects your privacy when you use the Au Pair Mongolia app and related web services.",
         "This Privacy Policy explains what information we collect, how we use it, with whom we share it, and the rights you have.",
       ],
     },
@@ -190,14 +190,14 @@ const SECTIONS: Section[] = [
     body: {
       mn: [
         "Нууцлалтай холбоотой асуулт, хүсэлтийг дараах хаягаар илгээнэ үү:",
-        "Volunteer Center Mongolia",
+        "Au Pair Mongolia",
         "Имэйл: volunteercenter22@gmail.com",
         "Утас: +976 9599 7999",
         "Хаяг: Time Center, 504 тоот, Улаанбаатар, Монгол",
       ],
       en: [
         "For privacy questions or requests, contact:",
-        "Volunteer Center Mongolia",
+        "Au Pair Mongolia",
         "Email: volunteercenter22@gmail.com",
         "Phone: +976 9599 7999",
         "Address: Time Center, Room 504, Ulaanbaatar, Mongolia",
@@ -252,7 +252,7 @@ export default function PrivacyClient() {
           </Link>
           {" · "}
           <Link href="/about" className="underline underline-offset-2">
-            {lang === "mn" ? "Бидний тухай" : "About VCM"}
+            {lang === "mn" ? "Бидний тухай" : "About APM"}
           </Link>
         </p>
       </div>

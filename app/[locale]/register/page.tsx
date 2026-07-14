@@ -33,7 +33,7 @@ export default function RegisterPage() {
 
   return (
     <AuthScreen
-      title="VCM-д нэгдэх"
+      title="APM-д нэгдэх"
       subtitle="Та аль хувилбарыг сонгох вэ?"
       showBack
       footer={

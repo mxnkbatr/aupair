@@ -4,10 +4,10 @@ import { Metadata } from "next";
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
   return {
-    title: locale === "mn" ? "Бидний тухай – VCM" : "About Us – VCM",
+    title: locale === "mn" ? "Бидний тухай – APM" : "About Us – APM",
     description: locale === "mn"
-      ? "Монголын Сайн Дурынхны Төв – 2007 оноос хойш хүмүүнлэг нийгмийг байгуулж байна."
-      : "Volunteer Center Mongolia – Building a humane society since 2007.",
+      ? "Монголын Au Pair Төв – 2007 оноос хойш хүмүүнлэг нийгмийг байгуулж байна."
+      : "Au Pair Mongolia – Building a humane society since 2007.",
   };
 }
 

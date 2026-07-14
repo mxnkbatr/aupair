@@ -11,16 +11,18 @@ import {
   LucideIcon
 } from "lucide-react";
 import { useTranslations, useLocale } from "next-intl";
+import BrandLogo from "@/app/components/BrandLogo";
+import { BRAND as BRAND_META } from "@/lib/branding";
 
 // --- CONTENT ---
 const footerData = {
   mn: {
-    slogan: "Сайн дурын үйлсээр нийгэмдээ гэрэл нэмье.",
+    slogan: "Монголын хамгийн том au pair зуучлалын төв.",
     exploreTitle: "Нүүр",
     exploreLinks: [
       { text: "Бидний тухай", href: "/about" },
       { text: "Хөтөлбөрүүд", href: "/programs" },
-      { text: "Сайн дурын ажил", href: "/events" },
+      { text: "Арга хэмжээ", href: "/events" },
       { text: "Мэдээ", href: "/news" },
     ],
     supportTitle: "Дэмжлэг",
@@ -30,21 +32,21 @@ const footerData = {
       { text: "Нууцлалын бодлого", href: "/privacy" },
     ],
     contactTitle: "Холбоо барих",
-    address: "Time Center, 504 тоот, Улаанбаатар, Монгол",
-    email: "volunteercenter22@gmail.com",
-    phone: "+976 9599 7999",
+    address: "Улаанбаатар, Монгол",
+    email: "info@aupairmongolia.mn",
+    phone: "+976 7000 0000",
     newsletterTitle: "Мэдээлэл авах",
     newsletterPlaceholder: "Таны имэйл хаяг",
     subscribeButton: "Бүртгүүлэх",
-    copyright: `© ${new Date().getFullYear()} Volunteer Center Mongolia. Бүх эрх хуулиар хамгаалагдсан.`,
+    copyright: `© ${new Date().getFullYear()} Au Pair Mongolia. Бүх эрх хуулиар хамгаалагдсан.`,
   },
   en: {
-    slogan: "Lighting up our community through volunteerism.",
+    slogan: "Mongolia's largest au pair agency.",
     exploreTitle: "Explore",
     exploreLinks: [
       { text: "About Us", href: "/about" },
       { text: "Programs", href: "/programs" },
-      { text: "Volunteering", href: "/events" },
+      { text: "Events", href: "/events" },
       { text: "News", href: "/news" },
     ],
     supportTitle: "Support",
@@ -54,19 +56,19 @@ const footerData = {
       { text: "Privacy Policy", href: "/privacy" },
     ],
     contactTitle: "Get in Touch",
-    address: "Time Center, Room 504, Ulaanbaatar, Mongolia",
-    email: "volunteercenter22@gmail.com",
-    phone: "+976 9599 7999",
+    address: "Ulaanbaatar, Mongolia",
+    email: "info@aupairmongolia.mn",
+    phone: "+976 7000 0000",
     newsletterTitle: "Stay Connected",
     newsletterPlaceholder: "Your email address",
     subscribeButton: "Subscribe",
-    copyright: `© ${new Date().getFullYear()} Volunteer Center Mongolia. All rights reserved.`,
+    copyright: `© ${new Date().getFullYear()} Au Pair Mongolia. All rights reserved.`,
   },
 };
 
 const BRAND = {
-  PRIMARY: "#0EA5E9",
-  ACCENT: "#38BDF8",
+  PRIMARY: "#C41E3A",
+  ACCENT: "#1AABB8",
 };
 
 export default function AestheticFooter() {
@@ -76,14 +78,10 @@ export default function AestheticFooter() {
   return (
     <footer className="relative w-full pt-12 sm:pt-16 pb-24 sm:pb-8 font-sans transition-all duration-700 overflow-hidden bg-white">
 
-      {/* ─── VIBRANT COLOR BLOBS (Sky Blue) ─── */}
+      {/* ─── Brand color wash ─── */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        {/* Soft Sky Haze bottom-left */}
-        <div className="absolute -bottom-[20%] -left-[10%] w-[800px] h-[800px] bg-gradient-to-t from-sky-100 via-blue-50 to-transparent rounded-full blur-[100px] opacity-60" />
-        {/* Soft Sky Haze top-right */}
-        <div className="absolute top-[0%] -right-[10%] w-[900px] h-[900px] bg-gradient-to-b from-sky-100 via-sky-50 to-transparent rounded-full blur-[100px] opacity-60" />
-
-        {/* Noise Texture */}
+        <div className="absolute -bottom-[20%] -left-[10%] w-[800px] h-[800px] bg-gradient-to-t from-rose-100 via-red-50 to-transparent rounded-full blur-[100px] opacity-60" />
+        <div className="absolute top-[0%] -right-[10%] w-[900px] h-[900px] bg-gradient-to-b from-cyan-100 via-teal-50 to-transparent rounded-full blur-[100px] opacity-50" />
         <div className={`absolute inset-0 opacity-[0.3] bg-[url('/noise.svg')] mix-blend-overlay`} />
       </div>
 
@@ -91,39 +89,34 @@ export default function AestheticFooter() {
 
         {/* ─── 1. NEWSLETTER CARD ─── */}
         <div className="relative mb-12 sm:mb-24">
-          <div className="relative overflow-hidden rounded-[2.5rem] shadow-2xl shadow-sky-200/50 bg-white border border-slate-50">
+          <div className="relative overflow-hidden rounded-[2.5rem] shadow-2xl shadow-rose-200/40 bg-white border border-slate-50">
 
-            {/* Colorful Gradient Border Effect */}
-            <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-sky-400 via-blue-400 to-sky-300" />
-
-            {/* Inner Glow */}
-            <div className="absolute inset-0 bg-gradient-to-br from-sky-50/50 via-transparent to-blue-50/50 opacity-50" />
+            <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-[#C41E3A] via-[#1AABB8] to-[#F18F01]" />
+            <div className="absolute inset-0 bg-gradient-to-br from-rose-50/50 via-transparent to-cyan-50/40 opacity-50" />
 
             <div className="relative p-5 sm:p-8 md:p-12 lg:px-16 grid lg:grid-cols-2 gap-6 sm:gap-10 items-center">
 
-              {/* Left Text */}
               <div className="space-y-4">
-                <span className="inline-block px-4 py-1.5 rounded-full bg-sky-50 text-sky-600 text-xs font-bold uppercase tracking-widest ring-1 ring-sky-100">
+                <span className="inline-block px-4 py-1.5 rounded-full bg-rose-50 text-[#C41E3A] text-xs font-bold uppercase tracking-widest ring-1 ring-rose-100">
                   {d.newsletterTitle}
                 </span>
                 <h2 className="text-2xl sm:text-4xl md:text-5xl font-black leading-tight text-slate-900">
                   {locale === 'mn' ? 'Хамтдаа' : "Don't Miss"} <br />
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-500 to-blue-400">
-                    {locale === 'mn' ? 'Хөгжицгөөе' : 'Your Chance'}
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#C41E3A] to-[#1AABB8]">
+                    {locale === 'mn' ? 'Холбогдоё' : 'Your Chance'}
                   </span>
                 </h2>
               </div>
 
-              {/* Right Input */}
               <div className="relative w-full">
-                <div className="flex items-center p-2 rounded-2xl shadow-sm border focus-within:ring-4 focus-within:ring-sky-100 transition-all bg-white border-slate-100 group">
+                <div className="flex items-center p-2 rounded-2xl shadow-sm border focus-within:ring-4 focus-within:ring-rose-100 transition-all bg-white border-slate-100 group">
                   <Mail className="ml-4 text-slate-400 shrink-0" size={20} />
                   <input
                     type="email"
                     placeholder={d.newsletterPlaceholder}
                     className="w-full bg-transparent px-4 py-3 text-sm font-semibold outline-none text-slate-800 placeholder:text-slate-400"
                   />
-                  <button className="flex items-center gap-2 px-6 py-3 rounded-xl bg-sky-500 text-white font-bold text-xs uppercase tracking-widest hover:bg-sky-600 hover:scale-105 transition-all shadow-lg shadow-sky-500/30 shrink-0">
+                  <button className="flex items-center gap-2 px-6 py-3 rounded-xl bg-[#C41E3A] text-white font-bold text-xs uppercase tracking-widest hover:bg-[#9E1530] hover:scale-105 transition-all shadow-lg shadow-rose-500/30 shrink-0">
                     {d.subscribeButton} <Send size={14} className="-rotate-12 group-hover:rotate-0 transition-transform" />
                   </button>
                 </div>
@@ -136,21 +129,15 @@ export default function AestheticFooter() {
         {/* ─── 2. FOOTER COLUMNS ─── */}
         <div className="grid grid-cols-1 md:grid-cols-12 gap-12 lg:gap-16 items-start mb-16">
 
-          {/* LOGO AREA */}
           <div className="md:col-span-12 lg:col-span-4 space-y-6">
             <Link href="/" className="inline-flex items-center gap-3 group">
-              <div className="w-12 h-12 bg-slate-900 rounded-lg flex items-center justify-center text-white relative overflow-hidden shadow-md">
-                {/* Abstract Color inside Logo Box */}
-                <div className="absolute inset-0 bg-gradient-to-br from-sky-400 to-blue-600 opacity-20" />
-                <span className="font-bold text-xl relative z-10 text-sky-400">V</span>
-              </div>
+              <BrandLogo size={48} />
               <div className="flex flex-col">
                 <span className="text-2xl font-black uppercase leading-none tracking-tight text-slate-900">
-                  Volunteer
+                  Au Pair
                 </span>
-                {/* Colorful Agency Text */}
-                <span className="text-[10px] font-bold uppercase tracking-[0.3em] bg-clip-text text-transparent bg-gradient-to-r from-sky-500 to-blue-400">
-                  Center Mongolia
+                <span className="text-[10px] font-bold uppercase tracking-[0.3em] bg-clip-text text-transparent bg-gradient-to-r from-[#C41E3A] to-[#1AABB8]">
+                  Mongolia
                 </span>
               </div>
             </Link>
@@ -159,7 +146,6 @@ export default function AestheticFooter() {
             </p>
           </div>
 
-          {/* LINKS AREA */}
           <div className="md:col-span-12 lg:col-span-5 grid grid-cols-2 gap-8">
             <div>
               <SectionHeader color={BRAND.PRIMARY} label={d.exploreTitle} />
@@ -179,7 +165,6 @@ export default function AestheticFooter() {
             </div>
           </div>
 
-          {/* CONTACT AREA */}
           <div className="md:col-span-12 lg:col-span-3">
             <SectionHeader color={BRAND.PRIMARY} label={d.contactTitle} />
             <div className="space-y-3 mt-4">
@@ -187,15 +172,15 @@ export default function AestheticFooter() {
                 icon={Phone}
                 title={locale === 'mn' ? "Утас" : "Phone"}
                 value={d.phone}
-                bgColor="bg-sky-50"
-                textColor="text-sky-600"
+                bgColor="bg-rose-50"
+                textColor="text-[#C41E3A]"
               />
               <ContactItem
                 icon={Mail}
                 title={locale === 'mn' ? "Имэйл" : "Email"}
                 value={d.email}
-                bgColor="bg-blue-50"
-                textColor="text-blue-600"
+                bgColor="bg-cyan-50"
+                textColor="text-[#1AABB8]"
               />
               <ContactItem
                 icon={MapPin}
@@ -208,7 +193,6 @@ export default function AestheticFooter() {
           </div>
         </div>
 
-        {/* ─── 3. BOTTOM BAR ─── */}
         <div className="pt-8 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-xs font-bold uppercase tracking-widest opacity-60 text-slate-500 text-center sm:text-left">
             {d.copyright}
@@ -218,13 +202,12 @@ export default function AestheticFooter() {
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
             aria-label="Scroll to top"
             className="p-3 rounded-full transition-colors hover:shadow-lg group bg-white text-slate-800 hover:bg-slate-50 border border-slate-100">
-            <ArrowUp size={16} className="group-hover:text-sky-500 transition-colors" />
+            <ArrowUp size={16} className="group-hover:text-[#C41E3A] transition-colors" />
           </button>
         </div>
 
-        {/* Giant Watermark (Sky Theme) */}
         <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-full text-center pointer-events-none select-none opacity-[0.03] hidden sm:block">
-          <span className="text-[8rem] md:text-[12rem] font-black uppercase leading-none whitespace-nowrap text-transparent bg-clip-text bg-gradient-to-b from-sky-400 to-transparent">Volunteer</span>
+          <span className="text-[8rem] md:text-[12rem] font-black uppercase leading-none whitespace-nowrap text-transparent bg-clip-text bg-gradient-to-b from-[#C41E3A] to-transparent">{BRAND_META.shortName}</span>
         </div>
 
       </div>

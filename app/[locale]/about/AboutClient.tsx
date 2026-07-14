@@ -40,7 +40,7 @@ const VALUES = [
 ];
 
 const PROGRAMS = [
-  { emoji: "📚", name: "VCM EDU", desc: { mn: "Боловсролын хөтөлбөр", en: "Education Program" }, href: "/programs/edu", color: "var(--blue)" },
+  { emoji: "📚", name: "APM EDU", desc: { mn: "Боловсролын хөтөлбөр", en: "Education Program" }, href: "/programs/edu", color: "var(--blue)" },
   { emoji: "🤝", name: "AND Program", desc: { mn: "Хамтын ажиллагааны хөтөлбөр", en: "Collaboration Program" }, href: "/programs/and", color: "var(--emerald)" },
   { emoji: "🏆", name: "V-CLUB", desc: { mn: "Клубын хөтөлбөр", en: "Club Program" }, href: "/programs/vclub", color: "var(--orange)" },
 ];
@@ -92,7 +92,7 @@ export default function AboutClient() {
           <div className="relative h-44 w-full">
             <Image
               src="https://res.cloudinary.com/dc127wztz/image/upload/q_auto/f_auto/v1775390121/tsevlee_mnzwhq.jpg"
-              alt="VCM Mission"
+              alt="APM Mission"
               fill
               className="object-cover"
               priority
@@ -110,8 +110,8 @@ export default function AboutClient() {
           <div className="p-5">
             <p className="text-[14px] leading-relaxed font-medium" style={{ color: "var(--label2)" }}>
               {locale === "mn"
-                ? "Монголын сайн дурынхны төв нь бүтээлч оролцоо бүхий хүмүүнлэг, иргэний ардчилсан нийгмийг бүтээхэд хувь нэмрээ оруулах эрхэм зорилготойгоор 2007 оноос хойш 50 гаруй үндэсний төсөл, хөтөлбөрийг амжилттай хэрэгжүүлж байна."
-                : "Since 2007, VCM has pursued the goal of building a humane, democratic society through creative volunteerism, implementing over 50 national projects in education, child protection, and sustainable livelihoods."}
+                ? "Монголын Au Pair төв нь бүтээлч оролцоо бүхий хүмүүнлэг, иргэний ардчилсан нийгмийг бүтээхэд хувь нэмрээ оруулах эрхэм зорилготойгоор 2007 оноос хойш 50 гаруй үндэсний төсөл, хөтөлбөрийг амжилттай хэрэгжүүлж байна."
+                : "Since 2007, APM has pursued the goal of building a humane, democratic society through creative volunteerism, implementing over 50 national projects in education, child protection, and sustainable livelihoods."}
             </p>
           </div>
         </motion.div>
@@ -137,8 +137,8 @@ export default function AboutClient() {
 
           <p className="text-[13px] leading-relaxed" style={{ color: "var(--label2)" }}>
             {locale === "mn"
-              ? "Сайн дурын үйлсээр дамжуулан эерэг өөрчлөлтийг бүтээх хүсэл тэмүүлэл минь Монголын сайн дурынхны төвийг үүсгэн байгуулахад хүргэсэн юм. Таныг энэхүү үнэ цэнтэй аялалд нэгдэхийг урьж байна."
-              : "My passion for creating positive change through volunteerism led me to establish VCM. I invite you to join us on this invaluable journey."}
+              ? "Сайн дурын үйлсээр дамжуулан эерэг өөрчлөлтийг бүтээх хүсэл тэмүүлэл минь Монголын Au Pair төвийг үүсгэн байгуулахад хүргэсэн юм. Таныг энэхүү үнэ цэнтэй аялалд нэгдэхийг урьж байна."
+              : "My passion for creating positive change through volunteerism led me to establish APM. I invite you to join us on this invaluable journey."}
           </p>
 
           <div className="pt-2 border-t space-y-2" style={{ borderColor: "var(--sep)" }}>
@@ -208,7 +208,7 @@ export default function AboutClient() {
           <p className="sec-label">{locale === "mn" ? "Холбоо барих" : "Contact"}</p>
           <div className="card p-2">
             {[
-              { icon: <Mail size={15} />, text: "info@vcm.mn", color: "var(--blue)", bg: "var(--blue-dim)" },
+              { icon: <Mail size={15} />, text: "info@aupairmongolia.mn", color: "var(--blue)", bg: "var(--blue-dim)" },
               { icon: <Phone size={15} />, text: "+976 99-XX-XXXX", color: "var(--emerald)", bg: "var(--emerald-dim)" },
               { icon: <MapPin size={15} />, text: locale === "mn" ? "Улаанбаатар, Монгол" : "Ulaanbaatar, Mongolia", color: "var(--orange)", bg: "var(--orange-dim)" },
             ].map((c, i, arr) => (
@@ -225,8 +225,8 @@ export default function AboutClient() {
 
         {/* Footer */}
         <div className="text-center space-y-1 pt-4">
-          <p className="text-[13px] font-bold" style={{ color: "var(--label)" }}>Volunteer Center Mongolia</p>
-          <p className="text-[11px]" style={{ color: "var(--label4)" }}>© 2007–{new Date().getFullYear()} · VCM</p>
+          <p className="text-[13px] font-bold" style={{ color: "var(--label)" }}>Au Pair Mongolia</p>
+          <p className="text-[11px]" style={{ color: "var(--label4)" }}>© 2007–{new Date().getFullYear()} · APM</p>
         </div>
 
       </div>

@@ -158,7 +158,7 @@ export default function BannersManager({
     setUploading(true);
     setError("");
     try {
-      const { secureUrl } = await signedCloudinaryUpload({ file, folder: "vcm/banners" });
+      const { secureUrl } = await signedCloudinaryUpload({ file, folder: "APM/banners" });
       setForm((f) => ({ ...f, image: secureUrl }));
     } catch (e: unknown) {
       setError(e instanceof Error ? e.message : "Зураг байршуулахад алдаа");

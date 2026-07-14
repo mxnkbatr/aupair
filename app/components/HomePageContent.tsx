@@ -268,7 +268,7 @@ export default function HomePageContent({
         >
           <section className="mt-8">
             <div className="px-5">
-              <PremiumSectionHeader title="Дэлгүүр" subtitle="VCM бүтээгдэхүүн" href="/shop" />
+              <PremiumSectionHeader title="Дэлгүүр" subtitle="APM бүтээгдэхүүн" href="/shop" />
             </div>
             <div className="flex overflow-x-auto gap-3 px-5 pb-3 mt-4 no-scroll">
               <ShopClient items={items.slice(0, 4)} locale={locale} isHorizontal />

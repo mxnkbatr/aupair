@@ -12,13 +12,13 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { id, locale } = await params;
   const event = await getEventById(id);
-  if (!event) return { title: "Event – VCM" };
+  if (!event) return { title: "Event – APM" };
   const title =
     locale === "en"
       ? (event as any).title?.en
       : (event as any).title?.mn || (event as any).title?.en;
   return {
-    title: `${title || "Event"} – VCM`,
+    title: `${title || "Event"} – APM`,
     description:
       locale === "en"
         ? (event as any).description?.en

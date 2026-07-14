@@ -9,7 +9,7 @@ export default function ThemeProvider({ children }: { children: React.ReactNode 
       defaultTheme="light"
       enableSystem={false}
       disableTransitionOnChange={true}
-      storageKey="vcm-theme"
+      storageKey="APM-theme"
     >
       {children}
     </NextThemesProvider>

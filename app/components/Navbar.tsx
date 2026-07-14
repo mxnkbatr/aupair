@@ -23,8 +23,8 @@ import AuthActions from "./AuthActions";
 
 // --- COLOR PALETTE CONFIGURATION ---
 const BRAND = {
-  RED: "#38bdf8", // Using Sky-400 as primary
-  GREEN: "#0ea5e9", // Using Sky-500 as secondary
+  RED: "#C41E3A",
+  GREEN: "#1AABB8",
   WHITE: "#FFFFFF",
 };
 
@@ -79,7 +79,7 @@ export default function Navbar() {
           z-[100] transform-gpu pointer-events-auto flex items-center justify-between transition-[background-color,border-color,shadow,padding] duration-700 relative
           w-[98%] xl:w-[1250px] py-3 px-6 rounded-full border backdrop-blur-xl text-slate-800 drop-shadow-sm
           ${isScrolled
-              ? "bg-white/95 border-sky-500/20 shadow-[0_20px_40px_-15px_rgba(14,165,233,0.2)]"
+              ? "bg-white/95 border-[#C41E3A]/20 shadow-[0_20px_40px_-15px_rgba(196,30,58,0.2)]"
               : "bg-white/60 border-white/50 shadow-xl"}
         `}>
           <Link href="/" className="flex items-center gap-3 group shrink-0">
@@ -99,8 +99,8 @@ export default function Navbar() {
                     href={item.href}
                     className={`flex items-center gap-1 px-4 py-2.5 rounded-full text-[10px] font-bold uppercase tracking-widest transition-all duration-300 whitespace-nowrap
                       ${isActive
-                        ? "bg-sky-500 text-white shadow-lg shadow-sky-500/30"
-                        : "text-slate-800 opacity-80 hover:opacity-100 hover:text-sky-600 hover:bg-sky-50 shadow-none"}`
+                        ? "bg-[#C41E3A] text-white shadow-lg shadow-[#C41E3A]/30"
+                        : "text-slate-800 opacity-80 hover:opacity-100 hover:text-[#C41E3A] hover:bg-rose-50 shadow-none"}`
                     }
                   >
                     {item.name}

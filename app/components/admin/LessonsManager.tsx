@@ -98,7 +98,7 @@ export default function LessonsManager({ lessons, onRefresh }: LessonsManagerPro
         try {
             const uploaded = await signedCloudinaryUpload({
               file,
-              folder: "vcm/admin/lessons",
+              folder: "APM/admin/lessons",
               resourceType: "image",
             });
             setFormData(prev => ({ ...prev, imageUrl: uploaded.secureUrl }));

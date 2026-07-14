@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { BRAND } from "@/lib/branding";
 import BrandLogo from "./BrandLogo";
 
-const STORAGE_KEY = "vcm-splash-dismissed";
+const STORAGE_KEY = "apm-splash-dismissed";
 const MIN_VISIBLE_MS = 450;
 const FADE_OUT_MS = 220;
 
@@ -75,10 +75,10 @@ export default function AppSplash() {
               animate={{ opacity: 1 }}
               transition={{ delay: 0.18, duration: 0.45 }}
             >
-              <p className="app-splash__brand-name">Volunteer Center</p>
+              <p className="app-splash__brand-name">Au Pair</p>
               <div className="app-splash__brand-rule">
                 <span className="app-splash__brand-line" />
-                <span className="app-splash__brand-of">of Mongolia</span>
+                <span className="app-splash__brand-of">Mongolia</span>
                 <span className="app-splash__brand-line" />
               </div>
             </motion.div>

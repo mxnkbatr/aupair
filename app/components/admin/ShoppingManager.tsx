@@ -47,13 +47,13 @@ export default function ShoppingManager() {
       <div className="p-6 md:p-8 border-b border-slate-50 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h2 className="text-xl font-black text-slate-900 flex items-center gap-2">
-            <Package size={24} className="text-[#0EA5E9]" /> Shopping Market
+            <Package size={24} className="text-[#C41E3A]" /> Shopping Market
           </h2>
           <p className="text-sm font-bold text-slate-400 mt-1">Manage your shop items, inventory, and categories</p>
         </div>
         <button
           onClick={() => { setEditingItem(null); setIsModalOpen(true); }}
-          className="flex items-center gap-2 px-6 py-3 bg-slate-900 text-white rounded-xl text-xs font-black uppercase tracking-widest hover:bg-[#0EA5E9] transition-all shadow-md active:scale-95"
+          className="flex items-center gap-2 px-6 py-3 bg-slate-900 text-white rounded-xl text-xs font-black uppercase tracking-widest hover:bg-[#C41E3A] transition-all shadow-md active:scale-95"
         >
           <Plus size={16} /> Add Product
         </button>
@@ -175,7 +175,7 @@ function ShoppingItemModal({ item, onClose, onSaved }: { item: any, onClose: () 
       if (imageFile) {
         const uploaded = await signedCloudinaryUpload({
           file: imageFile,
-          folder: "vcm/admin/shop",
+          folder: "APM/admin/shop",
           resourceType: "image",
         });
         payLoad.image = uploaded.secureUrl;
@@ -213,8 +213,8 @@ function ShoppingItemModal({ item, onClose, onSaved }: { item: any, onClose: () 
             
             <div className="grid grid-cols-3 gap-6">
               <div className="space-y-1">
-                <label className="text-[10px] font-black uppercase tracking-widest text-[#0EA5E9]">Name (EN)</label>
-                <input required value={formData.nameEn} onChange={e => setFormData({...formData, nameEn: e.target.value})} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 font-bold focus:ring-[#0EA5E9]" />
+                <label className="text-[10px] font-black uppercase tracking-widest text-[#C41E3A]">Name (EN)</label>
+                <input required value={formData.nameEn} onChange={e => setFormData({...formData, nameEn: e.target.value})} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 font-bold focus:ring-[#C41E3A]" />
               </div>
               <div className="space-y-1">
                 <label className="text-[10px] font-black uppercase tracking-widest text-blue-600">Name (MN)</label>
@@ -284,7 +284,7 @@ function ShoppingItemModal({ item, onClose, onSaved }: { item: any, onClose: () 
           <button type="button" onClick={onClose} className="px-6 py-3 font-black uppercase tracking-widest text-xs text-slate-500 hover:text-slate-900 transition-colors">
             Cancel
           </button>
-          <button form="shopping-form" type="submit" disabled={saving} className="flex items-center gap-2 px-8 py-3 bg-[#0EA5E9] text-white rounded-xl text-xs font-black uppercase tracking-widest shadow-lg hover:shadow-xl hover:-translate-y-0.5 active:scale-95 transition-all disabled:opacity-50">
+          <button form="shopping-form" type="submit" disabled={saving} className="flex items-center gap-2 px-8 py-3 bg-[#C41E3A] text-white rounded-xl text-xs font-black uppercase tracking-widest shadow-lg hover:shadow-xl hover:-translate-y-0.5 active:scale-95 transition-all disabled:opacity-50">
             {saving && <Loader2 size={16} className="animate-spin" />}
             {item ? "Update Product" : "Publish Product"}
           </button>

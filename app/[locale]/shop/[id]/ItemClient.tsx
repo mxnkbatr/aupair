@@ -174,7 +174,7 @@ export default function ItemClient({ item, locale = "en" }: { item: any; locale:
             </span>
             <span className="shop-detail__chip">
               <Tag size={12} strokeWidth={2.2} />
-              VCM Shop
+              APM Shop
             </span>
           </div>
         </motion.div>

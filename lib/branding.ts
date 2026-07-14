@@ -1,12 +1,12 @@
-/** Volunteer Center of Mongolia — shared brand assets & colors */
+/** Au Pair Mongolia — shared brand assets & colors */
 
 export const BRAND = {
-  name: "Volunteer Center Mongolia",
-  shortName: "VCM",
-  tagline: "Small Actions, Big Differences",
-  taglineMn: "Жижиг үйлдэл — том өөрчлөлт",
-  descriptorMn: "Монголын сайн дурын үйлсийн тэргүүлэгч платформ",
-  descriptorEn: "Mongolia's leading volunteer platform",
+  name: "Au Pair Mongolia",
+  shortName: "APM",
+  tagline: "Connect families. Connect cultures.",
+  taglineMn: "Гэр бүл · Соёл · Холбоо",
+  descriptorMn: "Монголын хамгийн том au pair зуучлалын төв",
+  descriptorEn: "Mongolia's largest au pair agency",
 
   /** App icon = logo (нэг эх сурвалж) */
   appIcon: "/branding/icon-512.png",
@@ -16,23 +16,23 @@ export const BRAND = {
   appleTouchIcon: "/branding/apple-touch-icon.png",
 
   colors: {
-    primary: "#0B84E5",
-    primaryLight: "#E3F2FD",
-    navy: "#142433",
-    cream: "#FBF8F3",
-    creamLight: "#FFFDFB",
-    creamWarm: "#F3EEE6",
-    creamBlue: "#EEF4FA",
-    background: "#FBF8F3",
-    backgroundDark: "#0F172A",
+    primary: "#C41E3A",
+    primaryLight: "#FDE8EC",
+    navy: "#1A1418",
+    cream: "#FFF9F8",
+    creamLight: "#FFFFFF",
+    creamWarm: "#FFF0EE",
+    creamBlue: "#E8F7F8",
+    background: "#FFF9F8",
+    backgroundDark: "#1A1214",
 
-    modulePrograms: "#0B84E5",
-    moduleShop: "#E8910A",
-    moduleLessons: "#0FA878",
-    moduleEvents: "#E8457A",
+    modulePrograms: "#C41E3A",
+    moduleShop: "#F18F01",
+    moduleLessons: "#1AABB8",
+    moduleEvents: "#F5C518",
 
-    programEdu: "#0B84E5",
-    programAnd: "#0FA878",
-    programVclub: "#E8910A",
+    programEdu: "#1AABB8",
+    programAnd: "#7EC8B0",
+    programVclub: "#F18F01",
   },
 } as const;

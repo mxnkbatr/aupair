@@ -26,10 +26,10 @@ import { useLocale } from "next-intl";
 
 // --- CONFIG & BRAND ---
 const BRAND = {
-  PRIMARY: "#0EA5E9",       // Sky Blue (was RED)
+  PRIMARY: "#C41E3A",
   PRIMARY_SOFT: "rgba(14, 165, 233, 0.15)",
   SECONDARY: "#F0F9FF",     // Ice white overlay
-  ACCENT: "#38BDF8",        // Lighter Sky (was GREEN)
+  ACCENT: "#1AABB8",        // Lighter Sky (was GREEN)
   ACCENT_SOFT: "rgba(56, 189, 248, 0.15)",
   DARK: "#0F172A",          // Slate 900
 };

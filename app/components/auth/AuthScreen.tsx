@@ -47,12 +47,12 @@ export default function AuthScreen({
           transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
           className="text-center mb-8"
         >
-          <BrandLogo size={88} priority className="mb-5 mx-auto" />
+          <BrandLogo size={88} priority className="mb-6 mx-auto" />
           <p
-            className="text-[11px] font-bold uppercase tracking-[0.2em] mb-2"
+            className="text-[11px] font-bold uppercase tracking-[0.2em] mb-3"
             style={{ color: "var(--blue)" }}
           >
-            Volunteer Center Mongolia
+            Au Pair Mongolia
           </p>
           <h1 className="text-[28px] font-black tracking-tight leading-tight" style={{ color: "var(--label)" }}>
             {title}

@@ -9,8 +9,8 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   return {
-    title: locale === "mn" ? "Өргөдөл гаргах – VCM" : "Apply to program – VCM",
-    description: "VCM хөтөлбөрт өргөдөл гаргах",
+    title: locale === "mn" ? "Өргөдөл гаргах – APM" : "Apply to program – APM",
+    description: "APM хөтөлбөрт өргөдөл гаргах",
   };
 }
 

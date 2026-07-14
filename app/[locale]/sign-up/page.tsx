@@ -64,11 +64,11 @@ export default function SignUpPage() {
       return;
     }
     if (!trimmedEmail) {
-      setError("Gmail хаягаа оруулна уу.");
+      setError("И-мэйл хаягаа оруулна уу.");
       return;
     }
     if (!trimmedEmail.includes("@")) {
-      setError("Зөв Gmail хаяг оруулна уу.");
+      setError("Зөв и-мэйл хаяг оруулна уу.");
       return;
     }
 
@@ -98,7 +98,7 @@ export default function SignUpPage() {
       if (!res.ok) {
         const msg =
           data.error === "An account with this email already exists"
-            ? "Энэ Gmail хаягтай бүртгэл байна."
+            ? "Энэ и-мэйл хаягтай бүртгэл байна."
             : data.error || "Бүртгэл амжилтгүй болсон.";
         throw new Error(msg);
       }
@@ -153,7 +153,7 @@ export default function SignUpPage() {
   return (
     <AuthScreen
       title="Бүртгүүлэх"
-      subtitle="Gmail болон нууц үгээр шинэ бүртгэл үүсгэнэ үү"
+      subtitle="И-мэйл болон нууц үгээр шинэ бүртгэл үүсгэнэ үү"
       footer={
         <p className="text-[14px]" style={{ color: "var(--label2)" }}>
           Аль хэдийн бүртгэлтэй юу?{" "}
@@ -185,7 +185,7 @@ export default function SignUpPage() {
               autoComplete="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="Gmail хаяг"
+              placeholder="И-мэйл хаяг"
               disabled={busy}
               required
             />
@@ -245,7 +245,7 @@ export default function SignUpPage() {
       <AuthDivider />
 
       <GoogleButton
-        label="Gmail-ээр бүртгүүлэх"
+        label="Google-ээр бүртгүүлэх"
         onClick={signUpWithGoogle}
         disabled={busy}
       />

@@ -133,8 +133,8 @@ export default function MobileChrome() {
         .then((d) => setNotifications(d.notifications || []))
         .catch(() => {});
     };
-    window.addEventListener("vcm:notifications-changed", onRefresh);
-    return () => window.removeEventListener("vcm:notifications-changed", onRefresh);
+    window.addEventListener("APM:notifications-changed", onRefresh);
+    return () => window.removeEventListener("APM:notifications-changed", onRefresh);
   }, [status]);
 
   useEffect(() => {
@@ -190,7 +190,7 @@ export default function MobileChrome() {
                 className="text-[10px] font-semibold truncate"
                 style={{ color: "var(--blue)" }}
               >
-                Volunteer Center
+                Au Pair
               </div>
             </div>
           </Link>
@@ -420,7 +420,7 @@ export default function MobileChrome() {
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-[13px] font-semibold" style={{ color: "var(--label)" }}>
-                        {n.title || "VCM"}
+                        {n.title || "APM"}
                       </p>
                       <p className="text-[11px] mt-0.5 line-clamp-2" style={{ color: "var(--label3)" }}>
                         {n.body}

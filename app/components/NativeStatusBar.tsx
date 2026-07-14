@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { useTheme } from "next-themes";
 import { BRAND } from "@/lib/branding";
 
-/** Sync native status bar with VCM cream / dark theme. */
+/** Sync native status bar with APM cream / dark theme. */
 export default function NativeStatusBar() {
   const { resolvedTheme } = useTheme();
 

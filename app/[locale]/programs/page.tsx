@@ -4,7 +4,7 @@ import { Metadata } from "next";
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
-    title: "Our Programs | Volunteer Center Mongolia",
+    title: "Our Programs | Au Pair Mongolia",
     description: "Explore our diverse volunteering programs: EDU-Volunteer, AND, and V-Club.",
   };
 }
