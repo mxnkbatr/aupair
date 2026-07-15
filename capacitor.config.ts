@@ -15,7 +15,7 @@ const serverUrl =
 const config: CapacitorConfig = {
   appId: "mn.aupair.app",
   appName: "Au Pair Mongolia",
-  webDir: "public",
+  webDir: "cap-www",
   ...(serverUrl
     ? {
         server: {

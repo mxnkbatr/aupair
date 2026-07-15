@@ -6,13 +6,10 @@
       name="viewport"
       content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no"
     />
-    <meta name="color-scheme" content="light" />
     <meta name="theme-color" content="#C41E3A" />
     <title>Au Pair Mongolia</title>
     <style>
-      * {
-        box-sizing: border-box;
-      }
+      * { box-sizing: border-box; }
       body {
         margin: 0;
         min-height: 100dvh;
@@ -32,15 +29,8 @@
         border-radius: 14px;
         box-shadow: 0 8px 24px rgba(196, 30, 58, 0.22);
       }
-      .title {
-        font-size: 15px;
-        font-weight: 800;
-        letter-spacing: -0.2px;
-      }
-      .sub {
-        font-size: 12px;
-        color: #8A7478;
-      }
+      .title { font-size: 15px; font-weight: 800; }
+      .sub { font-size: 12px; color: #8A7478; }
       .spinner {
         width: 28px;
         height: 28px;
@@ -49,17 +39,20 @@
         border-radius: 50%;
         animation: spin 0.8s linear infinite;
       }
-      @keyframes spin {
-        to {
-          transform: rotate(360deg);
-        }
-      }
+      @keyframes spin { to { transform: rotate(360deg); } }
     </style>
   </head>
   <body>
-    <img class="logo" src="/branding/icon-192.png" alt="APM" />
+    <img class="logo" src="./branding/icon-192.png" alt="APM" />
     <div class="title">Au Pair Mongolia</div>
     <div class="sub">Ачааллаж байна...</div>
     <div class="spinner" aria-hidden="true"></div>
+    <script>
+      // Remote shell fallback — Cap usually loads CAPACITOR_SERVER_URL
+      var remote = "https://aupair-app.vercel.app/mn";
+      setTimeout(function () {
+        try { window.location.replace(remote); } catch (e) {}
+      }, 400);
+    </script>
   </body>
 </html>
