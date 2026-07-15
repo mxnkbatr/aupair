@@ -237,7 +237,7 @@ export default function SettingsPage() {
 
         {/* App version */}
         <p className="text-center text-[11px]" style={{ color: "var(--label4)" }}>
-          APM v1.0.0 · {locale === "mn" ? "Монголын Au Pair Төв" : "Au Pair Mongolia"}
+          APM v1.0.1 · {locale === "mn" ? "Монголын Au Pair Төв" : "Au Pair Mongolia"}
         </p>
 
       </div>

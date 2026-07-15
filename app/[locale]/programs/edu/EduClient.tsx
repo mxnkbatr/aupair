@@ -6,22 +6,22 @@ import { GraduationCap, BookOpen, Users, CalendarDays, Star } from "lucide-react
 const EDU_CONFIG = {
   id: "EDU",
   emoji: "🎓",
-  gradientFrom: "#0ea5e9",
-  gradientTo: "#3b82f6",
-  accentBg: "bg-sky-50",
-  accentText: "text-sky-600",
-  btnBg: "bg-sky-500 hover:bg-sky-600",
-  shadowColor: "shadow-sky-500/20",
-  name: "EDU-Сайн дурын ажилтан",
-  shortDesc: "Мэдлэгээ хуваалцаж, шинэ үеэ урамшуулах",
+  gradientFrom: "#2BC4D0",
+  gradientTo: "#128A95",
+  accentBg: "bg-cyan-50",
+  accentText: "text-cyan-700",
+  btnBg: "bg-teal-500 hover:bg-teal-600",
+  shadowColor: "shadow-teal-500/20",
+  name: "EDU Бэлтгэл",
+  shortDesc: "Гэр бүл · au pair бэлтгэлийн хөтөлбөр",
   duration: "3–12 сар",
-  type: "Боловсрол",
+  type: "Бэлтгэл",
   location: "Монгол улс",
   openSlots: 8,
   tags: [
-    { label: "Сургалт", bg: "bg-sky-50 text-sky-700" },
-    { label: "Хэл заалт", bg: "bg-blue-50 text-blue-700" },
-    { label: "Залуучууд", bg: "bg-indigo-50 text-indigo-700" },
+    { label: "Бэлтгэл", bg: "bg-cyan-50 text-cyan-700" },
+    { label: "Хэл", bg: "bg-teal-50 text-teal-700" },
+    { label: "Гэр бүл", bg: "bg-rose-50 text-rose-700" },
   ],
   features: [
     {
@@ -58,9 +58,9 @@ const EDU_CONFIG = {
     "Нийгмийн хариуцлагатай байдал",
   ],
   whyJoin:
-    "Монголын сургуулиудад өөрийн мэдлэгийг дамжуулж, нийгмийн хөгжилд биечлэн хувь нэмэр оруулах ховор боломж. Сурагчдын ирээдүйг гэрэлтүүлэх аялал эндээс эхэлнэ.",
+    "Гэр бүл, au pair аялалд бэлдэж, хэл·соёлын ур чадвараа дээшлүүлэх. APM-ийн бэлтгэл нь нийцүүлэлтээс өмнөх чухал алхам юм.",
   heroSub:
-    "Сургууль, сургалтын төвүүдэд өөрийн мэдлэг, чадвараа хуваалцаж, залуу оюун ухааныг чадавхжуулан гэрэлт ирээдүйг хамтдаа бүтээцгээе.",
+    "Гэр бүл, au pair-уудад зориулсан хэл, соёл, өдөр тутмын ур чадварын бэлтгэл — аяллаа итгэлтэйгээр эхлүүлээрэй.",
   steps: [
     { num: "1", title: "Өргөдөл гаргах", desc: "Энэ хуудсаас анкетаа бөглөж илгээнэ үү." },
     { num: "2", title: "Ярилцлага", desc: "APM-ийн баг 24 цагийн дотор холбогдоно." },

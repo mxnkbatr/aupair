@@ -12,43 +12,43 @@ import PremiumSectionHeader from "@/app/components/PremiumSectionHeader";
 const STATS = [
   { value: "50+", label: { mn: "Үндэсний төсөл", en: "National projects" } },
   { value: "2007", label: { mn: "Үүсгэн байгуулагдсан", en: "Founded" } },
-  { value: "10K+", label: { mn: "Сайн дурынхан", en: "Volunteers" } },
+  { value: "10K+", label: { mn: "Оролцогчид", en: "Participants" } },
   { value: "3", label: { mn: "Хөтөлбөр", en: "Programs" } },
 ];
 
 const VALUES = [
   {
     icon: Heart, color: "var(--red)", bg: "var(--red-dim)",
-    title: { mn: "Сайн дурын сэтгэл", en: "Volunteer Spirit" },
-    desc: { mn: "Бидний үйл ажиллагааны цөм нь сайн дурынхны хүсэл тэмүүлэл юм.", en: "The passion of volunteers is at the core of our operations." },
+    title: { mn: "Гэр бүлийн холбоо", en: "Family Matching" },
+    desc: { mn: "Гэр бүл, au pair-ыг найдвартай, ёс зүйтэйгээр холбох нь бидний цөм.", en: "Trusted, ethical matching of host families and au pairs is our core." },
   },
   {
     icon: Globe, color: "var(--blue)", bg: "var(--blue-dim)",
-    title: { mn: "Дэлхийн нөлөө", en: "Global Impact" },
-    desc: { mn: "Орон нутгийн үйлсээрээ дамжуулан дэлхийн өөрчлөлтийг бий болгохыг зорьдог.", en: "Creating global change through impactful local action." },
+    title: { mn: "Соёлын солилцоо", en: "Cultural Exchange" },
+    desc: { mn: "Хэл, соёл, өдөр тутмын амьдралаар дамжуулан дэлхийн ойлголтыг өргөжүүлнэ.", en: "Broadening worldviews through language, culture, and daily life together." },
   },
   {
     icon: Users, color: "var(--emerald)", bg: "var(--emerald-dim)",
-    title: { mn: "Олон нийтийн хөгжил", en: "Community Building" },
-    desc: { mn: "Хамтдаа илүү хүчирхэг, ээлтэй нийгмийг цогцлоон бэхжүүлдэг.", en: "Strengthening bonds to build more resilient communities." },
+    title: { mn: "Хүүхдийн асрамж", en: "Childcare Support" },
+    desc: { mn: "Гэр бүлд тусалж, хүүхдэд халамжтай орчин бүрдүүлэхэд дэмжлэг үзүүлнэ.", en: "Supporting families with warm, reliable childcare in the home." },
   },
   {
     icon: Sparkles, color: "var(--orange)", bg: "var(--orange-dim)",
-    title: { mn: "Дур хүсэл ба халамж", en: "Passion & Care" },
-    desc: { mn: "Хийж буй бүх зүйлдээ чин сэтгэлийн хандлага, халамжийг шингээдэг.", en: "Infusing genuine passion into everything we undertake." },
+    title: { mn: "Бэлтгэл · Дэмжлэг", en: "Prep & Support" },
+    desc: { mn: "Өргөдлөөс байршуулалт хүртэл бэлтгэл сургалт, зөвлөгөөгөөр хамт байна.", en: "From application to placement, we stay with you through prep and guidance." },
   },
 ];
 
 const PROGRAMS = [
-  { emoji: "📚", name: "APM EDU", desc: { mn: "Боловсролын хөтөлбөр", en: "Education Program" }, href: "/programs/edu", color: "var(--blue)" },
-  { emoji: "🤝", name: "AND Program", desc: { mn: "Хамтын ажиллагааны хөтөлбөр", en: "Collaboration Program" }, href: "/programs/and", color: "var(--emerald)" },
-  { emoji: "🏆", name: "V-CLUB", desc: { mn: "Клубын хөтөлбөр", en: "Club Program" }, href: "/programs/vclub", color: "var(--orange)" },
+  { emoji: "📚", name: "APM EDU", desc: { mn: "Гэр бүлийн бэлтгэл", en: "Host-family prep" }, href: "/programs/edu", color: "var(--blue)" },
+  { emoji: "🤝", name: "AND Program", desc: { mn: "Гэр бүл · хүүхэд", en: "Family · childcare" }, href: "/programs/and", color: "var(--emerald)" },
+  { emoji: "🏆", name: "V-CLUB", desc: { mn: "Соёлын солилцоо", en: "Cultural exchange" }, href: "/programs/vclub", color: "var(--orange)" },
 ];
 
 const HIGHLIGHTS = [
-  { mn: "Нийгмийн ажлын багш, зөвлөх мэргэжилтэн", en: "Certified Social Work Teacher and Consultant" },
+  { mn: "Au pair зуучлал, гэр бүлийн зөвлөх", en: "Au pair placement & family consulting" },
   { mn: "50 гаруй үндэсний хэмжээний төсөл удирдсан", en: "Led over 50 national-level projects" },
-  { mn: "Олон нийтийн оролцоо ба залуучуудын хөгжлийн мэргэжилтэн", en: "Specialist in community engagement and youth development" },
+  { mn: "Соёлын солилцоо ба залуучуудын хөгжлийн мэргэжилтэн", en: "Specialist in cultural exchange and youth development" },
 ];
 
 export default function AboutClient() {
@@ -62,7 +62,7 @@ export default function AboutClient() {
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
           <PremiumSectionHeader
             title={locale === "mn" ? "Бидний тухай" : "About Us"}
-            subtitle={locale === "mn" ? "2007 оноос хойш хүмүүнлэг нийгмийг байгуулж байна" : "Building a humane society since 2007"}
+            subtitle={locale === "mn" ? "Монголын хамгийн том au pair зуучлалын төв" : "Mongolia's largest au pair agency"}
           />
         </motion.div>
 
@@ -110,8 +110,8 @@ export default function AboutClient() {
           <div className="p-5">
             <p className="text-[14px] leading-relaxed font-medium" style={{ color: "var(--label2)" }}>
               {locale === "mn"
-                ? "Монголын Au Pair төв нь бүтээлч оролцоо бүхий хүмүүнлэг, иргэний ардчилсан нийгмийг бүтээхэд хувь нэмрээ оруулах эрхэм зорилготойгоор 2007 оноос хойш 50 гаруй үндэсний төсөл, хөтөлбөрийг амжилттай хэрэгжүүлж байна."
-                : "Since 2007, APM has pursued the goal of building a humane, democratic society through creative volunteerism, implementing over 50 national projects in education, child protection, and sustainable livelihoods."}
+                ? "Au Pair Mongolia нь гэр бүл болон au pair-уудыг холбож, соёлын солилцоо, хүүхдийн асрамжийг дэмжих эрхэм зорилготойгоор 2007 оноос хойш 50 гаруй үндэсний төсөл, хөтөлбөрийг амжилттай хэрэгжүүлж байна."
+                : "Since 2007, Au Pair Mongolia has connected host families and au pairs through cultural exchange and childcare support, delivering over 50 national programs."}
             </p>
           </div>
         </motion.div>
@@ -137,8 +137,8 @@ export default function AboutClient() {
 
           <p className="text-[13px] leading-relaxed" style={{ color: "var(--label2)" }}>
             {locale === "mn"
-              ? "Сайн дурын үйлсээр дамжуулан эерэг өөрчлөлтийг бүтээх хүсэл тэмүүлэл минь Монголын Au Pair төвийг үүсгэн байгуулахад хүргэсэн юм. Таныг энэхүү үнэ цэнтэй аялалд нэгдэхийг урьж байна."
-              : "My passion for creating positive change through volunteerism led me to establish APM. I invite you to join us on this invaluable journey."}
+              ? "Гэр бүл, au pair-уудыг холбож, соёлын солилцоог дэмжих хүсэл тэмүүлэл минь Au Pair Mongolia-г үүсгэн байгуулахад хүргэсэн юм. Таныг энэхүү аялалд нэгдэхийг урьж байна."
+              : "My passion for connecting families and au pairs through cultural exchange led me to establish Au Pair Mongolia. I invite you to join us on this journey."}
           </p>
 
           <div className="pt-2 border-t space-y-2" style={{ borderColor: "var(--sep)" }}>
