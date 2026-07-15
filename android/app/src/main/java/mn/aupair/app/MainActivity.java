@@ -1,4 +1,4 @@
-package mn.volunteer.app;
+package mn.aupair.app;
 
 import com.getcapacitor.BridgeActivity;
 

@@ -7,7 +7,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-        <string>VCM</string>
+        <string>Au Pair Mongolia</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -48,10 +48,10 @@
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Volunteer Mongolia needs access to your photo library so you can choose a profile picture and share images for volunteer applications and events.</string>
+	<string>Au Pair Mongolia needs access to your photo library so you can choose a profile picture and share images for applications and events.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>Volunteer Mongolia needs permission to save images to your photo library when you download certificates or event materials.</string>
+	<string>Au Pair Mongolia needs permission to save images to your photo library when you download certificates or event materials.</string>
 	<key>NSCameraUsageDescription</key>
-	<string>Volunteer Mongolia needs camera access so you can take a profile photo and upload pictures for volunteer applications and events.</string>
+	<string>Au Pair Mongolia needs camera access so you can take a profile photo and upload pictures for applications and events.</string>
 </dict>
 </plist>

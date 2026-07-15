@@ -5,7 +5,7 @@ import type { CapacitorConfig } from "@capacitor/cli";
  * dotenv@17 prints a banner that breaks that JSON parse.
  * Set CAPACITOR_SERVER_URL / NEXT_PUBLIC_APP_URL in Appflow env (or your shell locally).
  */
-const productionUrl = "https://aupair-mongolia.vercel.app";
+const productionUrl = "https://aupair-app.vercel.app";
 const isDev = process.env.NODE_ENV === "development";
 const serverUrl =
   process.env.CAPACITOR_SERVER_URL ||
