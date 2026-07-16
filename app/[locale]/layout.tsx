@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 
 import "../globals.css";
 import AuthProvider from "../components/AuthProvider";
@@ -35,6 +35,18 @@ export const metadata: Metadata = {
   },
 };
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1.0,
+  maximumScale: 1.0,
+  userScalable: false,
+  viewportFit: "cover",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: BRAND.colors.creamLight },
+    { media: "(prefers-color-scheme: dark)", color: BRAND.colors.backgroundDark },
+  ],
+};
+
 const locales = ['en', 'mn', 'de'];
 
 export default async function RootLayout({
@@ -63,9 +75,6 @@ export default async function RootLayout({
           <link rel="preconnect" href="https://images.unsplash.com" crossOrigin="anonymous" />
           <link rel="dns-prefetch" href="https://res.cloudinary.com" />
 
-          <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no" />
-          <meta name="theme-color" content={BRAND.colors.creamLight} media="(prefers-color-scheme: light)" />
-          <meta name="theme-color" content={BRAND.colors.backgroundDark} media="(prefers-color-scheme: dark)" />
           <meta name="apple-mobile-web-app-title" content={BRAND.shortName} />
           <meta name="mobile-web-app-capable" content="yes" />
           <meta name="apple-mobile-web-app-capable" content="yes" />
