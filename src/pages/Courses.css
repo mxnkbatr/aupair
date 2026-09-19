@@ -1,0 +1,17 @@
+.courses-page {
+  padding-bottom: 0.5rem;
+}
+
+.courses-page .course-grid-wrap {
+  margin-top: 0.15rem;
+}
+
+@media (min-width: 900px) {
+  .courses-page {
+    padding-bottom: 3rem;
+  }
+
+  .courses-page .course-grid-wrap {
+    margin-top: 0.5rem;
+  }
+}

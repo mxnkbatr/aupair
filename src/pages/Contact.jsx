@@ -1,0 +1,110 @@
+import { useState } from 'react'
+import { api } from '../api'
+import { social } from '../data'
+import './Contact.css'
+
+export default function Contact() {
+  const [form, setForm] = useState({
+    name: '',
+    phone: '',
+    interest: 'course',
+    message: '',
+  })
+  const [loading, setLoading] = useState(false)
+  const [status, setStatus] = useState(null)
+
+  async function onSubmit(e) {
+    e.preventDefault()
+    setLoading(true)
+    setStatus(null)
+    try {
+      const res = await api.contact(form)
+      setStatus({ ok: true, text: res.message || 'Хүсэлт хүлээн авлаа' })
+      setForm({ name: '', phone: '', interest: 'course', message: '' })
+    } catch (err) {
+      setStatus({ ok: false, text: err.message })
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  return (
+    <div className="container page-hero fade-up">
+      <span className="eyebrow">Холбоо барих</span>
+      <h1>Элсэлт & зөвлөгөө</h1>
+      <p>
+        Сургалт, зуучлал, shop — формыг бөглөөрэй. Бид удахгүй холбогдоно.
+      </p>
+
+      <div className="contact-layout">
+        <form className="contact-form" onSubmit={onSubmit}>
+          <label className="field">
+            <span>Нэр *</span>
+            <input
+              required
+              value={form.name}
+              onChange={(e) => setForm({ ...form, name: e.target.value })}
+              placeholder="Таны нэр"
+            />
+          </label>
+          <label className="field">
+            <span>Утас *</span>
+            <input
+              required
+              value={form.phone}
+              onChange={(e) => setForm({ ...form, phone: e.target.value })}
+              placeholder="+976 ..."
+            />
+          </label>
+          <label className="field">
+            <span>Сонирхол</span>
+            <select
+              value={form.interest}
+              onChange={(e) => setForm({ ...form, interest: e.target.value })}
+            >
+              <option value="course">Сургалт</option>
+              <option value="uni">Их сургуулийн зуучлал</option>
+              <option value="shop">Shop захиалга</option>
+              <option value="other">Бусад</option>
+            </select>
+          </label>
+          <label className="field">
+            <span>Зурвас</span>
+            <textarea
+              rows={4}
+              value={form.message}
+              onChange={(e) => setForm({ ...form, message: e.target.value })}
+              placeholder="Түвшин, зорилгоо бичнэ үү..."
+            />
+          </label>
+
+          {status && (
+            <div className={`alert ${status.ok ? 'alert-ok' : 'alert-err'}`}>
+              {status.text}
+            </div>
+          )}
+
+          <button type="submit" className="btn btn-primary" disabled={loading}>
+            {loading ? 'Илгээж байна...' : 'Илгээх'}
+          </button>
+        </form>
+
+        <aside className="contact-aside">
+          <div>
+            <h2>Шууд холбоо</h2>
+            <a href={social.facebook} target="_blank" rel="noreferrer">
+              facebook.com/HanzAcademy
+            </a>
+            <a href={`mailto:${social.email}`}>{social.email}</a>
+            <p>{social.phone}</p>
+            <p>{social.address}</p>
+          </div>
+          <div className="contact-aside__badge">
+            <img src="/logo.png" alt="ХАНЗ" />
+            <p>Хятад хэлний академи · Gen Z platform</p>
+          </div>
+        </aside>
+      </div>
+    </div>
+  )
+}

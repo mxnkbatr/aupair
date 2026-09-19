@@ -1,0 +1,126 @@
+.page-header {
+  padding: 0.7rem 0 0.1rem;
+}
+
+.page-header__row {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.page-header .eyebrow {
+  display: none;
+}
+
+.page-header h1 {
+  margin-top: 0;
+  font-size: 1.35rem;
+  letter-spacing: -0.04em;
+  color: var(--ink);
+  max-width: 16ch;
+}
+
+.page-header p {
+  margin-top: 0.35rem;
+  max-width: 36ch;
+  color: var(--muted);
+  font-size: 0.86rem;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.page-header__right {
+  flex: 0 0 auto;
+  padding-top: 0.1rem;
+}
+
+.page-filters {
+  display: flex;
+  gap: 0.45rem;
+  overflow-x: auto;
+  padding: 0.55rem 0 0.65rem;
+  margin-bottom: 0.45rem;
+  scrollbar-width: none;
+  position: sticky;
+  top: var(--nav-h);
+  z-index: 12;
+  background: linear-gradient(180deg, #fff 72%, rgba(255, 255, 255, 0));
+}
+
+.page-filters::-webkit-scrollbar {
+  display: none;
+}
+
+.page-filters__btn {
+  flex: 0 0 auto;
+  border: 1px solid rgba(17, 17, 20, 0.1);
+  background: #fff;
+  color: var(--ink-2);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.82rem;
+  padding: 0.55rem 0.95rem;
+  border-radius: 999px;
+  cursor: pointer;
+  box-shadow: none;
+  transition:
+    background 0.18s ease,
+    color 0.18s ease,
+    border-color 0.18s ease;
+}
+
+.page-filters__btn:hover {
+  border-color: rgba(227, 30, 36, 0.25);
+  color: var(--red);
+}
+
+.page-filters__btn:active {
+  transform: scale(0.98);
+}
+
+.page-filters__btn.is-active {
+  background: var(--red-grad);
+  border-color: transparent;
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(200, 30, 36, 0.16);
+}
+
+@media (min-width: 900px) {
+  .page-header {
+    padding: 1.75rem 0 0.35rem;
+  }
+
+  .page-header h1 {
+    font-size: 2rem;
+    max-width: none;
+    letter-spacing: -0.045em;
+  }
+
+  .page-header p {
+    margin-top: 0.5rem;
+    font-size: 1rem;
+    max-width: 48ch;
+  }
+
+  .page-filters {
+    position: static;
+    gap: 0.5rem;
+    padding: 1rem 0 1.15rem;
+    margin-bottom: 0.75rem;
+    background: transparent;
+    overflow: visible;
+    flex-wrap: wrap;
+  }
+
+  .page-filters__btn {
+    padding: 0.55rem 1.1rem;
+    font-size: 0.88rem;
+    border-radius: 10px;
+  }
+
+  .page-filters__btn.is-active {
+    background: var(--red);
+    box-shadow: none;
+  }
+}

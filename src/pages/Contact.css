@@ -1,0 +1,92 @@
+.contact-layout {
+  margin-top: 1.8rem;
+  display: grid;
+  gap: 1rem;
+}
+
+.contact-form {
+  display: grid;
+  gap: 0.9rem;
+  padding: 1.25rem;
+  border-radius: var(--radius);
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid var(--line);
+}
+
+.contact-form label {
+  display: grid;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+.contact-form input,
+.contact-form select,
+.contact-form textarea {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 0.85rem 0.95rem;
+  background: #fff;
+  color: var(--ink);
+  outline: none;
+}
+
+.contact-form input:focus,
+.contact-form select:focus,
+.contact-form textarea:focus {
+  border-color: rgba(227, 30, 36, 0.45);
+  box-shadow: 0 0 0 4px rgba(227, 30, 36, 0.1);
+}
+
+.contact-aside {
+  display: grid;
+  gap: 1rem;
+}
+
+.contact-aside > div {
+  padding: 1.25rem;
+  border-radius: var(--radius);
+  background: var(--ink);
+  color: #fff;
+}
+
+.contact-aside h2 {
+  margin-bottom: 0.8rem;
+  font-size: 1.15rem;
+}
+
+.contact-aside a,
+.contact-aside p {
+  display: block;
+  color: rgba(255, 255, 255, 0.78);
+  margin-top: 0.45rem;
+  font-weight: 600;
+}
+
+.contact-aside a:hover {
+  color: #fff;
+}
+
+.contact-aside__badge {
+  display: grid !important;
+  place-items: center;
+  text-align: center;
+  gap: 0.8rem;
+  background: linear-gradient(145deg, #2a0a0c, #e31e24) !important;
+}
+
+.contact-aside__badge img {
+  width: 84px;
+  height: 84px;
+  border-radius: 18px;
+  object-fit: cover;
+}
+
+@media (min-width: 900px) {
+  .contact-layout {
+    grid-template-columns: 1.3fr 0.9fr;
+    align-items: start;
+  }
+}
