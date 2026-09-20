@@ -33,7 +33,7 @@ export default function Contact() {
       <span className="eyebrow">Холбоо барих</span>
       <h1>Элсэлт & зөвлөгөө</h1>
       <p>
-        Сургалт, зуучлал, shop — формыг бөглөөрэй. Бид удахгүй холбогдоно.
+        Au Pair элсэлт, хэлний бэлтгэл — формыг бөглөөрэй. Бид удахгүй холбогдоно.
       </p>
 
       <div className="contact-layout">
@@ -62,9 +62,9 @@ export default function Contact() {
               value={form.interest}
               onChange={(e) => setForm({ ...form, interest: e.target.value })}
             >
-              <option value="course">Сургалт</option>
-              <option value="uni">Их сургуулийн зуучлал</option>
-              <option value="shop">Shop захиалга</option>
+              <option value="country">Au Pair улс / элсэлт</option>
+              <option value="course">Хэлний анги</option>
+              <option value="france">Франц 2027</option>
               <option value="other">Бусад</option>
             </select>
           </label>
@@ -93,15 +93,15 @@ export default function Contact() {
           <div>
             <h2>Шууд холбоо</h2>
             <a href={social.facebook} target="_blank" rel="noreferrer">
-              facebook.com/HanzAcademy
+              facebook.com/MongolianAuPair
             </a>
             <a href={`mailto:${social.email}`}>{social.email}</a>
             <p>{social.phone}</p>
             <p>{social.address}</p>
           </div>
           <div className="contact-aside__badge">
-            <img src="/logo.png" alt="ХАНЗ" />
-            <p>Хятад хэлний академи · Gen Z platform</p>
+            <img src="/logo.svg" alt="Mongolian Au Pair" />
+            <p>Европ руу соёл солилцоо · 2005 оноос</p>
           </div>
         </aside>
       </div>

@@ -7,8 +7,8 @@ export default function Courses() {
     <div className="courses-page screen fade-up">
       <div className="container">
         <PageHeader
-          title="Сургалт"
-          text="HSK 1–5 · эрчимжүүлсэн · ганцаарчилсан — Union Building 1204"
+          title="Хөтөлбөр"
+          text="Au Pair элсэлт · франц, герман хэлний бэлтгэл — New Residence 726-1"
         />
         <CourseGrid showFilters />
       </div>

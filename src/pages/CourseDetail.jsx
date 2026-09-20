@@ -26,7 +26,7 @@ export default function CourseDetail() {
         const fallback = coursesFallback.find((c) => c.id === id)
         if (alive) {
           if (fallback) setCourse(fallback)
-          else setError('Сургалт олдсонгүй')
+          else setError('Хөтөлбөр олдсонгүй')
         }
       })
     return () => {
@@ -69,7 +69,7 @@ export default function CourseDetail() {
         <section className="cd-hero">
           <div className="cd-hero__banner">
             <div className="cd-hero__badge-row">
-              <span className="cd-hero__hsk">{course.hsk || '漢'}</span>
+              <span className="cd-hero__hsk">{course.hsk || 'AP'}</span>
               {course.badge ? (
                 <span className="cd-hero__status">{course.badge}</span>
               ) : null}
@@ -135,19 +135,19 @@ export default function CourseDetail() {
         </section>
 
         <section className="cd-block cd-block--soft">
-          <h2>Яагаад ХАНЗ?</h2>
+          <h2>Яагаад Mongolian Au Pair?</h2>
           <div className="cd-why">
             <div>
-              <strong>Туршлагатай багш</strong>
-              <span>HSK бэлтгэлийн практик арга</span>
+              <strong>2005 оноос</strong>
+              <span>3,000+ залуусыг Европ руу зуучилсан</span>
             </div>
             <div>
-              <strong>Тохилог орчин</strong>
-              <span>Union Building 1204 · СБД</span>
+              <strong>Албан ёсны хөтөлбөр</strong>
+              <span>1969 оны Олон Улсын Конвенц</span>
             </div>
             <div>
-              <strong>Уян хуваарь</strong>
-              <span>Өдөр / оройн анги</span>
+              <strong>Хэлний бэлтгэл</strong>
+              <span>Франц, герман хэлний ангитай</span>
             </div>
           </div>
         </section>

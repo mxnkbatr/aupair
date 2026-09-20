@@ -8,24 +8,23 @@ export default function Footer() {
       <div className="container site-footer__grid">
         <div>
           <div className="site-footer__brand">
-            <img src="/logo.png" alt="ХАНЗ" />
+            <img src="/logo.svg" alt="Mongolian Au Pair" />
             <div>
-              <strong>Ханз Академи</strong>
-              <p>Хятад хэлний академи · Улаанбаатар</p>
+              <strong>Mongolian Au Pair</strong>
+              <p>Европ руу соёл солилцоо · 2005 оноос</p>
             </div>
           </div>
           <p className="site-footer__lead">
-            HSK 1–5, эрчимжүүлсэн болон ганцаарчилсан сургалт. Union Building
-            1204, СБД.
+            1969 оны Олон Улсын Конвенцийн дагуу хэрэгжих албан ёсны Au Pair хөтөлбөр.
+            {social.address}
           </p>
         </div>
 
         <div>
           <h4>Цэс</h4>
           <div className="site-footer__links">
-            <Link to="/courses">Сургалт</Link>
-            <Link to="/universities">Их сургууль</Link>
-            <Link to="/videos">Бичлэг</Link>
+            <Link to="/courses">Хөтөлбөр</Link>
+            <Link to="/universities">Улс орнууд</Link>
             <Link to="/shop">Дэлгүүр</Link>
             <Link to="/profile">Холбоо барих</Link>
           </div>
@@ -35,18 +34,20 @@ export default function Footer() {
           <h4>Холбоо</h4>
           <div className="site-footer__links">
             <a href={social.facebook} target="_blank" rel="noreferrer">
-              Facebook / HanzAcademy
+              Facebook / MongolianAuPair
+            </a>
+            <a href={social.instagram} target="_blank" rel="noreferrer">
+              Instagram
             </a>
             <a href={`tel:${social.phoneTel}`}>{social.phone}</a>
-            <a href={`tel:${social.phoneAltTel}`}>{social.phoneAlt}</a>
             <a href={`mailto:${social.email}`}>{social.email}</a>
             <span>{social.address}</span>
           </div>
         </div>
       </div>
       <div className="container site-footer__bottom">
-        <span>© {new Date().getFullYear()} Ханз Академи</span>
-        <span>{social.followers} дагагч · facebook.com/HanzAcademy</span>
+        <span>© {new Date().getFullYear()} Mongolian Au Pair</span>
+        <span>facebook.com/MongolianAuPair</span>
       </div>
     </footer>
   )

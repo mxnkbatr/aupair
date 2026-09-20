@@ -6,17 +6,17 @@ import PageHeader from '../components/PageHeader'
 import './Profile.css'
 
 const QUICK = [
-  { to: '/courses', label: 'Сургалт', desc: 'HSK 1–5 анги' },
-  { to: '/universities', label: 'Зуучлал', desc: 'Их сургууль' },
-  { to: '/videos', label: 'Бичлэг', desc: 'Хичээлийн видео' },
-  { href: social.facebook, label: 'Facebook', desc: `${social.followers} дагагч` },
+  { to: '/universities', label: 'Улс орнууд', desc: '7 улс · элсэлт' },
+  { to: '/courses', label: 'Хөтөлбөр', desc: 'Хэлний бэлтгэл' },
+  { to: '/shop', label: 'Дэлгүүр', desc: 'Ном · материал' },
+  { href: social.facebook, label: 'Facebook', desc: 'MongolianAuPair' },
 ]
 
 export default function Profile() {
   const [form, setForm] = useState({
     name: '',
     phone: '',
-    interest: 'course',
+    interest: 'country',
     message: '',
   })
   const [loading, setLoading] = useState(false)
@@ -29,7 +29,7 @@ export default function Profile() {
     try {
       const res = await api.contact(form)
       setStatus({ ok: true, text: res.message || 'Хүсэлт хүлээн авлаа. Удахгүй холбогдоно.' })
-      setForm({ name: '', phone: '', interest: 'course', message: '' })
+      setForm({ name: '', phone: '', interest: 'country', message: '' })
     } catch (err) {
       setStatus({ ok: false, text: err.message })
     } finally {
@@ -41,16 +41,16 @@ export default function Profile() {
     <div className="profile-page">
       <div className="container">
         <PageHeader
-          title="Профайл"
-          text="Элсэлт, зөвлөгөө — шууд холбогдоорой"
+          title="Холбоо барих"
+          text="Au Pair элсэлт, зөвлөгөө — шууд холбогдоорой"
         />
 
         <section className="profile-card fade-up">
-          <img src="/logo.png" alt="" className="profile-card__avatar" />
+          <img src="/logo.svg" alt="" className="profile-card__avatar" />
           <div>
-            <h2>Ханз Академи</h2>
+            <h2>Mongolian Au Pair</h2>
             <p>
-              {social.city} · {social.followers} дагагч · {social.recommend} зөвлөдөг
+              {social.city} · {social.since} оноос · {social.placed} залуус
             </p>
           </div>
         </section>
@@ -105,9 +105,9 @@ export default function Profile() {
                   value={form.interest}
                   onChange={(e) => setForm({ ...form, interest: e.target.value })}
                 >
-                  <option value="course">Сургалт / Элсэлт</option>
-                  <option value="private">Ганцаарчилсан</option>
-                  <option value="uni">Зуучлал</option>
+                  <option value="country">Au Pair улс / элсэлт</option>
+                  <option value="course">Хэлний анги</option>
+                  <option value="france">Франц 2027</option>
                   <option value="other">Бусад</option>
                 </select>
               </label>
@@ -117,7 +117,7 @@ export default function Profile() {
                   rows={3}
                   value={form.message}
                   onChange={(e) => setForm({ ...form, message: e.target.value })}
-                  placeholder="Ямар анги сонирхож байна вэ?"
+                  placeholder="Аль улс руу явахыг сонирхож байна вэ?"
                 />
               </label>
 
@@ -139,8 +139,8 @@ export default function Profile() {
             <aside className="profile-aside">
               <h4>Шууд холбоо</h4>
               <a href={`tel:${social.phoneTel}`}>{social.phone}</a>
-              <a href={`tel:${social.phoneAltTel}`}>{social.phoneAlt}</a>
               <a href={`mailto:${social.email}`}>{social.email}</a>
+              <a href={`mailto:${social.emailAlt}`}>{social.emailAlt}</a>
               <p>{social.address}</p>
               <a
                 className="btn btn-ghost btn-block"

@@ -14,12 +14,12 @@ import ProductDetail from './pages/ProductDetail'
 import Profile from './pages/Profile'
 
 const TITLES = {
-  '/': 'ХАНЗ',
-  '/courses': 'Сургалт',
-  '/universities': 'Их сургууль',
+  '/': 'Au Pair',
+  '/courses': 'Хөтөлбөр',
+  '/universities': 'Улс орнууд',
   '/videos': 'Бичлэг',
   '/shop': 'Дэлгүүр',
-  '/profile': 'Профайл',
+  '/profile': 'Холбоо',
 }
 
 function ScrollToTop() {
@@ -35,12 +35,12 @@ function AppFrame() {
   const title =
     TITLES[pathname] ||
     (pathname.startsWith('/courses/')
-      ? 'Сургалт'
+      ? 'Хөтөлбөр'
       : pathname.startsWith('/shop/')
         ? 'Дэлгүүр'
         : pathname.startsWith('/universities/')
-          ? 'Их сургууль'
-          : 'ХАНЗ')
+          ? 'Улс орнууд'
+          : 'Au Pair')
   const isHome = pathname === '/'
 
   return (

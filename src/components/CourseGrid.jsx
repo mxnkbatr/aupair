@@ -6,25 +6,23 @@ import './CourseGrid.css'
 
 const FILTERS = [
   { id: 'all', label: 'Бүгд' },
-  { id: 'hsk', label: 'HSK' },
-  { id: 'intensive', label: 'Эрчимжүүлсэн' },
-  { id: 'regular', label: 'Энгийн' },
-  { id: 'private', label: 'Ганцаарчилсан' },
+  { id: 'open', label: 'Элсэлт нээлттэй' },
+  { id: 'french', label: 'Франц' },
+  { id: 'german', label: 'Герман' },
 ]
 
 function matchesFilter(course, filter) {
+  if (course.type === 'country') return false
   if (filter === 'all') return true
-  if (filter === 'hsk') {
-    return String(course.hsk || '').includes('HSK') || course.id.startsWith('hsk')
+  if (filter === 'open') {
+    return Boolean(course.badge) || (typeof course.seatsLeft === 'number' && course.seatsLeft > 0)
   }
-  if (filter === 'intensive') {
-    return course.id.startsWith('intensive') || course.level === 'Эрчимжүүлсэн'
+  if (filter === 'french') {
+    return String(course.hsk || course.title || '').toLowerCase().includes('fr') ||
+      String(course.title || '').includes('Франц')
   }
-  if (filter === 'regular') {
-    return course.id === 'regular1' || course.level === 'Энгийн'
-  }
-  if (filter === 'private') {
-    return course.id === 'private' || course.level === 'Ганцаарчилсан' || course.level === '1:1'
+  if (filter === 'german') {
+    return String(course.hsk || '').includes('DE') || String(course.title || '').includes('Герман')
   }
   return true
 }
@@ -67,8 +65,8 @@ export default function CourseGrid({
       {showAllLink && (
         <div className="section-head">
           <div>
-            <span className="eyebrow">Сургалт</span>
-            <h2>Түвшиндээ тохирсон анги</h2>
+            <span className="eyebrow">Хөтөлбөр</span>
+            <h2>Элсэлт нээлттэй ангиуд</h2>
           </div>
           <Link to="/courses" className="link-more">
             Бүгдийг харах →
@@ -131,7 +129,7 @@ function CourseCard({ course }) {
   return (
     <article className="course-card">
       <div className="course-card__head">
-        <span className="course-card__hsk">{course.hsk || '漢'}</span>
+        <span className="course-card__hsk">{course.hsk || 'AP'}</span>
         {accent ? (
           <span className="course-card__badge">{course.badge}</span>
         ) : course.level ? (

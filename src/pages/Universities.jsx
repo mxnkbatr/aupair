@@ -1,32 +1,33 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { universities, social } from '../data'
+import { countries, social } from '../data'
 import './Universities.css'
 
 const FILTERS = [
   { id: 'all', label: 'Бүгд' },
-  { id: 'Бээжин', label: 'Бээжин' },
-  { id: 'Шанхай', label: 'Шанхай' },
-  { id: 'Ханжоу', label: 'Ханжоу' },
-  { id: 'Нанжин', label: 'Нанжин' },
-  { id: 'Ухань', label: 'Ухань' },
-  { id: 'Гуанжоу', label: 'Гуанжоу' },
+  { id: 'open', label: 'Элсэлт нээлттэй' },
+  { id: 'german', label: 'Герман хэл' },
+  { id: 'french', label: 'Франц хэл' },
+  { id: 'north', label: 'Хойд Европ' },
 ]
+
+function matchesFilter(country, filter) {
+  if (filter === 'all') return true
+  if (filter === 'open') return country.open
+  return country.langGroup === filter
+}
 
 export default function Universities() {
   const [filter, setFilter] = useState('all')
   const [slide, setSlide] = useState(0)
 
   const featured = useMemo(
-    () => universities.filter((u) => u.featured),
+    () => countries.filter((u) => u.featured),
     [],
   )
 
   const list = useMemo(
-    () =>
-      filter === 'all'
-        ? universities
-        : universities.filter((u) => u.city === filter),
+    () => countries.filter((u) => matchesFilter(u, filter)),
     [filter],
   )
 
@@ -44,7 +45,7 @@ export default function Universities() {
     <div className="uni-page fade-up">
       <div className="container">
         {current ? (
-          <section className="uni-banner" aria-label="Топ их сургуулиуд">
+          <section className="uni-banner" aria-label="Au Pair улс орнууд">
             <div className="uni-banner__frame">
               {featured.map((uni, i) => (
                 <Link
@@ -68,12 +69,12 @@ export default function Universities() {
                   />
                   <div className="uni-banner__shade" aria-hidden />
                   <div className="uni-banner__body">
-                    <span className="uni-banner__kicker">Топ их сургууль</span>
+                    <span className="uni-banner__kicker">Au Pair · элсэлт авч байна</span>
                     <strong>{uni.nameMn}</strong>
                     <p>
-                      {uni.city} · {uni.focus}
+                      {uni.city} · {uni.language}
                     </p>
-                    <em>Дэлгэрэнгүй үзэх →</em>
+                    <em>Элсэх →</em>
                   </div>
                 </Link>
               ))}
@@ -109,12 +110,21 @@ export default function Universities() {
           ))}
         </div>
 
-        <p className="uni-count">{list.length} их сургууль · зуучлал нээлттэй</p>
+        <p className="uni-count">
+          {list.length} улс · Au Pair элсэлт {list.some((c) => c.open) ? 'нээлттэй' : ''}
+        </p>
 
         <div className="uni-grid">
-          {list.map((uni) => (
-            <article key={uni.id} className="uni-card">
-              <Link to={`/universities/${uni.id}`} className="uni-card__media">
+          {list.map((uni) => {
+            const seats = uni.seatsLeft
+            const total = uni.seats || 10
+            const filled =
+              typeof seats === 'number'
+                ? Math.min(100, Math.round(((total - seats) / total) * 100))
+                : 0
+            return (
+              <article key={uni.id} className="uni-card">
+                <Link to={`/universities/${uni.id}`} className="uni-card__media">
                   <img
                     src={uni.image}
                     alt={uni.nameMn}
@@ -123,65 +133,72 @@ export default function Universities() {
                       e.currentTarget.src = '/cover.jpg'
                     }}
                   />
-                <div className="uni-card__overlay" aria-hidden />
-                <div className="uni-card__media-top">
-                  <span className="uni-card__mark">{uni.short}</span>
-                  {uni.badge ? <span className="uni-card__badge">{uni.badge}</span> : null}
-                </div>
-                <div className="uni-card__media-bottom">
-                  <span>{uni.city}</span>
-                  <strong>{uni.hsk}</strong>
-                </div>
-              </Link>
-
-              <div className="uni-card__body">
-                <h2>
-                  <Link to={`/universities/${uni.id}`}>{uni.nameMn}</Link>
-                </h2>
-                <p className="uni-card__en">{uni.name}</p>
-
-                <ul className="uni-card__facts">
-                  <li>
-                    <PinIcon />
-                    <span>{uni.city}</span>
-                  </li>
-                  <li>
-                    <BookIcon />
-                    <span>{uni.focus}</span>
-                  </li>
-                  <li>
-                    <CalIcon />
-                    <span>{uni.intake}</span>
-                  </li>
-                  <li>
-                    <LevelIcon />
-                    <span>{uni.duration}</span>
-                  </li>
-                </ul>
-
-                <div className="uni-card__foot">
-                  <div className="uni-card__price">
-                    <small>Төлбөр</small>
-                    <strong>{uni.tuition}</strong>
+                  <div className="uni-card__overlay" aria-hidden />
+                  <div className="uni-card__media-top">
+                    <span className="uni-card__mark">{uni.short}</span>
+                    {uni.badge ? <span className="uni-card__badge">{uni.badge}</span> : null}
                   </div>
-                  <Link to={`/universities/${uni.id}`} className="uni-card__cta">
-                    Дэлгэрэнгүй
-                  </Link>
+                  <div className="uni-card__media-bottom">
+                    <span>{uni.city}</span>
+                    <strong>{uni.language}</strong>
+                  </div>
+                </Link>
+
+                <div className="uni-card__body">
+                  <h2>
+                    <Link to={`/universities/${uni.id}`}>{uni.nameMn}</Link>
+                  </h2>
+                  <p className="uni-card__en">{uni.name} Au Pair</p>
+
+                  <ul className="uni-card__facts">
+                    <li>
+                      <PinIcon />
+                      <span>{uni.city}</span>
+                    </li>
+                    <li>
+                      <BookIcon />
+                      <span>{uni.language}</span>
+                    </li>
+                    <li>
+                      <CalIcon />
+                      <span>{uni.intake}</span>
+                    </li>
+                    <li>
+                      <LevelIcon />
+                      <span>{uni.duration}</span>
+                    </li>
+                  </ul>
+
+                  {typeof seats === 'number' ? (
+                    <p className="uni-card__en" style={{ marginTop: '0.35rem' }}>
+                      {seats} суудал үлдсэн · {filled}% дүүрсэн
+                    </p>
+                  ) : null}
+
+                  <div className="uni-card__foot">
+                    <div className="uni-card__price">
+                      <small>Нөхцөл</small>
+                      <strong>{uni.tuition}</strong>
+                    </div>
+                    <Link to={`/universities/${uni.id}`} className="uni-card__cta">
+                      Элсэх
+                    </Link>
+                  </div>
                 </div>
-              </div>
-            </article>
-          ))}
+              </article>
+            )
+          })}
         </div>
 
         {list.length === 0 ? (
-          <p className="uni-empty">Энэ хотод их сургууль олдсонгүй.</p>
+          <p className="uni-empty">Энэ шүүлтээр улс олдсонгүй.</p>
         ) : null}
 
         <div className="uni-cta">
           <div>
-            <h3>Зуучлуулахад бэлэн үү?</h3>
+            <h3>Ямар улс руу явахаа мэдэхгүй байна уу?</h3>
             <p>
-              Түвшин, зорилгоо хэлээд тохирох их сургууль, бичиг баримтын процессыг хамт хийнэ.
+              Нас, хэл, зорилгоо хэлээд тохирох Au Pair улс, гэр бүл, визийн процессыг хамт хийнэ.
             </p>
           </div>
           <div className="uni-cta__actions">

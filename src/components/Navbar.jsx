@@ -6,11 +6,11 @@ export default function Navbar() {
   return (
     <header className="topnav">
       <div className="container topnav__inner">
-        <NavLink to="/" className="brand" aria-label="Ханз Академи">
-          <img src="/logo.png" alt="" className="brand__mark" />
+        <NavLink to="/" className="brand" aria-label="Mongolian Au Pair">
+          <img src="/logo.svg" alt="" className="brand__mark" />
           <span className="brand__text">
-            <strong>ХАНЗ</strong>
-            <small>Хятад хэлний академи</small>
+            <strong>Au Pair</strong>
+            <small>Mongolian Au Pair</small>
           </span>
         </NavLink>
 

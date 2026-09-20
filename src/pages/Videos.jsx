@@ -5,11 +5,9 @@ import './Videos.css'
 
 const FILTERS = [
   { id: 'all', label: 'Бүгд' },
-  { id: 'Reel', label: 'Reel' },
-  { id: 'HSK', label: 'HSK' },
-  { id: 'Яриа', label: 'Яриа' },
-  { id: 'Академи', label: 'Академи' },
   { id: 'Элсэлт', label: 'Элсэлт' },
+  { id: 'Герман', label: 'Герман' },
+  { id: 'Reel', label: 'Reel' },
   { id: 'Мэдээ', label: 'Мэдээ' },
 ]
 
@@ -26,11 +24,11 @@ export default function Videos() {
       <div className="container">
         <PageHeader
           title="Бичлэг"
-          text="Ханз Академийн Facebook Reels"
+          text="Mongolian AuPair — Facebook & Instagram"
           right={
             <a
               className="btn btn-ghost videos-all"
-              href={`${social.facebook}/reels_tab`}
+              href={social.facebook}
               target="_blank"
               rel="noreferrer"
             >
@@ -62,7 +60,7 @@ export default function Videos() {
               <a
                 key={video.id}
                 className="reel-card"
-                href={`https://www.facebook.com/reel/${video.reelId}/`}
+                href={video.href || social.facebook}
                 target="_blank"
                 rel="noreferrer"
               >
@@ -78,7 +76,7 @@ export default function Videos() {
                 <div className="reel-card__body">
                   <span className="tag">{video.category}</span>
                   <h2>{video.title}</h2>
-                  <span className="reel-card__meta">Facebook · HanzAcademy</span>
+                  <span className="reel-card__meta">Facebook · MongolianAuPair</span>
                 </div>
               </a>
             ))}
@@ -91,7 +89,7 @@ export default function Videos() {
           target="_blank"
           rel="noreferrer"
         >
-          facebook.com/HanzAcademy
+          facebook.com/MongolianAuPair
         </a>
       </div>
     </div>

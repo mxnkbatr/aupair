@@ -3,10 +3,10 @@ import './BottomNav.css'
 
 const items = [
   { to: '/', label: 'Нүүр', icon: HomeIcon },
-  { to: '/courses', label: 'Сургалт', icon: BookIcon },
-  { to: '/universities', label: 'Сургууль', icon: UniIcon },
+  { to: '/courses', label: 'Хөтөлбөр', icon: BookIcon },
+  { to: '/universities', label: 'Улс', icon: UniIcon },
   { to: '/shop', label: 'Дэлгүүр', icon: BagIcon },
-  { to: '/profile', label: 'Профайл', icon: UserIcon },
+  { to: '/profile', label: 'Холбоо', icon: UserIcon },
 ]
 
 export default function BottomNav() {

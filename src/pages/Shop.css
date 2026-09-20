@@ -335,7 +335,7 @@
 }
 
 .art-test i:last-child::after {
-  content: 'HSK';
+  content: 'AP';
   position: absolute;
   left: 14%;
   top: 18%;

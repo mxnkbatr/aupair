@@ -1,14 +1,14 @@
 import { Link } from 'react-router-dom'
 import Hero from '../components/Hero'
 import PortalFeed from '../components/PortalFeed'
-import { universities, videos, coursesFallback, social } from '../data'
+import { countries, products, coursesFallback, social } from '../data'
 import './Home.css'
 
 const SHORTCUTS = [
-  { to: '/courses', label: 'Сургалт', hint: 'HSK 1–5' },
-  { to: '/videos', label: 'Бичлэг', hint: 'Хичээл' },
-  { to: '/universities', label: 'Зуучлал', hint: 'Их сургууль' },
-  { to: '/profile', label: 'Холбоо', hint: '9999-1573' },
+  { to: '/courses', label: 'Хөтөлбөр', hint: 'Хэл + элсэлт' },
+  { to: '/universities', label: 'Улс орнууд', hint: '7 улс' },
+  { to: '/shop', label: 'Дэлгүүр', hint: 'Ном · материал' },
+  { to: '/profile', label: 'Холбоо', hint: '7711-6906' },
 ]
 
 export default function Home() {
@@ -35,8 +35,8 @@ export default function Home() {
         <div className="container">
           <div className="block-head">
             <div>
-              <span className="eyebrow">Сургалт</span>
-              <h2>Одоо нээлттэй ангиуд</h2>
+              <span className="eyebrow">Хөтөлбөр</span>
+              <h2>Одоо нээлттэй элсэлт</h2>
             </div>
             <Link to="/courses" className="link-more">
               Бүгдийг үзэх →
@@ -68,31 +68,28 @@ export default function Home() {
         <div className="container">
           <div className="block-head">
             <div>
-              <span className="eyebrow">Бичлэг</span>
-              <h2>Хичээлийн видео</h2>
+              <span className="eyebrow">Дэлгүүр</span>
+              <h2>Ном · материал</h2>
             </div>
-            <Link to="/videos" className="link-more">
+            <Link to="/shop" className="link-more">
               Бүгдийг үзэх →
             </Link>
           </div>
 
-          <div className="home-videos">
-            {videos.slice(0, 3).map((video) => (
-              <Link key={video.id} to="/videos" className="home-video">
-                <div className="home-video__thumb">
-                  <img src={video.thumb} alt="" loading="lazy" />
-                  <span className="home-video__shade" aria-hidden />
-                  <span className="home-video__play" aria-hidden>
-                    <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
-                      <path d="M9 7.2v9.6l8.2-4.8L9 7.2Z" />
-                    </svg>
-                  </span>
-                  <span className="home-video__views">{video.views}</span>
+          <div className="home-courses">
+            {products.slice(0, 3).map((item) => (
+              <Link
+                key={item.id}
+                to={`/shop/${item.id}`}
+                className="home-course"
+              >
+                <div className="home-course__art" aria-hidden>
+                  <span>{item.tag}</span>
                 </div>
-                <div className="home-video__meta">
-                  <span className="home-video__cat">{video.category}</span>
-                  <h3>{video.title}</h3>
-                  <small>Facebook · HanzAcademy</small>
+                <div className="home-course__body">
+                  <span className="tag">{item.blurb}</span>
+                  <h3>{item.name}</h3>
+                  <strong>{item.price}</strong>
                 </div>
               </Link>
             ))}
@@ -105,7 +102,7 @@ export default function Home() {
           <div className="block-head">
             <div>
               <span className="eyebrow">Зуучлал</span>
-              <h2>Их сургуулиуд</h2>
+              <h2>Au Pair улс орнууд</h2>
             </div>
             <Link to="/universities" className="link-more">
               Жагсаалт →
@@ -113,7 +110,7 @@ export default function Home() {
           </div>
 
           <div className="home-unis">
-            {universities.slice(0, 4).map((uni) => (
+            {countries.slice(0, 4).map((uni) => (
               <Link key={uni.id} to={`/universities/${uni.id}`} className="home-uni">
                 <div className="home-uni__media">
                   <img
@@ -140,7 +137,7 @@ export default function Home() {
           <div className="home-visit__card">
             <div>
               <span className="eyebrow">Ирж үзээрэй</span>
-              <h2>Union Building · 1204</h2>
+              <h2>New Residence · 726-1</h2>
               <p>{social.address}</p>
               <div className="home-visit__actions">
                 <a href={`tel:${social.phoneTel}`} className="btn btn-primary">
@@ -157,9 +154,9 @@ export default function Home() {
               </div>
             </div>
             <div className="home-visit__meta">
-              <strong>{social.phoneAlt}</strong>
-              <span>Нэмэлт утас</span>
-              <a href={`mailto:${social.email}`}>{social.email}</a>
+              <strong>{social.email}</strong>
+              <span>Имэйл</span>
+              <a href={`mailto:${social.emailAlt}`}>{social.emailAlt}</a>
             </div>
           </div>
         </div>
@@ -175,9 +172,9 @@ export default function Home() {
           >
             <div>
               <span className="eyebrow" style={{ color: 'rgba(255,255,255,0.8)' }}>
-                Албан ёсны хуудас · {social.followers} дагагч
+                Албан ёсны хуудас · {social.since} оноос
               </span>
-              <strong>facebook.com/HanzAcademy</strong>
+              <strong>facebook.com/MongolianAuPair</strong>
             </div>
             <span>Нээх →</span>
           </a>

@@ -8,11 +8,8 @@ import './Shop.css'
 
 const FILTERS = [
   { id: 'all', label: 'Бүгд' },
-  { id: 'Ном', label: 'Ном' },
-  { id: 'Карт', label: 'Карт' },
-  { id: 'Шалгалт', label: 'Шалгалт' },
-  { id: 'Merch', label: 'Мерч' },
-  { id: 'Дэвтэр', label: 'Дэвтэр' },
+  { id: 'Хэл', label: 'Хэл' },
+  { id: 'Виза', label: 'Виза' },
 ]
 
 const VISUAL = {
@@ -251,7 +248,7 @@ function ProductArt({ type }) {
     <div className="art art-book">
       <i />
       <i />
-      <b>HSK</b>
+      <b>AP</b>
     </div>
   )
 }

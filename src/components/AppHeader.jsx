@@ -18,16 +18,16 @@ function buildSearchIndex() {
       title: c.title,
       meta: c.hsk || c.level,
       to: `/courses/${c.id}`,
-      kind: 'Сургалт',
-      icon: '學',
+      kind: 'Хөтөлбөр',
+      icon: 'AP',
     })),
     ...products.map((p) => ({
       id: `product-${p.id}`,
       title: p.name,
       meta: p.price,
       to: `/shop/${p.id}`,
-      kind: 'Дэлгүүр',
-      icon: '書',
+      kind: 'Материал',
+      icon: 'BK',
     })),
     ...videos.map((v) => ({
       id: `video-${v.id}`,
@@ -35,15 +35,15 @@ function buildSearchIndex() {
       meta: v.category,
       to: '/videos',
       kind: 'Бичлэг',
-      icon: '影',
+      icon: '▶',
     })),
     ...universities.map((u) => ({
       id: `uni-${u.id}`,
-      title: u.nameMn,
-      meta: `${u.city} · ${u.focus}`,
+      title: `${u.nameMn} Au Pair`,
+      meta: `${u.city} · ${u.language}`,
       to: `/universities/${u.id}`,
-      kind: 'Их сургууль',
-      icon: '校',
+      kind: 'Улс',
+      icon: u.short,
     })),
   ]
 }
@@ -51,27 +51,27 @@ function buildSearchIndex() {
 const SEARCH_INDEX = buildSearchIndex()
 
 const QUICK_SEARCH = [
-  { label: 'HSK', q: 'HSK', to: '/courses' },
-  { label: 'Эрчимжүүлсэн', q: 'Эрчимжүүлсэн', to: '/courses' },
-  { label: 'Их сургууль', q: 'их сургууль', to: '/universities' },
-  { label: 'Ном', q: 'Ном', to: '/shop' },
+  { label: 'Франц', q: 'Франц', to: '/universities' },
+  { label: 'Герман', q: 'Герман', to: '/universities' },
+  { label: 'Элсэлт', q: 'элсэлт', to: '/courses' },
+  { label: 'Au Pair', q: 'Au Pair', to: '/universities' },
 ]
 
 const INITIAL_NOTIFICATIONS = [
   {
     id: 'n1',
     type: 'course',
-    title: 'HSK 3–4 анги элсэлт нээлттэй',
-    body: 'Мягмар · Пүрэв 18:30–20:30',
+    title: 'France Au Pair 2027 — 10 суудал',
+    body: '50% дүүрсэн · франц хэл 10/18',
     time: '2ц',
-    to: '/courses/hsk34',
+    to: '/universities/france',
     unread: true,
   },
   {
     id: 'n2',
     type: 'video',
-    title: 'Шинэ Facebook reel',
-    body: 'Хятад хэл сурах зөвлөмж',
+    title: 'Шинэ Facebook зар',
+    body: 'Mongolian AuPair',
     time: '1 өдөр',
     to: '/videos',
     unread: true,
@@ -79,18 +79,18 @@ const INITIAL_NOTIFICATIONS = [
   {
     id: 'n3',
     type: 'uni',
-    title: 'Зуучлалын зөвлөгөө',
-    body: 'Хятадын их сургуульд элсэх',
+    title: 'Герман Au Pair элсэлт',
+    body: 'Гэр бүл, виза, хэлний бэлтгэл',
     time: '3 өдөр',
-    to: '/universities',
+    to: '/universities/germany',
     unread: false,
   },
 ]
 
 const NOTIF_ICON = {
-  course: '學',
-  video: '影',
-  uni: '校',
+  course: 'FR',
+  video: '▶',
+  uni: 'DE',
 }
 
 export default function AppHeader({ title, showBrand = false }) {
@@ -105,7 +105,7 @@ export default function AppHeader({ title, showBrand = false }) {
   const notifRef = useRef(null)
   const searchWrapRef = useRef(null)
 
-  const canBack = !showBrand && title !== 'ХАНЗ'
+  const canBack = !showBrand && title !== 'Au Pair'
   const unreadCount = notifications.filter((n) => n.unread).length
 
   const results = useMemo(() => {
@@ -253,7 +253,7 @@ export default function AppHeader({ title, showBrand = false }) {
               onClick={() => openNotif(item)}
             >
               <span className={`app-notif__avatar is-${item.type}`} aria-hidden>
-                {NOTIF_ICON[item.type] || '漢'}
+                {NOTIF_ICON[item.type] || 'AP'}
               </span>
               <span className="app-notif__body">
                 <strong>{item.title}</strong>
@@ -296,10 +296,10 @@ export default function AppHeader({ title, showBrand = false }) {
         <nav className="app-menu__panel">
           <div className="app-menu__top">
             <div className="app-menu__brand">
-              <img src="/logo.png" alt="" />
+              <img src="/logo.svg" alt="" />
               <div>
-                <strong>ХАНЗ</strong>
-                <span>Academy</span>
+                <strong>Au Pair</strong>
+                <span>Mongolia</span>
               </div>
             </div>
             <button
@@ -313,10 +313,10 @@ export default function AppHeader({ title, showBrand = false }) {
           </div>
 
           <div className="app-menu__hero">
-            <p>Хятад хэл · HSK · Зуучлал</p>
+            <p>Au Pair · Европ · Элсэлт нээлттэй</p>
             <div className="app-menu__stats">
-              <span>{social.followers} дагагч</span>
-              <span>{social.recommend} зөвлөдөг</span>
+              <span>{social.since} оноос</span>
+              <span>{social.placed} залуус</span>
             </div>
           </div>
 
@@ -364,7 +364,7 @@ export default function AppHeader({ title, showBrand = false }) {
               className="app-menu__fb"
               onClick={() => setMenuOpen(false)}
             >
-              Facebook · HanzAcademy
+              Facebook · MongolianAuPair
             </a>
           </div>
         </nav>
@@ -387,8 +387,8 @@ export default function AppHeader({ title, showBrand = false }) {
             </button>
           ) : null}
           <Link to="/" className="app-header__brand">
-            <img src="/logo.png" alt="" />
-            <strong>ХАНЗ</strong>
+            <img src="/logo.svg" alt="" />
+            <strong>Au Pair</strong>
           </Link>
           {canBack ? <h1 className="app-header__page">{title}</h1> : null}
         </div>
@@ -456,7 +456,7 @@ export default function AppHeader({ title, showBrand = false }) {
             ) : null}
           </div>
 
-          <Link to="/courses" className="app-header__cta">
+          <Link to="/universities" className="app-header__cta">
             Элсэлт
           </Link>
 
@@ -509,7 +509,7 @@ export default function AppHeader({ title, showBrand = false }) {
               ref={inputRef}
               type="search"
               value={query}
-              placeholder="HSK, ном, видео хайх..."
+              placeholder="Франц, Герман, Au Pair хайх..."
               aria-label="Хайлт"
               onChange={(e) => setQuery(e.target.value)}
             />
@@ -561,10 +561,10 @@ export default function AppHeader({ title, showBrand = false }) {
                   <p className="app-header__hint">Шуурхай очих</p>
                   <div className="app-header__quick-grid">
                     {[
-                      { label: 'Сургалт', to: '/courses', icon: '學' },
-                      { label: 'Сургууль', to: '/universities', icon: '校' },
-                      { label: 'Бичлэг', to: '/videos', icon: '影' },
-                      { label: 'Дэлгүүр', to: '/shop', icon: '書' },
+                      { label: 'Хөтөлбөр', to: '/courses', icon: 'AP' },
+                      { label: 'Улс орнууд', to: '/universities', icon: 'EU' },
+                      { label: 'Дэлгүүр', to: '/shop', icon: 'BK' },
+                      { label: 'Холбоо', to: '/profile', icon: '@' },
                     ].map((item) => (
                       <button
                         key={item.to}
