@@ -18,22 +18,22 @@ export default function Hero() {
 
           <div className="hero__content">
             <p className="hero__live fade-up">
-              <i /> Элсэлт авч байна · Франц 2027
+              <i /> Элсэлт авч байна
             </p>
 
             <h1 className="hero__title fade-up-delay">
-              Соёл солилцоогоор
-              <span> дэлхийд </span>
-              хөл тавь.
+              Au Pair-аар
+              <span> Европ </span>
+              руу
             </h1>
 
             <p className="hero__lead fade-up-2">
-              2005 оноос хойш · Герман · Франц · Австри · Швейцарь · Бельги · Нидерланд · Дани
+              Гэр бүлд амьдарч, хэл сурна.
             </p>
 
             <div className="hero__actions fade-up-3">
               <Link to="/universities" className="btn btn-primary hero__cta">
-                Улс орнууд · элсэх
+                Элсэх
               </Link>
             </div>
           </div>
