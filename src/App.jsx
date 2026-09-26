@@ -1,5 +1,6 @@
-import { BrowserRouter, Routes, Route, useLocation, Navigate } from 'react-router-dom'
+import { BrowserRouter, HashRouter, Routes, Route, useLocation, Navigate } from 'react-router-dom'
 import { useEffect } from 'react'
+import { Capacitor } from '@capacitor/core'
 import AppHeader from './components/AppHeader'
 import BottomNav from './components/BottomNav'
 import Footer from './components/Footer'
@@ -12,6 +13,8 @@ import Videos from './pages/Videos'
 import Shop from './pages/Shop'
 import ProductDetail from './pages/ProductDetail'
 import Profile from './pages/Profile'
+
+const Router = Capacitor.isNativePlatform() ? HashRouter : BrowserRouter
 
 const TITLES = {
   '/': 'Au Pair',
@@ -68,9 +71,9 @@ function AppFrame() {
 
 export default function App() {
   return (
-    <BrowserRouter>
+    <Router>
       <ScrollToTop />
       <AppFrame />
-    </BrowserRouter>
+    </Router>
   )
 }

@@ -1,4 +1,7 @@
-const API_BASE = '/api'
+const ENV_API = import.meta.env.VITE_API_URL?.replace(/\/$/, '')
+
+/** Web: `/api` (Vite proxy / Express). Native: set `VITE_API_URL` to your deployed server origin. */
+const API_BASE = ENV_API ? `${ENV_API}/api` : '/api'
 
 async function request(path, options = {}) {
   const res = await fetch(`${API_BASE}${path}`, {

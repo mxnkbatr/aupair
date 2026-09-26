@@ -15,6 +15,17 @@ dist-ssr
 # Runtime data
 server/data/*.json
 
+# Capacitor / Android
+android/.gradle
+android/app/build
+android/build
+android/captures
+android/local.properties
+android/.idea
+*.apk
+*.aab
+*.keystore
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

@@ -8,6 +8,10 @@
     "dev:web": "vite",
     "dev:api": "nodemon server/index.js",
     "build": "vite build",
+    "build:app": "vite build && npx cap sync android",
+    "cap:sync": "npx cap sync android",
+    "cap:open": "npx cap open android",
+    "cap:run": "vite build && npx cap run android",
     "start": "node server/index.js",
     "preview": "vite preview",
     "lint": "oxlint"
@@ -16,6 +20,12 @@
     "node": ">=20"
   },
   "dependencies": {
+    "@capacitor/android": "^8.5.2",
+    "@capacitor/app": "^8.1.1",
+    "@capacitor/core": "^8.5.2",
+    "@capacitor/keyboard": "^8.0.5",
+    "@capacitor/splash-screen": "^8.0.2",
+    "@capacitor/status-bar": "^8.0.3",
     "concurrently": "^9.2.1",
     "cors": "^2.8.5",
     "express": "^5.1.0",
@@ -24,6 +34,8 @@
     "react-router-dom": "^7.18.4"
   },
   "devDependencies": {
+    "@capacitor/assets": "^3.0.5",
+    "@capacitor/cli": "^8.5.2",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.7",
     "@vitejs/plugin-react": "^6.1.1",
