@@ -8,6 +8,7 @@ import {
   Navigate,
 } from 'react-router-dom'
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { flushSync } from 'react-dom'
 import { Capacitor } from '@capacitor/core'
 import AppHeader from './components/AppHeader'
 import BottomNav from './components/BottomNav'
@@ -44,18 +45,44 @@ const TITLES = {
 const TAB_PATHS = ['/', '/courses', '/universities', '/shop', '/profile']
 const scrollPositions = new Map()
 
-/** Slide forward/back like a native stack; tab switches fade and keep their scroll. */
-function usePageTransition(pathname) {
+const canViewTransition = () =>
+  typeof document.startViewTransition === 'function' &&
+  !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+/**
+ * Slide forward/back like a native stack; tab switches fade and keep their scroll.
+ * The rendered location lags the URL until the view transition has captured the old page.
+ */
+function usePageTransition() {
+  const location = useLocation()
   const navType = useNavigationType()
-  const [state, setState] = useState({ path: pathname, dir: 'none' })
-  if (state.path !== pathname) {
-    const tabSwitch = TAB_PATHS.includes(state.path) && TAB_PATHS.includes(pathname)
-    setState({
-      path: pathname,
-      dir: tabSwitch ? 'fade' : navType === 'POP' ? 'back' : 'forward',
+  const [shown, setShown] = useState({ location, dir: 'none' })
+
+  useLayoutEffect(() => {
+    const prev = shown.location
+    if (location.key === prev.key && location.pathname === prev.pathname) return
+    if (location.pathname === prev.pathname) {
+      setShown({ location, dir: shown.dir })
+      return
+    }
+    const tabSwitch = TAB_PATHS.includes(prev.pathname) && TAB_PATHS.includes(location.pathname)
+    const dir = tabSwitch ? 'fade' : navType === 'POP' ? 'back' : 'forward'
+
+    if (!canViewTransition()) {
+      setShown({ location, dir })
+      return
+    }
+    const root = document.documentElement
+    root.dataset.nav = dir
+    const transition = document.startViewTransition(() => {
+      flushSync(() => setShown({ location, dir, viewTransition: true }))
     })
-  }
-  return state.dir
+    transition.finished.finally(() => {
+      if (root.dataset.nav === dir) delete root.dataset.nav
+    })
+  }, [location, navType, shown])
+
+  return shown
 }
 
 function useScrollMemory(pathname, dir) {
@@ -78,8 +105,9 @@ function useScrollMemory(pathname, dir) {
 }
 
 function AppFrame() {
-  const { pathname } = useLocation()
-  const dir = usePageTransition(pathname)
+  const shown = usePageTransition()
+  const { pathname } = shown.location
+  const dir = shown.dir
   useScrollMemory(pathname, dir)
   const title =
     TITLES[pathname] ||
@@ -97,8 +125,8 @@ function AppFrame() {
       <AppHeader title={title} showBrand={isHome} />
       <OfflineBanner />
       <main className="site__main">
-        <div key={pathname} className={`page page--${dir}`}>
-          <Routes>
+        <div key={pathname} className={`page page--${shown.viewTransition ? 'none' : dir}`}>
+          <Routes location={shown.location}>
             <Route path="/" element={<Home />} />
             <Route path="/courses" element={<Courses />} />
             <Route path="/courses/:id" element={<CourseDetail />} />

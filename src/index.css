@@ -537,6 +537,93 @@ p {
   }
 }
 
+/* iOS-style push via View Transitions (old page stays visible underneath). */
+.app-header {
+  view-transition-name: app-header;
+}
+
+.bottomnav {
+  view-transition-name: bottomnav;
+}
+
+::view-transition-group(app-header),
+::view-transition-group(bottomnav) {
+  animation: none;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  mix-blend-mode: normal;
+  animation-duration: 0.46s;
+  animation-timing-function: cubic-bezier(0.32, 0.72, 0, 1);
+  animation-fill-mode: both;
+}
+
+html[data-nav='forward']::view-transition-old(root) {
+  animation-name: vtPushOld;
+}
+
+html[data-nav='forward']::view-transition-new(root) {
+  animation-name: vtPushNew;
+  box-shadow: -10px 0 30px rgba(17, 17, 20, 0.14);
+}
+
+html[data-nav='back']::view-transition-old(root) {
+  z-index: 1;
+  animation-name: vtPopOld;
+  box-shadow: -10px 0 30px rgba(17, 17, 20, 0.14);
+}
+
+html[data-nav='back']::view-transition-new(root) {
+  animation-name: vtPopNew;
+}
+
+html[data-nav='fade']::view-transition-old(root) {
+  animation: vtFadeOut 0.18s ease both;
+}
+
+html[data-nav='fade']::view-transition-new(root) {
+  animation: vtFadeIn 0.22s ease both;
+}
+
+@keyframes vtPushOld {
+  to {
+    transform: translateX(-30%);
+    filter: brightness(0.9);
+  }
+}
+
+@keyframes vtPushNew {
+  from {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes vtPopOld {
+  to {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes vtPopNew {
+  from {
+    transform: translateX(-30%);
+    filter: brightness(0.9);
+  }
+}
+
+@keyframes vtFadeOut {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes vtFadeIn {
+  from {
+    opacity: 0;
+  }
+}
+
 /* Native-feeling touch */
 a,
 button,
