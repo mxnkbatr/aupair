@@ -110,10 +110,6 @@ export default function Universities() {
           ))}
         </div>
 
-        <p className="uni-count">
-          {list.length} улс · Au Pair элсэлт {list.some((c) => c.open) ? 'нээлттэй' : ''}
-        </p>
-
         <div className="uni-grid">
           {list.map((uni) => {
             const seats = uni.seatsLeft

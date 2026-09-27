@@ -395,10 +395,6 @@ body {
   box-shadow: 0 0 0 4px rgba(200, 30, 36, 0.1);
 }
 
-.app-header__search-input {
-  background: var(--fill);
-}
-
 .alert {
   border-radius: 16px;
 }
@@ -454,15 +450,6 @@ body {
     margin-bottom: calc(8px + env(safe-area-inset-bottom, 0px));
     padding-bottom: 0;
   }
-}
-
-.app-header__search-panel {
-  background: var(--glass-bg-strong);
-  border-bottom: 0;
-  border-radius: 0 0 28px 28px;
-  box-shadow: var(--glass-shadow);
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
 }
 
 .app-menu__panel {

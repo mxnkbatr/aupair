@@ -244,7 +244,7 @@ export const countries = [
     featured: true,
     open: true,
     image:
-      'https://images.unsplash.com/photo-1527668752968-14dc70a27c10?auto=format&fit=crop&w=1400&q=80',
+      'https://images.unsplash.com/photo-1515488764276-beab7607c1e6?auto=format&fit=crop&w=1400&q=80',
     description:
       'Швейцарьт герман эсвэл франц хэлтэй гэр бүлд Au Pair хийж, олон хэл, өндөр амьдралын орчинд суралцана.',
     points: ['Олон хэлний орчин', 'Өндөр амьжиргаа', 'Уулын болон хотын гэр бүл'],
@@ -308,7 +308,7 @@ export const countries = [
     featured: true,
     open: true,
     image:
-      'https://images.unsplash.com/photo-1534113414509-0eec2bfb493f?auto=format&fit=crop&w=1400&q=80',
+      'https://images.unsplash.com/photo-1576924542622-772281b13aa8?auto=format&fit=crop&w=1400&q=80',
     description:
       'Нидерландад Au Pair-аар амьдарч, дугуй, нээлттэй соёл, англи/нидерланд хэлтэй өдөр тутмын орчинд суралцана.',
     points: ['Англи хэлтэй орчин', 'Аюулгүй, нээлттэй нийгэм', 'Хэлний курс'],
@@ -340,7 +340,7 @@ export const countries = [
     featured: false,
     open: true,
     image:
-      'https://images.unsplash.com/photo-1513622470522-26c3e3b0c1a6?auto=format&fit=crop&w=1400&q=80',
+      'https://images.unsplash.com/photo-1552560880-2482cef14240?auto=format&fit=crop&w=1400&q=80',
     description:
       'Дани улсад Au Pair хийж, Скандинавын гэр бүл, англи хэлтэй орчин, өндөр амьдралын хэв маягтай танилцана.',
     points: ['Скандинав амьдрал', 'Англи хэлтэй гэр бүл', 'Аюулгүй орчин'],
@@ -383,7 +383,7 @@ export const videos = [
     category: 'Мэдээ',
     views: 'Page',
     thumb:
-      'https://images.unsplash.com/photo-1527668752968-14dc70a27c10?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1515488764276-beab7607c1e6?auto=format&fit=crop&w=800&q=80',
   },
   {
     id: 'r4',
@@ -392,7 +392,7 @@ export const videos = [
     category: 'Reel',
     views: 'IG',
     thumb:
-      'https://images.unsplash.com/photo-1534113414509-0eec2bfb493f?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1576924542622-772281b13aa8?auto=format&fit=crop&w=800&q=80',
   },
 ]
 

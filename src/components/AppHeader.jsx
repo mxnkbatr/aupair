@@ -1,61 +1,11 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { Link, NavLink, useNavigate } from 'react-router-dom'
-import {
-  navLinks,
-  coursesFallback,
-  products,
-  videos,
-  universities,
-  social,
-} from '../data'
+import { navLinks, social } from '../data'
+import SearchSheet from './SearchSheet'
 import './AppHeader.css'
 
-function buildSearchIndex() {
-  return [
-    ...coursesFallback.map((c) => ({
-      id: `course-${c.id}`,
-      title: c.title,
-      meta: c.hsk || c.level,
-      to: `/courses/${c.id}`,
-      kind: 'Хөтөлбөр',
-      icon: 'AP',
-    })),
-    ...products.map((p) => ({
-      id: `product-${p.id}`,
-      title: p.name,
-      meta: p.price,
-      to: `/shop/${p.id}`,
-      kind: 'Материал',
-      icon: 'BK',
-    })),
-    ...videos.map((v) => ({
-      id: `video-${v.id}`,
-      title: v.title,
-      meta: v.category,
-      to: '/videos',
-      kind: 'Бичлэг',
-      icon: '▶',
-    })),
-    ...universities.map((u) => ({
-      id: `uni-${u.id}`,
-      title: `${u.nameMn} Au Pair`,
-      meta: `${u.city} · ${u.language}`,
-      to: `/universities/${u.id}`,
-      kind: 'Улс',
-      icon: u.short,
-    })),
-  ]
-}
-
-const SEARCH_INDEX = buildSearchIndex()
-
-const QUICK_SEARCH = [
-  { label: 'A1', q: 'A1', to: '/courses' },
-  { label: 'A2', q: 'A2', to: '/courses' },
-  { label: 'Герман', q: 'Герман', to: '/universities' },
-  { label: 'Au Pair', q: 'Au Pair', to: '/universities' },
-]
+const IS_MAC = typeof navigator !== 'undefined' && /Mac|iPhone|iPad/.test(navigator.platform || '')
 
 const NOTIFICATIONS = [
   {
@@ -113,39 +63,24 @@ const NOTIF_ICON = {
 
 export default function AppHeader({ title, showBrand = false }) {
   const navigate = useNavigate()
-  const [query, setQuery] = useState('')
   const [searchOpen, setSearchOpen] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const [notifOpen, setNotifOpen] = useState(false)
   const [notifications, setNotifications] = useState(loadNotifications)
-  const inputRef = useRef(null)
-  const desktopInputRef = useRef(null)
   const notifRef = useRef(null)
-  const searchWrapRef = useRef(null)
 
   const canBack = !showBrand && title !== 'Au Pair'
   const unreadCount = notifications.filter((n) => n.unread).length
 
-  const results = useMemo(() => {
-    const q = query.trim().toLowerCase()
-    if (!q) return []
-    return SEARCH_INDEX.filter(
-      (item) =>
-        item.title.toLowerCase().includes(q) ||
-        String(item.meta || '')
-          .toLowerCase()
-          .includes(q) ||
-        item.kind.toLowerCase().includes(q),
-    ).slice(0, 8)
-  }, [query])
-
   useEffect(() => {
     function onKey(e) {
       if (e.key === 'Escape') {
-        setSearchOpen(false)
         setMenuOpen(false)
         setNotifOpen(false)
-        setQuery('')
+      }
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault()
+        openSearch()
       }
     }
     window.addEventListener('keydown', onKey)
@@ -153,44 +88,16 @@ export default function AppHeader({ title, showBrand = false }) {
   }, [])
 
   useEffect(() => {
-    if (!searchOpen) return undefined
-    const id = window.requestAnimationFrame(() => {
-      if (window.innerWidth >= 900) {
-        desktopInputRef.current?.focus()
-      } else {
-        inputRef.current?.focus()
-      }
-    })
-    return () => window.cancelAnimationFrame(id)
-  }, [searchOpen])
-
-  useEffect(() => {
-    if (!menuOpen && !searchOpen && !notifOpen) return undefined
+    if (!menuOpen && !notifOpen) return undefined
     const prev = document.body.style.overflow
-    const lockScroll =
-      menuOpen ||
-      (searchOpen && window.innerWidth < 900) ||
-      (notifOpen && window.innerWidth < 900)
+    const lockScroll = menuOpen || (notifOpen && window.innerWidth < 900)
     if (lockScroll) {
       document.body.style.overflow = 'hidden'
     }
     return () => {
       document.body.style.overflow = prev
     }
-  }, [menuOpen, searchOpen, notifOpen])
-
-  useEffect(() => {
-    if (!searchOpen) return undefined
-    function onPointer(e) {
-      if (window.innerWidth < 900) return
-      if (searchWrapRef.current?.contains(e.target)) return
-      if (e.target.closest?.('.app-header__search-layer')) return
-      setSearchOpen(false)
-      setQuery('')
-    }
-    document.addEventListener('pointerdown', onPointer)
-    return () => document.removeEventListener('pointerdown', onPointer)
-  }, [searchOpen])
+  }, [menuOpen, notifOpen])
 
   useEffect(() => {
     if (!notifOpen) return undefined
@@ -203,15 +110,14 @@ export default function AppHeader({ title, showBrand = false }) {
     return () => document.removeEventListener('pointerdown', onPointer)
   }, [notifOpen])
 
-  function closeSearch() {
-    setSearchOpen(false)
-    setQuery('')
+  function openSearch() {
+    setSearchOpen(true)
+    setMenuOpen(false)
+    setNotifOpen(false)
   }
 
   function openResult(to) {
-    closeSearch()
-    setMenuOpen(false)
-    setNotifOpen(false)
+    setSearchOpen(false)
     navigate(to)
   }
 
@@ -393,7 +299,7 @@ export default function AppHeader({ title, showBrand = false }) {
     )
 
   return (
-    <header className={searchOpen ? 'app-header is-searching' : 'app-header'}>
+    <header className="app-header">
       <div className="container app-header__inner">
         <div className="app-header__left">
           {canBack ? (
@@ -429,29 +335,16 @@ export default function AppHeader({ title, showBrand = false }) {
         </nav>
 
         <div className="app-header__right">
-          <div className="app-header__search-wrap" ref={searchWrapRef}>
-            <label className="app-header__desktop-search">
-              <SearchIcon />
-              <input
-                ref={desktopInputRef}
-                type="search"
-                value={query}
-                placeholder="Хайх..."
-                aria-label="Хайлт"
-                onChange={(e) => {
-                  setQuery(e.target.value)
-                  setSearchOpen(true)
-                  setMenuOpen(false)
-                  setNotifOpen(false)
-                }}
-                onFocus={() => {
-                  setSearchOpen(true)
-                  setMenuOpen(false)
-                  setNotifOpen(false)
-                }}
-              />
-            </label>
-          </div>
+          <button
+            type="button"
+            className="app-header__desktop-search"
+            aria-label="Хайлт"
+            onClick={openSearch}
+          >
+            <SearchIcon />
+            <span>Хайх…</span>
+            <kbd>{IS_MAC ? '⌘K' : 'Ctrl K'}</kbd>
+          </button>
 
           <div className="app-header__notif-wrap" ref={notifRef}>
             <button
@@ -484,11 +377,7 @@ export default function AppHeader({ title, showBrand = false }) {
             type="button"
             className="app-header__icon app-header__search-btn"
             aria-label="Хайлт"
-            onClick={() => {
-              setSearchOpen(true)
-              setMenuOpen(false)
-              setNotifOpen(false)
-            }}
+            onClick={openSearch}
           >
             <SearchIcon />
           </button>
@@ -513,129 +402,7 @@ export default function AppHeader({ title, showBrand = false }) {
         </div>
       </div>
 
-      {searchOpen ? (
-        <div className="container app-header__search-bar">
-          <button
-            type="button"
-            className="app-header__icon"
-            onClick={closeSearch}
-            aria-label="Хайлт хаах"
-          >
-            <BackIcon />
-          </button>
-          <label className="app-header__search-input">
-            <SearchIcon />
-            <input
-              ref={inputRef}
-              type="search"
-              value={query}
-              placeholder="A1, A2, Герман, Au Pair хайх..."
-              aria-label="Хайлт"
-              onChange={(e) => setQuery(e.target.value)}
-            />
-            {query ? (
-              <button
-                type="button"
-                className="app-header__clear"
-                aria-label="Цэвэрлэх"
-                onClick={() => setQuery('')}
-              >
-                <CloseIcon />
-              </button>
-            ) : null}
-          </label>
-        </div>
-      ) : null}
-
-      {searchOpen ? (
-        <div className="app-header__search-layer">
-          <button
-            type="button"
-            className="app-header__search-scrim"
-            aria-label="Хайлт хаах"
-            onClick={closeSearch}
-          />
-          <div className="app-header__search-panel" role="listbox">
-            {!query.trim() && (
-              <>
-                <div className="app-header__suggest">
-                  <div className="app-header__suggest-top">
-                    <p className="app-header__hint">Түгээмэл</p>
-                  </div>
-                  <div className="app-header__chips">
-                    {QUICK_SEARCH.map((chip) => (
-                      <button
-                        key={chip.label}
-                        type="button"
-                        className="app-header__chip"
-                        onClick={() => setQuery(chip.q)}
-                      >
-                        <SearchIcon />
-                        {chip.label}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="app-header__quick">
-                  <p className="app-header__hint">Шуурхай очих</p>
-                  <div className="app-header__quick-grid">
-                    {[
-                      { label: 'Хөтөлбөр', to: '/courses', icon: 'AP' },
-                      { label: 'Улс орнууд', to: '/universities', icon: 'EU' },
-                      { label: 'Дэлгүүр', to: '/shop', icon: 'BK' },
-                      { label: 'Профайл', to: '/profile', icon: '@' },
-                    ].map((item) => (
-                      <button
-                        key={item.to}
-                        type="button"
-                        className="app-header__quick-card"
-                        onClick={() => openResult(item.to)}
-                      >
-                        <span aria-hidden>{item.icon}</span>
-                        <strong>{item.label}</strong>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              </>
-            )}
-
-            {query.trim() && results.length === 0 && (
-              <div className="app-header__empty">
-                <SearchIcon />
-                <p>«{query}» олдсонгүй</p>
-                <small>Өөр түлхүүр үгээр дахин хайна уу</small>
-              </div>
-            )}
-
-            {results.length > 0 && (
-              <div className="app-header__results">
-                <p className="app-header__hint">{results.length} үр дүн</p>
-                {results.map((item) => (
-                  <button
-                    key={item.id}
-                    type="button"
-                    className="app-header__result"
-                    role="option"
-                    onClick={() => openResult(item.to)}
-                  >
-                    <span className="app-header__result-icon" aria-hidden>
-                      {item.icon}
-                    </span>
-                    <span className="app-header__result-text">
-                      <em>{item.kind}</em>
-                      <strong>{item.title}</strong>
-                      <small>{item.meta}</small>
-                    </span>
-                    <ChevronIcon />
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
-      ) : null}
+      <SearchSheet open={searchOpen} onClose={() => setSearchOpen(false)} onNavigate={openResult} />
 
       {notifPortal}
       {menuPortal}
@@ -708,20 +475,6 @@ function BellIcon() {
         stroke="currentColor"
         strokeWidth="1.8"
         strokeLinecap="round"
-      />
-    </svg>
-  )
-}
-
-function ChevronIcon() {
-  return (
-    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" aria-hidden>
-      <path
-        d="M10 7l5 5-5 5"
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinecap="round"
-        strokeLinejoin="round"
       />
     </svg>
   )

@@ -116,13 +116,6 @@
   background: var(--red);
 }
 
-.uni-count {
-  margin: 0.15rem 0 0.75rem;
-  color: var(--muted);
-  font-size: 0.8rem;
-  font-weight: 600;
-}
-
 .uni-grid {
   display: grid;
   gap: 1rem;
@@ -387,11 +380,6 @@
   .uni-banner__body strong {
     font-size: 1.55rem;
     max-width: 22ch;
-  }
-
-  .uni-count {
-    margin: 0.25rem 0 1rem;
-    font-size: 0.88rem;
   }
 
   .uni-grid {
