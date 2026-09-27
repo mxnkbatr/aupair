@@ -18,7 +18,7 @@ export async function openExternal(url) {
   if (isNative) {
     try {
       const { Browser } = await import('@capacitor/browser')
-      await Browser.open({ url, toolbarColor: '#C81E24' })
+      await Browser.open({ url, toolbarColor: '#CC2038' })
       return
     } catch {
       // fall through to window.open

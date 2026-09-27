@@ -14,7 +14,7 @@
   overflow: hidden;
   color: #fff;
   isolation: isolate;
-  border: 1px solid rgba(227, 30, 36, 0.16);
+  border: 1px solid rgba(227, 30, 57, 0.16);
 }
 
 .portal__featured-img,
@@ -28,7 +28,7 @@
 }
 
 .portal__featured-bg {
-  background: linear-gradient(145deg, #2a0a0c 0%, #c4161c 55%, #e31e24 100%);
+  background: linear-gradient(145deg, #2a0a0c 0%, #c4162e 55%, #e31e39 100%);
 }
 
 .portal__featured-shade {

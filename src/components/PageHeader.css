@@ -71,7 +71,7 @@
 }
 
 .page-filters__btn:hover {
-  border-color: rgba(227, 30, 36, 0.25);
+  border-color: rgba(227, 30, 57, 0.25);
   color: var(--red);
 }
 
@@ -83,7 +83,7 @@
   background: var(--red-grad);
   border-color: transparent;
   color: #fff;
-  box-shadow: 0 4px 12px rgba(200, 30, 36, 0.16);
+  box-shadow: 0 4px 12px rgba(204, 32, 56, 0.16);
 }
 
 @media (min-width: 900px) {

@@ -37,7 +37,7 @@
   aspect-ratio: 9 / 14;
   border-radius: 18px;
   overflow: hidden;
-  background: linear-gradient(145deg, #2a0a0c, #e31e24);
+  background: linear-gradient(145deg, #2a0a0c, #e31e39);
   border: 1px solid var(--line);
   box-shadow: 0 10px 28px rgba(17, 17, 20, 0.06);
 }

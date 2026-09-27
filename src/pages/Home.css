@@ -103,7 +103,7 @@
   border-radius: 14px;
   display: grid;
   place-items: center;
-  background: linear-gradient(145deg, #2a0a0c, #e31e24);
+  background: linear-gradient(145deg, #2a0a0c, #e31e39);
   color: #fff;
   font-family: var(--font-display);
   font-size: 0.74rem;
@@ -152,7 +152,7 @@
 
 .home-video:hover {
   transform: translateY(-2px);
-  border-color: rgba(227, 30, 36, 0.16);
+  border-color: rgba(227, 30, 57, 0.16);
   box-shadow: 0 10px 26px rgba(17, 17, 20, 0.07);
 }
 
@@ -307,7 +307,7 @@
   border-radius: 16px;
   display: grid;
   place-items: center;
-  background: linear-gradient(145deg, #2a0a0c 0%, #e31e24 100%);
+  background: linear-gradient(145deg, #2a0a0c 0%, #e31e39 100%);
   color: #fff;
   font-size: 0.72rem;
   font-weight: 700;

@@ -1,16 +1,16 @@
 :root {
-  --red: #c81e24;
-  --red-hot: #d92b32;
-  --red-deep: #9e161b;
+  --red: #cc2038;
+  --red-hot: #d92b44;
+  --red-deep: #9e1629;
   --red-soft: #faf4f4;
   --red-mist: #f7ecec;
-  --red-grad: linear-gradient(145deg, #d4353b 0%, #c81e24 52%, #a8191e 100%);
-  --red-grad-hover: linear-gradient(145deg, #db4046 0%, #b81c22 55%, #96151a 100%);
+  --red-grad: linear-gradient(145deg, #d4354c 0%, #cc2038 52%, #a8192d 100%);
+  --red-grad-hover: linear-gradient(145deg, #db4056 0%, #b81c32 55%, #961528 100%);
   --ink: #111114;
   --ink-2: #2a2a32;
   --muted: #6e6e7a;
   --line: rgba(17, 17, 20, 0.08);
-  --line-strong: rgba(200, 30, 36, 0.14);
+  --line-strong: rgba(204, 32, 56, 0.14);
   --paper: #faf8f8;
   --white: #ffffff;
   --surface: #ffffff;
@@ -23,7 +23,7 @@
   --font-body: 'Onest', 'Noto Sans SC', system-ui, sans-serif;
   --font-cn: 'Noto Sans SC', 'Onest', sans-serif;
   --shadow-soft: 0 12px 32px rgba(17, 17, 20, 0.05);
-  --shadow-lift: 0 12px 28px rgba(200, 30, 36, 0.14);
+  --shadow-lift: 0 12px 28px rgba(204, 32, 56, 0.14);
   --max: 1120px;
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-spring: cubic-bezier(0.34, 1.45, 0.64, 1);
@@ -62,8 +62,8 @@ body {
   font-weight: 400;
   color: var(--ink);
   background:
-    radial-gradient(900px 420px at 100% -8%, rgba(200, 30, 36, 0.045), transparent 55%),
-    radial-gradient(700px 360px at -8% 30%, rgba(200, 30, 36, 0.03), transparent 50%),
+    radial-gradient(900px 420px at 100% -8%, rgba(204, 32, 56, 0.045), transparent 55%),
+    radial-gradient(700px 360px at -8% 30%, rgba(204, 32, 56, 0.03), transparent 50%),
     linear-gradient(180deg, #ffffff 0%, #fbf9f9 50%, #ffffff 100%);
   background-attachment: fixed;
   -webkit-font-smoothing: antialiased;
@@ -308,7 +308,7 @@ p {
 .btn-primary {
   background: var(--red-grad);
   color: #fff;
-  box-shadow: 0 6px 18px rgba(200, 30, 36, 0.18);
+  box-shadow: 0 6px 18px rgba(204, 32, 56, 0.18);
 }
 
 .btn-primary:hover:not(:disabled) {
@@ -385,8 +385,8 @@ p {
 .field input:focus,
 .field select:focus,
 .field textarea:focus {
-  border-color: rgba(227, 30, 36, 0.45);
-  box-shadow: 0 0 0 3px rgba(227, 30, 36, 0.1);
+  border-color: rgba(227, 30, 57, 0.45);
+  box-shadow: 0 0 0 3px rgba(227, 30, 57, 0.1);
 }
 
 .alert {

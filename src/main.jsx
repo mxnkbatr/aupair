@@ -14,7 +14,7 @@ async function bootstrapNative() {
   try {
     const { StatusBar, Style } = await import('@capacitor/status-bar')
     await StatusBar.setStyle({ style: Style.Dark })
-    await StatusBar.setBackgroundColor({ color: '#C81E24' })
+    await StatusBar.setBackgroundColor({ color: '#CC2038' })
   } catch {
     // Status bar plugin optional on web preview
   }

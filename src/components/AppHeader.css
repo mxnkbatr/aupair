@@ -46,7 +46,7 @@
   height: 34px;
   border-radius: 10px;
   object-fit: cover;
-  box-shadow: 0 4px 12px rgba(200, 30, 36, 0.16);
+  box-shadow: 0 4px 12px rgba(204, 32, 56, 0.16);
 }
 
 .app-header__brand strong {
@@ -342,7 +342,7 @@
   height: 8px;
   border-radius: 50%;
   background: var(--red);
-  box-shadow: 0 0 0 3px rgba(227, 30, 36, 0.16);
+  box-shadow: 0 0 0 3px rgba(227, 30, 57, 0.16);
 }
 
 .app-notif__item em + .app-notif__pulse,
@@ -579,7 +579,7 @@
 .app-menu__link.is-active {
   background: var(--red-grad);
   color: #fff;
-  box-shadow: 0 6px 16px rgba(200, 30, 36, 0.18);
+  box-shadow: 0 6px 16px rgba(204, 32, 56, 0.18);
 }
 
 .app-menu__link.is-active .app-menu__link-icon {

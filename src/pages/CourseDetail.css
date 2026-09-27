@@ -31,10 +31,10 @@
   border-radius: 22px;
   color: #fff;
   background:
-    linear-gradient(145deg, rgba(26, 7, 9, 0.2), rgba(227, 30, 36, 0.55)),
-    linear-gradient(135deg, #1a0709 0%, #8d1419 45%, #e31e24 100%);
+    linear-gradient(145deg, rgba(26, 7, 9, 0.2), rgba(227, 30, 57, 0.55)),
+    linear-gradient(135deg, #1a0709 0%, #8d1426 45%, #e31e39 100%);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 16px 40px rgba(227, 30, 36, 0.18);
+  box-shadow: 0 16px 40px rgba(227, 30, 57, 0.18);
   animation: fadeUp 0.55s var(--ease-out) both;
 }
 
@@ -156,7 +156,7 @@
   padding: 1rem 1.05rem;
   border-radius: 16px;
   background: var(--red-soft);
-  border: 1px solid rgba(227, 30, 36, 0.12);
+  border: 1px solid rgba(227, 30, 57, 0.12);
   animation: fadeUp 0.6s var(--ease-out) 0.1s both;
 }
 
@@ -185,7 +185,7 @@
   color: var(--red);
   font-weight: 750;
   font-size: 0.8rem;
-  border: 1px solid rgba(227, 30, 36, 0.16);
+  border: 1px solid rgba(227, 30, 57, 0.16);
 }
 
 .cd-seats {
@@ -213,7 +213,7 @@
 .cd-seats__bar {
   height: 5px;
   border-radius: 999px;
-  background: rgba(227, 30, 36, 0.1);
+  background: rgba(227, 30, 57, 0.1);
   overflow: hidden;
 }
 

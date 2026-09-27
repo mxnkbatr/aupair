@@ -47,7 +47,7 @@
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(105deg, rgba(18, 6, 8, 0.72) 0%, rgba(18, 6, 8, 0.2) 55%, rgba(200, 30, 36, 0.2) 100%),
+    linear-gradient(105deg, rgba(18, 6, 8, 0.72) 0%, rgba(18, 6, 8, 0.2) 55%, rgba(204, 32, 56, 0.2) 100%),
     linear-gradient(180deg, transparent 30%, rgba(12, 4, 6, 0.55) 100%);
 }
 
@@ -315,7 +315,7 @@
   background: var(--red-grad);
   color: #fff;
   text-decoration: none;
-  box-shadow: 0 4px 12px rgba(200, 30, 36, 0.16);
+  box-shadow: 0 4px 12px rgba(204, 32, 56, 0.16);
 }
 
 .uni-empty {

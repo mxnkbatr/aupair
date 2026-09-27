@@ -29,7 +29,7 @@
     0 10px 36px -8px rgba(17, 17, 20, 0.16),
     0 1px 3px rgba(17, 17, 20, 0.05);
 
-  --red-shadow: 0 10px 24px -8px rgba(200, 30, 36, 0.5);
+  --red-shadow: 0 10px 24px -8px rgba(204, 32, 56, 0.5);
   --fill: rgba(118, 118, 128, 0.09);
 }
 
@@ -37,8 +37,8 @@
 
 body {
   background:
-    radial-gradient(120% 60% at 100% -10%, rgba(200, 30, 36, 0.07), transparent 55%),
-    radial-gradient(90% 50% at -10% 20%, rgba(200, 30, 36, 0.04), transparent 50%),
+    radial-gradient(120% 60% at 100% -10%, rgba(204, 32, 56, 0.07), transparent 55%),
+    radial-gradient(90% 50% at -10% 20%, rgba(204, 32, 56, 0.04), transparent 50%),
     var(--bg-app);
   background-attachment: fixed;
 }
@@ -47,7 +47,7 @@ body {
   body,
   .site {
     background:
-      radial-gradient(70% 50% at 100% -10%, rgba(200, 30, 36, 0.06), transparent 55%),
+      radial-gradient(70% 50% at 100% -10%, rgba(204, 32, 56, 0.06), transparent 55%),
       var(--bg-app);
   }
 }
@@ -103,19 +103,19 @@ body {
 
 .app-header__icon:hover,
 .app-header__icon.is-on {
-  background: rgba(200, 30, 36, 0.1);
+  background: rgba(204, 32, 56, 0.1);
   border-color: rgba(255, 255, 255, 0.7);
 }
 
 .app-header__badge {
   top: -4px;
   right: -4px;
-  box-shadow: 0 4px 10px -2px rgba(200, 30, 36, 0.55);
+  box-shadow: 0 4px 10px -2px rgba(204, 32, 56, 0.55);
 }
 
 .app-header__brand img {
   border-radius: 11px;
-  box-shadow: 0 6px 16px -4px rgba(200, 30, 36, 0.45);
+  box-shadow: 0 6px 16px -4px rgba(204, 32, 56, 0.45);
 }
 
 .bottomnav {
@@ -135,10 +135,10 @@ body {
 
 .bottomnav__item.is-active {
   color: var(--red);
-  background: rgba(200, 30, 36, 0.1);
+  background: rgba(204, 32, 56, 0.1);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.7),
-    inset 0 0 0 0.5px rgba(200, 30, 36, 0.12);
+    inset 0 0 0 0.5px rgba(204, 32, 56, 0.12);
 }
 
 .cd-bar,
@@ -171,7 +171,7 @@ body {
   background: var(--red-grad-hover);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.28),
-    0 14px 28px -8px rgba(200, 30, 36, 0.55);
+    0 14px 28px -8px rgba(204, 32, 56, 0.55);
 }
 
 .btn-ghost {
@@ -205,8 +205,8 @@ body {
 }
 
 .product__cta {
-  border: 0.5px solid rgba(200, 30, 36, 0.25);
-  box-shadow: 0 4px 12px -6px rgba(200, 30, 36, 0.35);
+  border: 0.5px solid rgba(204, 32, 56, 0.25);
+  box-shadow: 0 4px 12px -6px rgba(204, 32, 56, 0.35);
 }
 
 /* ---------- Filter pills ---------- */
@@ -242,7 +242,7 @@ body {
   color: #fff;
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.25),
-    0 8px 18px -6px rgba(200, 30, 36, 0.5);
+    0 8px 18px -6px rgba(204, 32, 56, 0.5);
 }
 
 @media (min-width: 900px) {
@@ -325,7 +325,7 @@ body {
 .cd-schedule,
 .ud-help {
   border-radius: var(--r-card);
-  border: 0.5px solid rgba(200, 30, 36, 0.1);
+  border: 0.5px solid rgba(204, 32, 56, 0.1);
 }
 
 .product__media {
@@ -391,8 +391,8 @@ body {
 .contact-form select:focus,
 .contact-form textarea:focus {
   background: #fff;
-  border-color: rgba(200, 30, 36, 0.35);
-  box-shadow: 0 0 0 4px rgba(200, 30, 36, 0.1);
+  border-color: rgba(204, 32, 56, 0.35);
+  box-shadow: 0 0 0 4px rgba(204, 32, 56, 0.1);
 }
 
 .alert {

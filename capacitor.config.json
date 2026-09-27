@@ -14,7 +14,7 @@
     },
     "StatusBar": {
       "style": "DARK",
-      "backgroundColor": "#C81E24"
+      "backgroundColor": "#CC2038"
     },
     "Keyboard": {
       "resize": "body"
