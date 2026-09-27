@@ -26,6 +26,7 @@ import Profile from './pages/Profile'
 import Contact from './pages/Contact'
 import Admin from './pages/Admin'
 import { AuthProvider } from './auth'
+import './theme.css'
 
 const Router = Capacitor.isNativePlatform() ? HashRouter : BrowserRouter
 

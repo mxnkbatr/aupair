@@ -39,7 +39,7 @@
 }
 
 .cd-hero__banner::after {
-  content: '學';
+  content: 'DE';
   position: absolute;
   right: -0.05em;
   bottom: -0.25em;

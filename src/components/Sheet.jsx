@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import { createPortal } from 'react-dom'
 import './Sheet.css'
 
 export default function Sheet({ open, onClose, title, children }) {
@@ -18,7 +19,7 @@ export default function Sheet({ open, onClose, title, children }) {
 
   if (!open) return null
 
-  return (
+  return createPortal(
     <div className="sheet" role="dialog" aria-modal="true" aria-label={title}>
       <button
         type="button"
@@ -36,6 +37,7 @@ export default function Sheet({ open, onClose, title, children }) {
         </div>
         <div className="sheet__body">{children}</div>
       </div>
-    </div>
+    </div>,
+    document.body,
   )
 }

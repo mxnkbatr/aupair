@@ -9,7 +9,7 @@ export default function Contact() {
   const [form, setForm] = useState({
     name: user?.name || '',
     phone: user?.phone || '',
-    interest: 'course',
+    interest: 'german-a1',
     message: '',
   })
   const [loading, setLoading] = useState(false)
@@ -22,7 +22,7 @@ export default function Contact() {
     try {
       const res = await api.contact(form)
       setStatus({ ok: true, text: res.message || 'Хүсэлт хүлээн авлаа' })
-      setForm({ name: user?.name || '', phone: user?.phone || '', interest: 'course', message: '' })
+      setForm({ name: user?.name || '', phone: user?.phone || '', interest: 'german-a1', message: '' })
     } catch (err) {
       setStatus({ ok: false, text: err.message })
     } finally {
