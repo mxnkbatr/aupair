@@ -649,9 +649,21 @@ img {
   user-select: none;
 }
 
+html.is-native {
+  background: var(--bg-app, #fff);
+}
+
 html.is-native body {
   -webkit-user-select: none;
   user-select: none;
+  overscroll-behavior-x: none;
+  overscroll-behavior-y: auto;
+}
+
+@media (hover: none) {
+  html body {
+    background-attachment: scroll;
+  }
 }
 
 html.is-native input,
@@ -670,6 +682,7 @@ html.is-native textarea {
   :where(a[class], button, [role='button']):active {
     transform: scale(0.97);
     opacity: 0.88;
+    transition-duration: 0.08s;
   }
 }
 

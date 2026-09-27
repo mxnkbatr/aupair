@@ -7,6 +7,8 @@ import { interceptExternalLinks } from './native'
 
 if (Capacitor.isNativePlatform()) document.documentElement.classList.add('is-native')
 if ('scrollRestoration' in window.history) window.history.scrollRestoration = 'manual'
+// iOS WebKit only applies :active styles when a touch listener exists
+document.addEventListener('touchstart', () => {}, { passive: true })
 interceptExternalLinks()
 
 async function bootstrapNative() {
