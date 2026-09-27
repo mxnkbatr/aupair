@@ -2,7 +2,8 @@
   position: sticky;
   top: 0;
   z-index: 40;
-  min-height: var(--nav-h);
+  min-height: calc(var(--nav-h) + env(safe-area-inset-top, 0px));
+  padding-top: env(safe-area-inset-top, 0px);
   display: flex;
   flex-direction: column;
   justify-content: center;

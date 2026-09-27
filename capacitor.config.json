@@ -1,8 +1,9 @@
 ﻿{
-  "appId": "mn.mongolianaupair.app",
-  "appName": "Mongolian Au Pair",
+  "appId": "mn.aupair.app",
+  "appName": "Au Pair Mongolia",
   "webDir": "dist",
   "server": {
+    "url": "https://aupair-app.vercel.app",
     "androidScheme": "https"
   },
   "plugins": {
@@ -10,11 +11,12 @@
       "launchShowDuration": 1200,
       "launchAutoHide": true,
       "backgroundColor": "#FFFFFF",
-      "showSpinner": false
+      "showSpinner": false,
+      "androidSplashResourceName": "splash"
     },
     "StatusBar": {
-      "style": "DARK",
-      "backgroundColor": "#CC2038"
+      "style": "LIGHT",
+      "backgroundColor": "#FFFFFF"
     },
     "Keyboard": {
       "resize": "body"
