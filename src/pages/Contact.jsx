@@ -102,7 +102,7 @@ export default function Contact() {
             <p>{social.address}</p>
           </div>
           <div className="contact-aside__badge">
-            <img src="/logo.svg" alt="Mongolian Au Pair" />
+            <img src="/logo.png" alt="Mongolian Au Pair" />
             <p>Европ руу соёл солилцоо · 2005 оноос</p>
           </div>
         </aside>

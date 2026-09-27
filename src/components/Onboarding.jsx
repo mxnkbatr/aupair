@@ -95,7 +95,7 @@ export default function Onboarding() {
                 <img src={slide.image} alt="" />
               ) : (
                 <div className="onb__brand">
-                  <img src="/logo.svg" alt="" />
+                  <img src="/logo.png" alt="" />
                 </div>
               )}
             </div>

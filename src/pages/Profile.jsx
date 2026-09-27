@@ -62,7 +62,7 @@ function AuthPanel() {
   return (
     <>
       <section className="pf-welcome">
-        <img src="/logo.svg" alt="" />
+        <img src="/logo.png" alt="" />
         <div>
           <h2>Mongolian Au Pair</h2>
           <p>Нэвтэрч элсэлтийнхээ явцыг хянаарай</p>

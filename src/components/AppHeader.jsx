@@ -202,7 +202,7 @@ export default function AppHeader({ title, showBrand = false }) {
         <nav className="app-menu__panel">
           <div className="app-menu__top">
             <div className="app-menu__brand">
-              <img src="/logo.svg" alt="" />
+              <img src="/logo.png" alt="" />
               <div>
                 <strong>Au Pair</strong>
                 <span>Mongolia</span>
@@ -293,7 +293,7 @@ export default function AppHeader({ title, showBrand = false }) {
             </button>
           ) : null}
           <Link to="/" className="app-header__brand">
-            <img src="/logo.svg" alt="" />
+            <img src="/logo.png" alt="" />
             <strong>Au Pair</strong>
           </Link>
           {canBack ? <h1 className="app-header__page">{title}</h1> : null}

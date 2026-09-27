@@ -7,7 +7,7 @@ export default function Navbar() {
     <header className="topnav">
       <div className="container topnav__inner">
         <NavLink to="/" className="brand" aria-label="Mongolian Au Pair">
-          <img src="/logo.svg" alt="" className="brand__mark" />
+          <img src="/logo.png" alt="" className="brand__mark" />
           <span className="brand__text">
             <strong>Au Pair</strong>
             <small>Mongolian Au Pair</small>

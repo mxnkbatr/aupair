@@ -8,7 +8,7 @@ export default function Footer() {
       <div className="container site-footer__grid">
         <div>
           <div className="site-footer__brand">
-            <img src="/logo.svg" alt="Mongolian Au Pair" />
+            <img src="/logo.png" alt="Mongolian Au Pair" />
             <div>
               <strong>Mongolian Au Pair</strong>
               <p>Европ руу соёл солилцоо · 2005 оноос</p>
