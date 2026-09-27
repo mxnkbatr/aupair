@@ -2,10 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { Link, NavLink, useNavigate } from 'react-router-dom'
 import { navLinks, social } from '../data'
-import SearchSheet from './SearchSheet'
 import './AppHeader.css'
-
-const IS_MAC = typeof navigator !== 'undefined' && /Mac|iPhone|iPad/.test(navigator.platform || '')
 
 const NOTIFICATIONS = [
   {
@@ -63,7 +60,6 @@ const NOTIF_ICON = {
 
 export default function AppHeader({ title, showBrand = false }) {
   const navigate = useNavigate()
-  const [searchOpen, setSearchOpen] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const [notifOpen, setNotifOpen] = useState(false)
   const [notifications, setNotifications] = useState(loadNotifications)
@@ -77,10 +73,6 @@ export default function AppHeader({ title, showBrand = false }) {
       if (e.key === 'Escape') {
         setMenuOpen(false)
         setNotifOpen(false)
-      }
-      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
-        e.preventDefault()
-        openSearch()
       }
     }
     window.addEventListener('keydown', onKey)
@@ -110,22 +102,10 @@ export default function AppHeader({ title, showBrand = false }) {
     return () => document.removeEventListener('pointerdown', onPointer)
   }, [notifOpen])
 
-  function openSearch() {
-    setSearchOpen(true)
-    setMenuOpen(false)
-    setNotifOpen(false)
-  }
-
-  function openResult(to) {
-    setSearchOpen(false)
-    navigate(to)
-  }
-
   function toggleNotif() {
     setNotifOpen((v) => {
       const next = !v
       if (next) {
-        setSearchOpen(false)
         setMenuOpen(false)
       }
       return next
@@ -335,17 +315,6 @@ export default function AppHeader({ title, showBrand = false }) {
         </nav>
 
         <div className="app-header__right">
-          <button
-            type="button"
-            className="app-header__desktop-search"
-            aria-label="Хайлт"
-            onClick={openSearch}
-          >
-            <SearchIcon />
-            <span>Хайх…</span>
-            <kbd>{IS_MAC ? '⌘K' : 'Ctrl K'}</kbd>
-          </button>
-
           <div className="app-header__notif-wrap" ref={notifRef}>
             <button
               type="button"
@@ -375,15 +344,6 @@ export default function AppHeader({ title, showBrand = false }) {
 
           <button
             type="button"
-            className="app-header__icon app-header__search-btn"
-            aria-label="Хайлт"
-            onClick={openSearch}
-          >
-            <SearchIcon />
-          </button>
-
-          <button
-            type="button"
             className={
               menuOpen
                 ? 'app-header__icon app-header__menu-btn is-on'
@@ -393,7 +353,6 @@ export default function AppHeader({ title, showBrand = false }) {
             aria-expanded={menuOpen}
             onClick={() => {
               setMenuOpen((v) => !v)
-              setSearchOpen(false)
               setNotifOpen(false)
             }}
           >
@@ -402,25 +361,9 @@ export default function AppHeader({ title, showBrand = false }) {
         </div>
       </div>
 
-      <SearchSheet open={searchOpen} onClose={() => setSearchOpen(false)} onNavigate={openResult} />
-
       {notifPortal}
       {menuPortal}
     </header>
-  )
-}
-
-function SearchIcon() {
-  return (
-    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" aria-hidden>
-      <circle cx="11" cy="11" r="6.5" stroke="currentColor" strokeWidth="1.8" />
-      <path
-        d="M16.2 16.2 20 20"
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinecap="round"
-      />
-    </svg>
   )
 }
 
