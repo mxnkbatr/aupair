@@ -3,6 +3,11 @@ import { createRoot } from 'react-dom/client'
 import { Capacitor } from '@capacitor/core'
 import './index.css'
 import App from './App.jsx'
+import { interceptExternalLinks } from './native'
+
+if (Capacitor.isNativePlatform()) document.documentElement.classList.add('is-native')
+if ('scrollRestoration' in window.history) window.history.scrollRestoration = 'manual'
+interceptExternalLinks()
 
 async function bootstrapNative() {
   if (!Capacitor.isNativePlatform()) return

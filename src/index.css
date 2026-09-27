@@ -485,6 +485,124 @@ p {
   }
 }
 
+/* Page transitions: opacity + `left` only, so fixed bottom bars inside pages stay anchored. */
+.page {
+  position: relative;
+  animation-duration: 0.34s;
+  animation-timing-function: var(--ease-out);
+  animation-fill-mode: backwards;
+}
+
+.page--forward {
+  animation-name: pageForward;
+}
+
+.page--back {
+  animation-name: pageBack;
+}
+
+.page--fade {
+  animation-name: pageFade;
+  animation-duration: 0.22s;
+}
+
+@keyframes pageForward {
+  from {
+    opacity: 0;
+    left: 36px;
+  }
+  to {
+    opacity: 1;
+    left: 0;
+  }
+}
+
+@keyframes pageBack {
+  from {
+    opacity: 0;
+    left: -36px;
+  }
+  to {
+    opacity: 1;
+    left: 0;
+  }
+}
+
+@keyframes pageFade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Native-feeling touch */
+a,
+button,
+input,
+select,
+textarea,
+label {
+  touch-action: manipulation;
+}
+
+a,
+button,
+img {
+  -webkit-touch-callout: none;
+}
+
+.btn,
+.bottomnav,
+.app-header,
+.pf-segment,
+.pf-menu {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+html.is-native body {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+html.is-native input,
+html.is-native textarea {
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+:where(a[class], button, [role='button']) {
+  transition:
+    transform 0.16s var(--ease-out),
+    opacity 0.16s var(--ease-out);
+}
+
+@media (hover: none) {
+  :where(a[class], button, [role='button']):active {
+    transform: scale(0.97);
+    opacity: 0.88;
+  }
+}
+
+/* Skeleton loading */
+.skeleton {
+  border-radius: 12px;
+  background: linear-gradient(90deg, #f1eded 0%, #faf7f7 50%, #f1eded 100%);
+  background-size: 200% 100%;
+  animation: skeleton 1.2s ease-in-out infinite;
+}
+
+@keyframes skeleton {
+  from {
+    background-position: 100% 0;
+  }
+  to {
+    background-position: -100% 0;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

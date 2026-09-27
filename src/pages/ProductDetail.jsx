@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { api } from '../api'
+import { useAuth } from '../auth'
 import { products, social } from '../data'
 import Sheet from '../components/Sheet'
 import './ProductDetail.css'
@@ -9,7 +10,8 @@ export default function ProductDetail() {
   const { id } = useParams()
   const product = useMemo(() => products.find((p) => p.id === id), [id])
   const [open, setOpen] = useState(false)
-  const [form, setForm] = useState({ name: '', phone: '' })
+  const { user } = useAuth()
+  const [form, setForm] = useState({ name: user?.name || '', phone: user?.phone || '' })
   const [loading, setLoading] = useState(false)
   const [status, setStatus] = useState(null)
 
@@ -38,7 +40,7 @@ export default function ProductDetail() {
         items: [{ id: product.id, name: product.name, price: product.price }],
       })
       setStatus({ ok: true, text: res.message || 'Захиалга бүртгэгдлээ' })
-      setForm({ name: '', phone: '' })
+      setForm({ name: user?.name || '', phone: user?.phone || '' })
     } catch (err) {
       setStatus({ ok: false, text: err.message })
     } finally {

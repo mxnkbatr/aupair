@@ -61,4 +61,13 @@ npm run build
 npm start
 ```
 
+Server environment variables:
+
+| Variable | Purpose |
+| --- | --- |
+| `ADMIN_KEY` | Password for `/admin` (required in production; dev default `aupair-admin`) |
+| `AUTH_SECRET` | Signs user login tokens (otherwise generated into `server/data/secret.key`) |
+| `DATA_DIR` | Where JSON data is stored (default `server/data`) |
+| `PORT` | HTTP port (default `3001`) |
+
 Repo: https://github.com/mxnkbatr/aupair

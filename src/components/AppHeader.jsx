@@ -51,46 +51,64 @@ function buildSearchIndex() {
 const SEARCH_INDEX = buildSearchIndex()
 
 const QUICK_SEARCH = [
-  { label: 'Франц', q: 'Франц', to: '/universities' },
+  { label: 'A1', q: 'A1', to: '/courses' },
+  { label: 'A2', q: 'A2', to: '/courses' },
   { label: 'Герман', q: 'Герман', to: '/universities' },
-  { label: 'Элсэлт', q: 'элсэлт', to: '/courses' },
   { label: 'Au Pair', q: 'Au Pair', to: '/universities' },
 ]
 
-const INITIAL_NOTIFICATIONS = [
+const NOTIFICATIONS = [
   {
-    id: 'n1',
+    id: 'german-a1',
     type: 'course',
-    title: 'France Au Pair 2027 — 10 суудал',
-    body: '50% дүүрсэн · франц хэл 10/18',
-    time: '2ц',
-    to: '/universities/france',
-    unread: true,
+    title: 'Герман хэлний A1 анги — элсэлт',
+    body: 'Анхан шатнаас · Au Pair бэлтгэл',
+    time: 'A1',
+    to: '/courses/german-a1',
   },
   {
-    id: 'n2',
-    type: 'video',
-    title: 'Шинэ Facebook зар',
-    body: 'Mongolian AuPair',
-    time: '1 өдөр',
-    to: '/videos',
-    unread: true,
+    id: 'german-a2',
+    type: 'course',
+    title: 'Герман хэлний A2 анги — элсэлт',
+    body: 'A1 төгссөн хүмүүст · виза, ярилцлагын бэлтгэл',
+    time: 'A2',
+    to: '/courses/german-a2',
   },
   {
-    id: 'n3',
+    id: 'germany-aupair',
     type: 'uni',
     title: 'Герман Au Pair элсэлт',
     body: 'Гэр бүл, виза, хэлний бэлтгэл',
-    time: '3 өдөр',
+    time: 'DE',
     to: '/universities/germany',
-    unread: false,
   },
 ]
 
+const READ_STORAGE = 'aupair-read-notifications'
+
+function loadNotifications() {
+  let read = []
+  try {
+    read = JSON.parse(localStorage.getItem(READ_STORAGE) || '[]')
+  } catch {
+    read = []
+  }
+  return NOTIFICATIONS.map((n) => ({ ...n, unread: !read.includes(n.id) }))
+}
+
+function saveRead(list) {
+  const read = list.filter((n) => !n.unread).map((n) => n.id)
+  try {
+    localStorage.setItem(READ_STORAGE, JSON.stringify(read))
+  } catch {
+    // storage unavailable (private mode)
+  }
+}
+
 const NOTIF_ICON = {
-  course: 'FR',
+  course: 'DE',
   video: '▶',
-  uni: 'DE',
+  uni: 'AP',
 }
 
 export default function AppHeader({ title, showBrand = false }) {
@@ -99,7 +117,7 @@ export default function AppHeader({ title, showBrand = false }) {
   const [searchOpen, setSearchOpen] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const [notifOpen, setNotifOpen] = useState(false)
-  const [notifications, setNotifications] = useState(INITIAL_NOTIFICATIONS)
+  const [notifications, setNotifications] = useState(loadNotifications)
   const inputRef = useRef(null)
   const desktopInputRef = useRef(null)
   const notifRef = useRef(null)
@@ -209,15 +227,17 @@ export default function AppHeader({ title, showBrand = false }) {
   }
 
   function openNotif(item) {
-    setNotifications((list) =>
-      list.map((n) => (n.id === item.id ? { ...n, unread: false } : n)),
-    )
+    const next = notifications.map((n) => (n.id === item.id ? { ...n, unread: false } : n))
+    setNotifications(next)
+    saveRead(next)
     setNotifOpen(false)
     navigate(item.to)
   }
 
   function markAllRead() {
-    setNotifications((list) => list.map((n) => ({ ...n, unread: false })))
+    const next = notifications.map((n) => ({ ...n, unread: false }))
+    setNotifications(next)
+    saveRead(next)
   }
 
   const notifPanel = (
@@ -509,7 +529,7 @@ export default function AppHeader({ title, showBrand = false }) {
               ref={inputRef}
               type="search"
               value={query}
-              placeholder="Франц, Герман, Au Pair хайх..."
+              placeholder="A1, A2, Герман, Au Pair хайх..."
               aria-label="Хайлт"
               onChange={(e) => setQuery(e.target.value)}
             />
@@ -564,7 +584,7 @@ export default function AppHeader({ title, showBrand = false }) {
                       { label: 'Хөтөлбөр', to: '/courses', icon: 'AP' },
                       { label: 'Улс орнууд', to: '/universities', icon: 'EU' },
                       { label: 'Дэлгүүр', to: '/shop', icon: 'BK' },
-                      { label: 'Холбоо', to: '/profile', icon: '@' },
+                      { label: 'Профайл', to: '/profile', icon: '@' },
                     ].map((item) => (
                       <button
                         key={item.to}

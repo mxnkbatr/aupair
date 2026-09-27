@@ -1,4 +1,5 @@
 import { NavLink } from 'react-router-dom'
+import { haptic } from '../native'
 import './BottomNav.css'
 
 const items = [
@@ -6,7 +7,7 @@ const items = [
   { to: '/courses', label: 'Хөтөлбөр', icon: BookIcon },
   { to: '/universities', label: 'Улс', icon: UniIcon },
   { to: '/shop', label: 'Дэлгүүр', icon: BagIcon },
-  { to: '/profile', label: 'Холбоо', icon: UserIcon },
+  { to: '/profile', label: 'Профайл', icon: UserIcon },
 ]
 
 export default function BottomNav() {
@@ -17,6 +18,7 @@ export default function BottomNav() {
           key={to}
           to={to}
           end={to === '/'}
+          onClick={() => haptic()}
           className={({ isActive }) =>
             isActive ? 'bottomnav__item is-active' : 'bottomnav__item'
           }

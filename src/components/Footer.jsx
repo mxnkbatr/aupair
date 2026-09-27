@@ -26,7 +26,7 @@ export default function Footer() {
             <Link to="/courses">Хөтөлбөр</Link>
             <Link to="/universities">Улс орнууд</Link>
             <Link to="/shop">Дэлгүүр</Link>
-            <Link to="/profile">Холбоо барих</Link>
+            <Link to="/contact">Холбоо барих</Link>
           </div>
         </div>
 

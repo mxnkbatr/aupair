@@ -1,9 +1,9 @@
 import { Link } from 'react-router-dom'
-import { feed, stories, social } from '../data'
+import { feed, social } from '../data'
 import './PortalFeed.css'
 
 export default function PortalFeed() {
-  const { featured, side } = feed
+  const { featured } = feed
 
   return (
     <section className="portal">
@@ -45,25 +45,6 @@ export default function PortalFeed() {
               ) : null}
             </div>
           </Link>
-
-          <div className="portal__side">
-            {side.map((item) => (
-              <Link key={item.title} to={item.to} className="portal__side-item">
-                <span className="tag">{item.tag}</span>
-                <h4>{item.title}</h4>
-              </Link>
-            ))}
-          </div>
-        </div>
-
-        <div className="portal__chips">
-          {stories.map((story) => (
-            <div key={story.id} className="portal__chip">
-              <span>{story.category}</span>
-              <strong>{story.title}</strong>
-              <small>{story.time}</small>
-            </div>
-          ))}
         </div>
       </div>
     </section>

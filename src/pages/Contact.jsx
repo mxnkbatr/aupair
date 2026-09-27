@@ -1,12 +1,14 @@
 import { useState } from 'react'
 import { api } from '../api'
+import { useAuth } from '../auth'
 import { social } from '../data'
 import './Contact.css'
 
 export default function Contact() {
+  const { user } = useAuth()
   const [form, setForm] = useState({
-    name: '',
-    phone: '',
+    name: user?.name || '',
+    phone: user?.phone || '',
     interest: 'course',
     message: '',
   })
@@ -20,7 +22,7 @@ export default function Contact() {
     try {
       const res = await api.contact(form)
       setStatus({ ok: true, text: res.message || 'Хүсэлт хүлээн авлаа' })
-      setForm({ name: '', phone: '', interest: 'course', message: '' })
+      setForm({ name: user?.name || '', phone: user?.phone || '', interest: 'course', message: '' })
     } catch (err) {
       setStatus({ ok: false, text: err.message })
     } finally {
@@ -63,8 +65,8 @@ export default function Contact() {
               onChange={(e) => setForm({ ...form, interest: e.target.value })}
             >
               <option value="country">Au Pair улс / элсэлт</option>
-              <option value="course">Хэлний анги</option>
-              <option value="france">Франц 2027</option>
+              <option value="german-a1">Герман хэл A1</option>
+              <option value="german-a2">Герман хэл A2</option>
               <option value="other">Бусад</option>
             </select>
           </label>

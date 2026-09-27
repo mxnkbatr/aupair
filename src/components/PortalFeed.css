@@ -152,7 +152,6 @@
   }
 
   .portal__layout {
-    grid-template-columns: 1.55fr 1fr;
     gap: 1rem;
     min-height: 340px;
   }

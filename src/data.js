@@ -3,7 +3,7 @@ export const navLinks = [
   { to: '/courses', label: 'Хөтөлбөр' },
   { to: '/universities', label: 'Улс орнууд' },
   { to: '/shop', label: 'Дэлгүүр' },
-  { to: '/profile', label: 'Холбоо' },
+  { to: '/profile', label: 'Профайл' },
 ]
 
 export const social = {
@@ -28,75 +28,54 @@ export const social = {
   placed: '3,000+',
 }
 
+export const GERMAN_LEVEL_LABELS = {
+  none: 'Сураагүй',
+  A1: 'A1',
+  A2: 'A2',
+  'B1+': 'B1 ба түүнээс дээш',
+}
+
+export const STATUS_LABELS = {
+  enrollments: {
+    pending: 'Шинэ',
+    contacted: 'Холбогдсон',
+    accepted: 'Элсүүлсэн',
+    cancelled: 'Цуцалсан',
+  },
+  contacts: {
+    pending: 'Шинэ',
+    contacted: 'Холбогдсон',
+    done: 'Шийдвэрлэсэн',
+  },
+  orders: {
+    pending: 'Шинэ',
+    contacted: 'Холбогдсон',
+    done: 'Хүргэсэн',
+    cancelled: 'Цуцалсан',
+  },
+}
+
+export const INTEREST_LABELS = {
+  country: 'Au Pair улс',
+  'german-a1': 'Герман хэл A1',
+  'german-a2': 'Герман хэл A2',
+  course: 'Хэлний анги',
+  other: 'Бусад',
+}
+
 export const feed = {
   featured: {
     tag: 'Элсэлт авч байна',
-    title: 'France Au Pair 2027 — 10 суудал, 50% дүүрсэн',
-    meta: 'Франц хэлний анхан шат · 10/18-нд эхэлнэ',
-    to: '/universities/france',
+    title: 'Герман хэлний A1, A2 анги',
+    meta: 'Au Pair-т бэлтгэх · бүртгэл нээлттэй',
+    to: '/courses',
     image:
-      'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=1400&q=80',
-    source: 'Facebook · Mongolian AuPair',
+      'https://images.unsplash.com/photo-1467269204594-9661b134dd2b?auto=format&fit=crop&w=1400&q=80',
+    source: 'Mongolian AuPair',
   },
-  side: [
-    {
-      tag: 'Франц',
-      title: 'Франц хэлний анхан шат 10/18-нд эхэлнэ',
-      to: '/courses/french-a1',
-    },
-    {
-      tag: 'Герман',
-      title: 'Герман Au Pair элсэлт нээлттэй',
-      to: '/universities/germany',
-    },
-    {
-      tag: 'Хаяг',
-      title: 'New Residence 726-1 · Сүхбаатар',
-      to: '/profile',
-    },
-  ],
 }
 
-export const stories = [
-  {
-    id: 1,
-    category: 'Туршлага',
-    title: `${social.since} оноос хойш соёл солилцоо`,
-    time: '20 жил',
-  },
-  {
-    id: 2,
-    category: 'Залуус',
-    title: `${social.placed} оролцогч Европын гэр бүлд`,
-    time: 'Идэвхтэй',
-  },
-  {
-    id: 3,
-    category: 'Хөтөлбөр',
-    title: '7 улс · элсэлт авч байна',
-    time: social.hours,
-  },
-]
-
 export const coursesFallback = [
-  {
-    id: 'french-a1',
-    type: 'language',
-    level: 'A1',
-    hsk: 'FR A1',
-    title: 'Франц хэлний анхан шат',
-    subtitle: 'France Au Pair 2027-д бэлтгэх анги',
-    duration: '3 сар',
-    mode: 'Танхим',
-    schedule: '2026.10.18-нд эхэлнэ',
-    priceLabel: 'Зөвлөгөө аваарай',
-    seats: 12,
-    seatsLeft: 6,
-    points: ['Анхан шатны яриа', 'Гэр бүлийн өдөр тутмын хэл', 'Соёл, дүрэм'],
-    badge: 'Элсэлт нээлттэй',
-    description:
-      'Франц руу Au Pair-аар явах залууст зориулсан анхан шатны франц хэлний анги. 10-р сарын 18-нд эхэлнэ.',
-  },
   {
     id: 'german-a1',
     type: 'language',
@@ -109,7 +88,6 @@ export const coursesFallback = [
     schedule: 'Өдөр / Орой',
     priceLabel: 'Зөвлөгөө аваарай',
     seats: 14,
-    seatsLeft: 8,
     points: ['A1 яриа, сонсох', 'Хүүхэд харах үгийн сан', 'Визийн ярилцлага'],
     badge: 'Элсэлт нээлттэй',
     description:
@@ -127,28 +105,9 @@ export const coursesFallback = [
     schedule: 'Оройн анги',
     priceLabel: 'Зөвлөгөө аваарай',
     seats: 12,
-    seatsLeft: 7,
     points: ['A2 түвшин', 'Хүүхэдтэй харилцах', 'Бичиг баримтын хэл'],
-    badge: null,
-    description: 'Герман Au Pair-т шаардлагатай A2 түвшинд бэлтгэнэ.',
-  },
-  {
-    id: 'eiffel',
-    type: 'language',
-    level: 'Франц',
-    hsk: 'Eiffel',
-    title: 'AuPair Eiffel — Франц',
-    subtitle: 'Alliance Française-тай хамтарсан хөтөлбөр',
-    duration: '12 сар',
-    mode: 'Соёл солилцоо',
-    schedule: '2027 оны элсэлт',
-    priceLabel: 'Зөвлөгөө аваарай',
-    seats: 10,
-    seatsLeft: 5,
-    points: ['Францад 1 жил', 'Хэлний сургалт', 'Гэр бүлд амьдрах'],
-    badge: '50% дүүрсэн',
-    description:
-      'Mongolian AuPair болон Alliance Française d’Oulan-Bator-ийн хамтарсан AuPair Eiffel хөтөлбөр. Францад нэг жил соёл солилцоо.',
+    badge: 'Элсэлт нээлттэй',
+    description: 'Герман Au Pair-т шаардлагатай A2 түвшинд бэлтгэнэ. Goethe A2 шалгалтад бэлтгэнэ.',
   },
 ]
 
@@ -176,8 +135,6 @@ export const countries = [
     badge: 'Эрэлттэй',
     featured: true,
     open: true,
-    seats: 12,
-    seatsLeft: 8,
     image:
       'https://images.unsplash.com/photo-1467269204594-9661b134dd2b?auto=format&fit=crop&w=1400&q=80',
     description:
@@ -205,25 +162,23 @@ export const countries = [
     region: 'Баруун Европ',
     language: 'Франц хэл',
     langGroup: 'french',
-    focus: 'Au Pair Eiffel · 2027',
+    focus: 'Au Pair · гэр бүл',
     intake: 'Элсэлт нээлттэй',
     hsk: 'A1+',
     duration: '12 сар',
     tuition: 'Хоол, байр + халаасны мөнгө',
     priceLabel: 'Зөвлөгөө үнэгүй',
-    badge: 'Элсэлт нээлттэй',
-    featured: true,
+    badge: null,
+    featured: false,
     open: true,
-    seats: 10,
-    seatsLeft: 5,
     image:
       'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=1400&q=80',
     description:
-      'France Au Pair 2027 — 10 суудал, одоогоор 50% дүүрсэн. Франц хэлний анхан шат 10-р сарын 18-нд эхэлнэ.',
+      'Францын гэр бүлд Au Pair-аар амьдарч, франц хэл, соёлтой танилцана.',
     points: [
-      '10 суудал · 50% дүүрсэн',
-      'Alliance Française-тай хамтарсан Eiffel хөтөлбөр',
-      'Франц хэлний бэлтгэл ангитай',
+      'Парис болон бусад хотууд',
+      'Alliance Française-тай хамтын ажиллагаа',
+      'Франц хэлний орчин',
     ],
     requirements: [
       '18–30 нас',
@@ -232,7 +187,7 @@ export const countries = [
       'Хүүхэд харах хүсэл',
       'Бүртгэлийн маягт',
     ],
-    why: 'Францад нэг жил амьдарч, хэл сурч, соёл солилцоо хийх шинэ боломж — суудал хязгаартай.',
+    why: 'Францад нэг жил амьдарч, франц хэл сурахыг хүсвэл.',
   },
   {
     id: 'austria',
@@ -252,8 +207,6 @@ export const countries = [
     badge: null,
     featured: true,
     open: true,
-    seats: 8,
-    seatsLeft: 6,
     image:
       'https://images.unsplash.com/photo-1609856878074-cf31e21ccb6b?auto=format&fit=crop&w=1400&q=80',
     description:
@@ -290,8 +243,6 @@ export const countries = [
     badge: null,
     featured: true,
     open: true,
-    seats: 6,
-    seatsLeft: 4,
     image:
       'https://images.unsplash.com/photo-1527668752968-14dc70a27c10?auto=format&fit=crop&w=1400&q=80',
     description:
@@ -324,8 +275,6 @@ export const countries = [
     badge: null,
     featured: false,
     open: true,
-    seats: 6,
-    seatsLeft: 5,
     image:
       'https://images.unsplash.com/photo-1559113202-c916b8e44373?auto=format&fit=crop&w=1400&q=80',
     description:
@@ -358,8 +307,6 @@ export const countries = [
     badge: null,
     featured: true,
     open: true,
-    seats: 6,
-    seatsLeft: 4,
     image:
       'https://images.unsplash.com/photo-1534113414509-0eec2bfb493f?auto=format&fit=crop&w=1400&q=80',
     description:
@@ -392,8 +339,6 @@ export const countries = [
     badge: 'Скандинав',
     featured: false,
     open: true,
-    seats: 5,
-    seatsLeft: 3,
     image:
       'https://images.unsplash.com/photo-1513622470522-26c3e3b0c1a6?auto=format&fit=crop&w=1400&q=80',
     description:
@@ -416,11 +361,11 @@ export const videos = [
   {
     id: 'r1',
     href: 'https://www.facebook.com/MongolianAuPair',
-    title: 'France Au Pair 2027 элсэлт',
+    title: 'Герман хэлний анги · элсэлт',
     category: 'Элсэлт',
     views: 'Шинэ',
     thumb:
-      'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1467269204594-9661b134dd2b?auto=format&fit=crop&w=800&q=80',
   },
   {
     id: 'r2',
@@ -463,12 +408,12 @@ export const products = [
   },
   {
     id: 'p2',
-    name: 'Франц хэлний анхан шатны ном',
+    name: 'Герман хэлний A2 ном',
     price: 'Зөвлөгөө',
     tag: 'Хэл',
-    blurb: 'France 2027',
-    description: 'Франц Au Pair-т зориулсан анхан шатны материал.',
-    points: ['A1 үгс', 'Өдөр тутмын яриа', 'Соёл'],
+    blurb: 'Goethe A2 бэлтгэл',
+    description: 'Герман хэлний A2 түвшний сурах бичиг, дасгал.',
+    points: ['A2 үгс', 'Дүрэм', 'Шалгалтын дасгал'],
   },
   {
     id: 'p3',

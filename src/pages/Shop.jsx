@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { api } from '../api'
+import { useAuth } from '../auth'
 import { products, social } from '../data'
 import PageHeader from '../components/PageHeader'
 import Sheet from '../components/Sheet'
@@ -24,7 +25,8 @@ export default function Shop() {
   const [filter, setFilter] = useState('all')
   const [cart, setCart] = useState([])
   const [open, setOpen] = useState(false)
-  const [form, setForm] = useState({ name: '', phone: '' })
+  const { user } = useAuth()
+  const [form, setForm] = useState({ name: user?.name || '', phone: user?.phone || '' })
   const [loading, setLoading] = useState(false)
   const [status, setStatus] = useState(null)
 
@@ -59,7 +61,7 @@ export default function Shop() {
       })
       setStatus({ ok: true, text: res.message || 'Захиалга бүртгэгдлээ' })
       setCart([])
-      setForm({ name: '', phone: '' })
+      setForm({ name: user?.name || '', phone: user?.phone || '' })
     } catch (err) {
       setStatus({ ok: false, text: err.message })
     } finally {

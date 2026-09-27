@@ -331,97 +331,6 @@
   font-size: 0.92rem;
 }
 
-.home-visit {
-  padding-top: 1.25rem;
-}
-
-.home-visit__card {
-  display: grid;
-  gap: 1.1rem;
-  padding: 1.25rem 1.2rem;
-  border-radius: 20px;
-  background: var(--white);
-  border: 1px solid var(--line);
-}
-
-.home-visit__card h2 {
-  margin-top: 0.3rem;
-  font-size: clamp(1.25rem, 3vw, 1.55rem);
-}
-
-.home-visit__card p {
-  margin-top: 0.45rem;
-  color: var(--muted);
-  font-size: 0.9rem;
-  max-width: 42ch;
-}
-
-.home-visit__actions {
-  margin-top: 1rem;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.55rem;
-}
-
-.home-visit__meta {
-  display: grid;
-  gap: 0.25rem;
-  padding: 1rem;
-  border-radius: 14px;
-  background: var(--red-soft);
-  border: 1px solid rgba(227, 30, 36, 0.1);
-}
-
-.home-visit__meta strong {
-  font-family: var(--font-display);
-  color: var(--red);
-  font-size: 1.05rem;
-}
-
-.home-visit__meta span {
-  color: var(--muted);
-  font-size: 0.75rem;
-  font-weight: 650;
-}
-
-.home-visit__meta a {
-  margin-top: 0.35rem;
-  color: var(--ink);
-  font-weight: 600;
-  font-size: 0.88rem;
-}
-
-.home-fb {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  padding: 1.2rem 1.25rem;
-  border-radius: 20px;
-  background: linear-gradient(125deg, #2a0a0c, #e31e24);
-  color: #fff;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  transition: transform 0.25s var(--ease-out);
-}
-
-.home-fb:hover {
-  transform: translateY(-2px);
-}
-
-.home-fb strong {
-  display: block;
-  margin-top: 0.22rem;
-  font-family: var(--font-display);
-  font-size: 1.15rem;
-  letter-spacing: -0.03em;
-}
-
-.home-fb > span:last-child {
-  font-weight: 700;
-  opacity: 0.92;
-  white-space: nowrap;
-}
-
 @media (max-width: 420px) {
   .home-shortcut span {
     display: none;
@@ -454,11 +363,6 @@
     grid-template-columns: repeat(4, 1fr);
   }
 
-  .home-visit__card {
-    grid-template-columns: 1.4fr 0.8fr;
-    align-items: center;
-  }
-
   .home-shortcuts__grid {
     gap: 0.75rem;
   }
@@ -470,18 +374,12 @@
 }
 
 @media (min-width: 900px) {
-  .home-shortcuts--mobile,
-  .home-fb-wrap {
+  .home-shortcuts--mobile {
     display: none;
   }
 
   .home-block {
     padding: 3rem 0 0.5rem;
-  }
-
-  .home-visit {
-    padding-top: 2.5rem;
-    padding-bottom: 3rem;
   }
 
   .block-head {
@@ -538,11 +436,5 @@
   .home-video__views,
   .home-video__meta small {
     display: none;
-  }
-
-  .home-visit__card {
-    grid-template-columns: 1.5fr 0.7fr;
-    padding: 1.75rem;
-    gap: 1.5rem;
   }
 }

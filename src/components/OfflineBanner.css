@@ -1,0 +1,23 @@
+.offline-banner {
+  position: sticky;
+  top: calc(var(--nav-h) + env(safe-area-inset-top, 0px));
+  z-index: 39;
+  padding: 0.5rem 1rem;
+  background: var(--ink);
+  color: #fff;
+  font-size: 0.78rem;
+  font-weight: 650;
+  text-align: center;
+  animation: offlineIn 0.25s var(--ease-out);
+}
+
+.offline-banner.is-online {
+  background: #0f7a45;
+}
+
+@keyframes offlineIn {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+}

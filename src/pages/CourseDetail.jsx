@@ -4,6 +4,7 @@ import { api } from '../api'
 import { coursesFallback, social } from '../data'
 import EnrollForm from '../components/EnrollForm'
 import Sheet from '../components/Sheet'
+import ShareButton from '../components/ShareButton'
 import './CourseDetail.css'
 
 export default function CourseDetail() {
@@ -68,6 +69,7 @@ export default function CourseDetail() {
       <div className="container">
         <section className="cd-hero">
           <div className="cd-hero__banner">
+            <ShareButton title={course.title} text={`${course.title} — элсэлт`} />
             <div className="cd-hero__badge-row">
               <span className="cd-hero__hsk">{course.hsk || 'AP'}</span>
               {course.badge ? (
@@ -147,7 +149,7 @@ export default function CourseDetail() {
             </div>
             <div>
               <strong>Хэлний бэлтгэл</strong>
-              <span>Франц, герман хэлний ангитай</span>
+              <span>Герман хэлний A1, A2 анги</span>
             </div>
           </div>
         </section>
