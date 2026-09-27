@@ -624,6 +624,26 @@ html[data-nav='fade']::view-transition-new(root) {
   }
 }
 
+/* Edge swipe back */
+.swipe-under {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  overflow: hidden;
+  pointer-events: none;
+  background: var(--bg-app, #fff);
+  transform: translate3d(-30%, 0, 0);
+  filter: brightness(0.92);
+}
+
+html[data-swipe] .site__main > .page {
+  z-index: 2;
+  min-height: 100dvh;
+  background: var(--bg-app, #fff);
+  box-shadow: -12px 0 32px rgba(17, 17, 20, 0.16);
+  will-change: transform;
+}
+
 /* Native-feeling touch */
 a,
 button,
@@ -683,6 +703,20 @@ html.is-native textarea {
     transform: scale(0.97);
     opacity: 0.88;
     transition-duration: 0.08s;
+  }
+}
+
+img.img-pending {
+  opacity: 0;
+}
+
+img.img-in {
+  animation: imgIn 0.4s ease both;
+}
+
+@keyframes imgIn {
+  from {
+    opacity: 0;
   }
 }
 

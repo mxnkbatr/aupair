@@ -64,8 +64,30 @@
   box-shadow: none;
 }
 
+.bottomnav__item svg > :first-child {
+  fill: currentColor;
+  fill-opacity: 0;
+  transition: fill-opacity 0.25s ease;
+}
+
 .bottomnav__item.is-active svg {
-  transform: translateY(-0.5px);
+  animation: tabPop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.bottomnav__item.is-active svg > :first-child {
+  fill-opacity: 0.2;
+}
+
+@keyframes tabPop {
+  0% {
+    transform: scale(0.78);
+  }
+  55% {
+    transform: scale(1.14);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 @media (min-width: 900px) {

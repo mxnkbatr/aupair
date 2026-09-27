@@ -4,10 +4,10 @@ import { haptic } from '../native'
 const THRESHOLD = 64
 const MAX_PULL = 110
 
-export default function usePullToRefresh(onRefresh) {
+export default function usePullToRefresh(onRefresh, enabled = true) {
   const [pull, setPull] = useState(0)
   const [refreshing, setRefreshing] = useState(false)
-  const startY = useRef(null)
+  const start = useRef(null)
   const distance = useRef(0)
   const callback = useRef(onRefresh)
 
@@ -16,14 +16,25 @@ export default function usePullToRefresh(onRefresh) {
   }, [onRefresh])
 
   useEffect(() => {
+    if (!enabled) return undefined
+
     function onStart(e) {
       const sheetOpen = document.body.style.overflow === 'hidden'
-      startY.current = window.scrollY <= 0 && !sheetOpen ? e.touches[0].clientY : null
+      const t = e.touches[0]
+      start.current = window.scrollY <= 0 && !sheetOpen ? { x: t.clientX, y: t.clientY } : null
     }
 
     function onMove(e) {
-      if (startY.current == null) return
-      const dy = e.touches[0].clientY - startY.current
+      if (start.current == null) return
+      const t = e.touches[0]
+      const dx = t.clientX - start.current.x
+      const dy = t.clientY - start.current.y
+      if ('swipe' in document.documentElement.dataset || (distance.current === 0 && Math.abs(dx) > 10 && Math.abs(dx) > Math.abs(dy))) {
+        start.current = null
+        distance.current = 0
+        setPull(0)
+        return
+      }
       const next = dy > 0 ? Math.min(MAX_PULL, dy * 0.5) : 0
       if (distance.current < THRESHOLD && next >= THRESHOLD) haptic()
       distance.current = next
@@ -31,8 +42,8 @@ export default function usePullToRefresh(onRefresh) {
     }
 
     async function onEnd() {
-      if (startY.current == null) return
-      startY.current = null
+      if (start.current == null) return
+      start.current = null
       const reached = distance.current >= THRESHOLD
       distance.current = 0
       setPull(0)
@@ -55,7 +66,7 @@ export default function usePullToRefresh(onRefresh) {
       window.removeEventListener('touchend', onEnd)
       window.removeEventListener('touchcancel', onEnd)
     }
-  }, [])
+  }, [enabled])
 
   return { pull, refreshing, ready: pull >= THRESHOLD }
 }

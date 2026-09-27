@@ -26,14 +26,18 @@ export default function CourseGrid({
 
   useEffect(() => {
     let alive = true
-    api
-      .getCourses()
-      .then((data) => {
-        if (alive) setList(data)
-      })
-      .catch(() => {})
+    const load = () =>
+      api
+        .getCourses()
+        .then((data) => {
+          if (alive) setList(data)
+        })
+        .catch(() => {})
+    load()
+    window.addEventListener('app:refresh', load)
     return () => {
       alive = false
+      window.removeEventListener('app:refresh', load)
     }
   }, [])
 

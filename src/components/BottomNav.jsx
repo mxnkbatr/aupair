@@ -1,4 +1,4 @@
-import { NavLink } from 'react-router-dom'
+import { NavLink, useLocation } from 'react-router-dom'
 import { haptic } from '../native'
 import './BottomNav.css'
 
@@ -11,6 +11,15 @@ const items = [
 ]
 
 export default function BottomNav() {
+  const { pathname } = useLocation()
+
+  function onTap(e, to) {
+    haptic()
+    if (pathname !== to) return
+    e.preventDefault()
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
   return (
     <nav className="bottomnav" aria-label="Үндсэн цэс">
       {items.map(({ to, label, icon: Icon }) => (
@@ -18,7 +27,7 @@ export default function BottomNav() {
           key={to}
           to={to}
           end={to === '/'}
-          onClick={() => haptic()}
+          onClick={(e) => onTap(e, to)}
           className={({ isActive }) =>
             isActive ? 'bottomnav__item is-active' : 'bottomnav__item'
           }
