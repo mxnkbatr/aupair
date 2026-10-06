@@ -54,7 +54,7 @@ export default function CourseGrid({
             <span className="eyebrow">Хөтөлбөр</span>
             <h2>Элсэлт нээлттэй ангиуд</h2>
           </div>
-          <Link to="/courses" className="link-more">
+          <Link to="/learn" className="link-more">
             Бүгдийг харах →
           </Link>
         </div>
@@ -165,7 +165,7 @@ function CourseCard({ course }) {
           <strong>{course.priceLabel || course.price}</strong>
         </div>
         <Link
-          to={`/courses/${course.id}`}
+          to={`/learn/course/${course.id}`}
           className={`course-card__cta${full ? ' is-disabled' : ''}`}
           aria-disabled={full}
           onClick={(e) => {

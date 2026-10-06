@@ -50,7 +50,7 @@ export default function Privacy() {
           <h3>5. Бүртгэл устгах</h3>
           <p>
             Та бүртгэлээ хүссэн үедээ устгаж болно:{' '}
-            <Link to="/profile">Профайл → Тохиргоо → Бүртгэл устгах</Link>. Эсвэл{' '}
+            <Link to="/me">Профайл → Тохиргоо → Бүртгэл устгах</Link>. Эсвэл{' '}
             <a href={`mailto:${social.email}`}>{social.email}</a> хаягаар хүсэлт илгээнэ үү.
             Устгасны дараа бүртгэл болон холбоотой хувийн мэдээлэл бүрмөсөн устана.
           </p>
@@ -101,7 +101,7 @@ export default function Privacy() {
           <h3>5. Account deletion</h3>
           <p>
             You can delete your account anytime in{' '}
-            <Link to="/profile">Profile → Settings → Delete account</Link>, or by emailing{' '}
+            <Link to="/me">Profile → Settings → Delete account</Link>, or by emailing{' '}
             <a href={`mailto:${social.email}`}>{social.email}</a>. After deletion, your account and
             related personal data are permanently removed.
           </p>

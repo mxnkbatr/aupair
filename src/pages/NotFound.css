@@ -1,0 +1,41 @@
+.notfound {
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+  padding: 72px 0 32px;
+  text-align: center;
+}
+
+.notfound__icon {
+  display: grid;
+  place-items: center;
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  background: var(--brand-tint);
+  color: var(--brand);
+}
+
+.notfound h1 {
+  font-size: 1.75rem;
+}
+
+.notfound p {
+  max-width: 32ch;
+  color: var(--label-2);
+}
+
+.notfound__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.notfound__help {
+  margin-top: 8px;
+  color: var(--brand);
+  font-size: 0.875rem;
+  font-weight: 600;
+}

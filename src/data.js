@@ -1,9 +1,8 @@
 export const navLinks = [
   { to: '/', label: 'Нүүр' },
-  { to: '/courses', label: 'Хөтөлбөр' },
-  { to: '/universities', label: 'Улс орнууд' },
-  { to: '/shop', label: 'Дэлгүүр' },
-  { to: '/profile', label: 'Профайл' },
+  { to: '/learn', label: 'Сурах' },
+  { to: '/countries', label: 'Улсууд' },
+  { to: '/me', label: 'Би' },
 ]
 
 export const social = {
@@ -68,7 +67,7 @@ export const feed = {
     tag: 'Элсэлт авч байна',
     title: 'Герман хэлний A1, A2 анги',
     meta: 'Au Pair-т бэлтгэх · бүртгэл нээлттэй',
-    to: '/courses',
+    to: '/learn',
     image:
       'https://images.unsplash.com/photo-1467269204594-9661b134dd2b?auto=format&fit=crop&w=1400&q=80',
     source: 'Mongolian AuPair',
@@ -80,7 +79,7 @@ export const coursesFallback = [
     id: 'german-a1',
     type: 'language',
     level: 'A1',
-    hsk: 'DE A1',
+    hsk: 'A1',
     title: 'Герман хэлний анхан шат',
     subtitle: 'Герман, Австри, Швейцарьт бэлтгэх',
     duration: '3 сар',
@@ -88,6 +87,9 @@ export const coursesFallback = [
     schedule: 'Өдөр / Орой',
     priceLabel: 'Зөвлөгөө аваарай',
     seats: 14,
+    seatsLeft: 14,
+    image:
+      'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=1400&q=80',
     points: ['A1 яриа, сонсох', 'Хүүхэд харах үгийн сан', 'Визийн ярилцлага'],
     badge: 'Элсэлт нээлттэй',
     description:
@@ -97,7 +99,7 @@ export const coursesFallback = [
     id: 'german-a2',
     type: 'language',
     level: 'A2',
-    hsk: 'DE A2',
+    hsk: 'A2',
     title: 'Герман хэл A2',
     subtitle: 'Гэр бүл, сургууль, өдөр тутмын харилцаа',
     duration: '3 сар',
@@ -105,6 +107,9 @@ export const coursesFallback = [
     schedule: 'Оройн анги',
     priceLabel: 'Зөвлөгөө аваарай',
     seats: 12,
+    seatsLeft: 12,
+    image:
+      'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=1400&q=80',
     points: ['A2 түвшин', 'Хүүхэдтэй харилцах', 'Бичиг баримтын хэл'],
     badge: 'Элсэлт нээлттэй',
     description: 'Герман Au Pair-т шаардлагатай A2 түвшинд бэлтгэнэ. Goethe A2 шалгалтад бэлтгэнэ.',
@@ -423,5 +428,102 @@ export const products = [
     blurb: 'Элсэлтийн жагсаалт',
     description: 'Паспорт, анкет, эрүүл мэнд — Au Pair бүртгэлийн чеклист.',
     points: ['Виза', 'Гэр бүл', 'Хэлний үнэмлэх'],
+  },
+]
+
+/** Өдрийн үг — герман / монгол. Word of the day rotates by calendar day. */
+export const dailyWords = [
+  { de: 'die Familie', mn: 'гэр бүл', example: 'Meine Familie ist groß.', exampleMn: 'Миний гэр бүл том.' },
+  { de: 'das Kind', mn: 'хүүхэд', example: 'Das Kind spielt im Garten.', exampleMn: 'Хүүхэд цэцэрлэгт тоглож байна.' },
+  { de: 'Guten Morgen', mn: 'Өглөөний мэнд', example: 'Guten Morgen, wie geht es dir?', exampleMn: 'Өглөөний мэнд, чи сайн уу?' },
+  { de: 'die Gastfamilie', mn: 'зочин гэр бүл', example: 'Ich wohne bei meiner Gastfamilie.', exampleMn: 'Би зочин гэр бүлдээ амьдарч байна.' },
+  { de: 'das Frühstück', mn: 'өглөөний цай', example: 'Das Frühstück ist fertig.', exampleMn: 'Өглөөний цай бэлэн боллоо.' },
+  { de: 'bitte', mn: 'гуйя / зүгээр', example: 'Ein Glas Wasser, bitte.', exampleMn: 'Нэг стакан ус өгнө үү.' },
+  { de: 'danke', mn: 'баярлалаа', example: 'Danke für deine Hilfe!', exampleMn: 'Тусалсанд баярлалаа!' },
+  { de: 'die Schule', mn: 'сургууль', example: 'Die Kinder gehen zur Schule.', exampleMn: 'Хүүхдүүд сургуульдаа явна.' },
+  { de: 'spielen', mn: 'тоглох', example: 'Wir spielen zusammen.', exampleMn: 'Бид хамт тоглоно.' },
+  { de: 'das Zimmer', mn: 'өрөө', example: 'Mein Zimmer ist klein, aber schön.', exampleMn: 'Миний өрөө жижиг ч гоё.' },
+  { de: 'der Bahnhof', mn: 'вокзал', example: 'Wo ist der Bahnhof?', exampleMn: 'Вокзал хаана байдаг вэ?' },
+  { de: 'die Hausaufgaben', mn: 'гэрийн даалгавар', example: 'Hast du deine Hausaufgaben gemacht?', exampleMn: 'Чи гэрийн даалгавраа хийсэн үү?' },
+  { de: 'Ich heiße ...', mn: 'Намайг ... гэдэг', example: 'Ich heiße Saraa.', exampleMn: 'Намайг Сараа гэдэг.' },
+  { de: 'der Reisepass', mn: 'гадаад паспорт', example: 'Ich brauche meinen Reisepass.', exampleMn: 'Надад паспорт хэрэгтэй.' },
+]
+
+/** Stories (Instagram-style) — ids are stored in localStorage `aupair-stories-seen`. */
+export const stories = [
+  {
+    id: 'how',
+    title: 'Хэрхэн эхлэх вэ',
+    cover: 'https://images.unsplash.com/photo-1467269204594-9661b134dd2b?auto=format&fit=crop&w=400&q=80',
+    slides: [
+      {
+        image: 'https://images.unsplash.com/photo-1467269204594-9661b134dd2b?auto=format&fit=crop&w=1000&q=80',
+        title: '1. Профайл үүсгэ',
+        text: 'Нэр, утас, герман хэлний түвшингээ оруул — 1 минут болно.',
+      },
+      {
+        image: 'https://images.unsplash.com/photo-1515488764276-beab7607c1e6?auto=format&fit=crop&w=1000&q=80',
+        title: '2. Хэлний бэлтгэл',
+        text: 'A1, A2 ангид суугаад ярилцлагад бэлд.',
+        cta: { to: '/learn', label: 'Ангиуд үзэх' },
+      },
+      {
+        image: 'https://images.unsplash.com/photo-1609856878074-cf31e21ccb6b?auto=format&fit=crop&w=1000&q=80',
+        title: '3. Гэр бүл, виз',
+        text: 'Тохирох гэр бүл, баримт бичиг, визийг бид хамт хийнэ.',
+      },
+    ],
+  },
+  {
+    id: 'germany',
+    title: 'Герман',
+    cover: 'https://images.unsplash.com/photo-1467269204594-9661b134dd2b?auto=format&fit=crop&w=400&q=80',
+    slides: [
+      {
+        image: 'https://images.unsplash.com/photo-1467269204594-9661b134dd2b?auto=format&fit=crop&w=1000&q=80',
+        title: 'Герман · Берлин',
+        text: 'Европын хамгийн том Au Pair зах зээл. Хэлний курс + халаасны мөнгө.',
+        cta: { to: '/countries/germany', label: 'Дэлгэрэнгүй' },
+      },
+    ],
+  },
+  {
+    id: 'austria',
+    title: 'Австри',
+    cover: 'https://images.unsplash.com/photo-1609856878074-cf31e21ccb6b?auto=format&fit=crop&w=400&q=80',
+    slides: [
+      {
+        image: 'https://images.unsplash.com/photo-1609856878074-cf31e21ccb6b?auto=format&fit=crop&w=1000&q=80',
+        title: 'Австри · Вена',
+        text: 'Аюулгүй, тохилог гэр бүлүүд. Герман хэлний орчин.',
+        cta: { to: '/countries/austria', label: 'Дэлгэрэнгүй' },
+      },
+    ],
+  },
+  {
+    id: 'switzerland',
+    title: 'Швейцарь',
+    cover: 'https://images.unsplash.com/photo-1515488764276-beab7607c1e6?auto=format&fit=crop&w=400&q=80',
+    slides: [
+      {
+        image: 'https://images.unsplash.com/photo-1515488764276-beab7607c1e6?auto=format&fit=crop&w=1000&q=80',
+        title: 'Швейцарь · Цюрих',
+        text: 'Олон хэл, өндөр амьдралын орчин, уулын гэр бүлүүд.',
+        cta: { to: '/countries/switzerland', label: 'Дэлгэрэнгүй' },
+      },
+    ],
+  },
+  {
+    id: 'courses',
+    title: 'Анги',
+    cover: 'https://images.unsplash.com/photo-1576924542622-772281b13aa8?auto=format&fit=crop&w=400&q=80',
+    slides: [
+      {
+        image: 'https://images.unsplash.com/photo-1576924542622-772281b13aa8?auto=format&fit=crop&w=1000&q=80',
+        title: 'Герман хэл A1 · A2',
+        text: 'Элсэлт нээлттэй. Суудал хязгаартай — одоо бүртгүүл.',
+        cta: { to: '/learn', label: 'Бүртгүүлэх' },
+      },
+    ],
   },
 ]

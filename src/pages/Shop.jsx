@@ -107,7 +107,7 @@ export default function Shop() {
             const visual = VISUAL[item.tag] || 'book'
             return (
               <article key={item.id} className="product">
-                <Link to={`/shop/${item.id}`} className="product__main">
+                <Link to={`/learn/item/${item.id}`} className="product__main">
                   <div className={`product__media is-${visual}`} aria-hidden>
                     <span className="product__badge">{item.tag}</span>
                     <ProductArt type={visual} />
@@ -226,7 +226,7 @@ function ProductArt({ type }) {
   if (type === 'merch') {
     return (
       <div className="art art-merch">
-        <b>漢</b>
+        <b>DE</b>
       </div>
     )
   }

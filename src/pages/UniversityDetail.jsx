@@ -18,8 +18,8 @@ export default function UniversityDetail() {
         <p style={{ color: 'var(--muted)', marginTop: '0.5rem' }}>
           Au Pair улс олдсонгүй
         </p>
-        <Link to="/universities" className="btn btn-primary" style={{ marginTop: '1rem' }}>
-          Улс орнууд руу
+        <Link to="/countries" className="btn btn-primary" style={{ marginTop: '1rem' }}>
+          Улсууд руу
         </Link>
       </div>
     )

@@ -1,0 +1,341 @@
+.learn {
+  padding-bottom: 16px;
+}
+
+/* iOS segmented control */
+.seg {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  gap: 2px;
+  margin: 12px 0 16px;
+  padding: 2px;
+  border-radius: 10px;
+  background: var(--surface-2);
+}
+
+.seg button {
+  position: relative;
+  min-height: 34px;
+  padding: 0 8px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--label);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.seg button.is-active {
+  font-weight: 700;
+}
+
+.seg__pill {
+  position: absolute;
+  inset: 0;
+  border-radius: 8px;
+  background: var(--surface);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
+}
+
+.seg button span {
+  position: relative;
+}
+
+/* Level path */
+.learn-path h2 {
+  margin-bottom: 10px;
+  font-size: 1.125rem;
+}
+
+.learn-path ol {
+  display: flex;
+  align-items: flex-start;
+  margin: 0;
+  padding: 16px 12px;
+  list-style: none;
+  border-radius: var(--r-card);
+  background: var(--surface);
+  border: var(--card-border);
+  box-shadow: var(--e1);
+}
+
+.learn-path li {
+  flex: 1 1 0;
+  display: flex;
+  align-items: flex-start;
+}
+
+.learn-path li:last-child {
+  flex: 0 0 auto;
+}
+
+.learn-path li > a,
+.learn-path li > div {
+  display: grid;
+  justify-items: center;
+  gap: 2px;
+  min-width: 64px;
+}
+
+.learn-path__node {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  margin-bottom: 4px;
+  border-radius: 50%;
+  background: var(--surface-2);
+  color: var(--label-3);
+  font-style: normal;
+  font-size: 0.9375rem;
+  font-weight: 800;
+}
+
+.learn-path li.is-open .learn-path__node {
+  background: var(--brand);
+  color: #fff;
+  box-shadow: 0 0 0 4px var(--brand-tint);
+}
+
+.learn-path strong {
+  font-family: var(--font-display);
+  font-size: 1rem;
+}
+
+.learn-path li > a span,
+.learn-path li > div span {
+  color: var(--label-2);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.learn-path__line {
+  flex: 1 1 auto;
+  height: 3px;
+  margin-top: 21px;
+  border-radius: 2px;
+  background: var(--separator);
+}
+
+.learn-path li.is-open .learn-path__line {
+  background: linear-gradient(90deg, var(--brand), var(--separator));
+}
+
+/* Course cards */
+.learn-list {
+  display: grid;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.learn-card {
+  display: grid;
+  gap: 8px;
+  padding: 16px;
+}
+
+.learn-card__top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.learn-card__level {
+  display: inline-grid;
+  place-items: center;
+  height: 28px;
+  min-width: 44px;
+  padding: 0 10px;
+  border-radius: 999px;
+  background: var(--brand);
+  color: #fff;
+  font-size: 0.8125rem;
+  font-weight: 800;
+}
+
+.learn-card__badge {
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--accent-tint);
+  color: var(--accent-ink);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.learn-card h3 {
+  font-size: 1.1875rem;
+}
+
+.learn-card p {
+  color: var(--label-2);
+  font-size: 0.9375rem;
+}
+
+.learn-card__facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: var(--label-2);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.learn-card__facts li {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.learn-card__seats > div {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 6px;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--accent-ink);
+}
+
+.learn-card__seats em {
+  color: var(--label-2);
+  font-style: normal;
+  font-weight: 600;
+}
+
+.learn-card__seats > i {
+  display: block;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--surface-2);
+  overflow: hidden;
+}
+
+.learn-card__seats b {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--accent);
+}
+
+.learn-card__seats.is-urgent > div:first-child span,
+.learn-card__seats.is-urgent > div {
+  color: var(--warning);
+}
+
+.learn-card__seats.is-urgent b {
+  background: var(--sun);
+}
+
+.learn-card__seats.is-full > div {
+  color: var(--label-3);
+}
+
+.learn-card__seats.is-full b {
+  background: var(--label-3);
+}
+
+.learn-card__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  justify-self: start;
+  color: var(--brand);
+  font-weight: 700;
+  font-size: 0.9375rem;
+}
+
+/* Teaser */
+.learn-teaser {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 12px;
+  margin-top: 16px;
+  padding: 14px 16px;
+  border-radius: var(--r-card);
+  background: var(--sun-tint);
+  border: 0.5px solid color-mix(in srgb, var(--sun) 45%, transparent);
+}
+
+.learn-teaser__icon {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: var(--sun);
+  color: #5a3d00;
+}
+
+.learn-teaser strong {
+  display: block;
+  font-size: 1rem;
+}
+
+.learn-teaser div span {
+  color: var(--label-2);
+  font-size: 0.8125rem;
+}
+
+/* Materials */
+.learn-materials {
+  display: grid;
+  gap: 12px;
+}
+
+.learn-material {
+  display: grid;
+  gap: 4px;
+  padding: 16px;
+  border-radius: var(--r-card);
+  background: var(--surface);
+  border: var(--card-border);
+  box-shadow: var(--e1);
+}
+
+.learn-material__tag {
+  justify-self: start;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: var(--brand-tint);
+  color: var(--brand);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.learn-material h3 {
+  margin-top: 4px;
+  font-size: 1.0625rem;
+}
+
+.learn-material p {
+  color: var(--label-2);
+  font-size: 0.875rem;
+}
+
+.learn-material strong {
+  margin-top: 4px;
+  color: var(--accent-ink);
+  font-size: 0.9375rem;
+}
+
+.learn-note {
+  color: var(--label-2);
+  font-size: 0.8125rem;
+  text-align: center;
+}
+
+.learn-note a {
+  color: var(--brand);
+  font-weight: 700;
+}
+
+@media (min-width: 900px) {
+  .learn {
+    max-width: 720px;
+  }
+}

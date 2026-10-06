@@ -7,12 +7,16 @@ import {
   useNavigate,
   useNavigationType,
   Navigate,
+  generatePath,
+  useParams,
 } from 'react-router-dom'
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { flushSync } from 'react-dom'
+import { LayoutGroup } from 'motion/react'
 import { Capacitor } from '@capacitor/core'
 import AppHeader from './components/AppHeader'
-import BottomNav from './components/BottomNav'
+import NavBar from './components/NavBar'
+import TabBar, { TAB_PATHS } from './components/TabBar'
 import Footer from './components/Footer'
 import OfflineBanner from './components/OfflineBanner'
 import Onboarding from './components/Onboarding'
@@ -21,12 +25,11 @@ import usePullToRefresh from './hooks/usePullToRefresh'
 import useSwipeBack from './hooks/useSwipeBack'
 import { reloadIfUpdated } from './native'
 import Home from './pages/Home'
-import Courses from './pages/Courses'
+import Learn from './pages/Learn'
+import NotFound from './pages/NotFound'
 import CourseDetail from './pages/CourseDetail'
 import Universities from './pages/Universities'
 import UniversityDetail from './pages/UniversityDetail'
-import Videos from './pages/Videos'
-import Shop from './pages/Shop'
 import ProductDetail from './pages/ProductDetail'
 import Profile from './pages/Profile'
 import Contact from './pages/Contact'
@@ -37,20 +40,52 @@ import './theme.css'
 
 const Router = Capacitor.isNativePlatform() ? HashRouter : BrowserRouter
 
-const TITLES = {
-  '/': 'Au Pair',
-  '/courses': 'Хөтөлбөр',
-  '/universities': 'Улс орнууд',
-  '/videos': 'Бичлэг',
-  '/shop': 'Дэлгүүр',
-  '/profile': 'Профайл',
-  '/contact': 'Холбоо барих',
-  '/privacy': 'Нууцлал',
-  '/admin': 'Админ',
+/** Nav bar config per route: tab roots show a compact title on scroll, push screens get a back button. */
+function getRouteMeta(pathname) {
+  switch (pathname) {
+    case '/':
+      return { root: true, minimal: true, title: 'Au Pair' }
+    case '/learn':
+      return { root: true, title: 'Сурах' }
+    case '/countries':
+      return { root: true, title: 'Улсууд' }
+    case '/me':
+      return { root: true, title: 'Би' }
+    case '/me/help':
+      return { title: 'Тусламж', backLabel: 'Би', parent: '/me' }
+    case '/privacy':
+      return { title: 'Нууцлал', backLabel: 'Би', parent: '/me' }
+    case '/admin':
+      return { title: 'Админ', backLabel: 'Нүүр', parent: '/' }
+    default:
+  }
+  if (pathname.startsWith('/learn/course/') || pathname.startsWith('/courses/')) {
+    return { title: 'Хөтөлбөр', backLabel: 'Сурах', parent: '/learn', transparent: true }
+  }
+  if (pathname.startsWith('/learn/item/') || pathname.startsWith('/shop/')) {
+    return { title: 'Материал', backLabel: 'Сурах', parent: '/learn' }
+  }
+  if (pathname.startsWith('/countries/') || pathname.startsWith('/universities/')) {
+    return { title: 'Улс', backLabel: 'Улсууд', parent: '/countries' }
+  }
+  // Legacy tab roots while <Navigate> redirects
+  if (pathname === '/courses' || pathname === '/shop') return { root: true, title: 'Сурах' }
+  if (pathname === '/universities') return { root: true, title: 'Улсууд' }
+  if (pathname === '/profile' || pathname === '/stories' || pathname === '/videos') {
+    return { root: true, title: 'Би' }
+  }
+  if (pathname === '/contact') return { title: 'Тусламж', backLabel: 'Би', parent: '/me' }
+  return { title: 'Олдсонгүй', backLabel: 'Нүүр', parent: '/' }
 }
 
-const TAB_PATHS = ['/', '/courses', '/universities', '/shop', '/profile']
-const REFRESH_PATHS = ['/', '/courses', '/universities', '/shop']
+const REFRESH_PATHS = ['/', '/learn', '/countries']
+
+/** Old URLs keep working: /courses/:id → /learn/course/:id etc. */
+function RedirectWithParams({ to }) {
+  const params = useParams()
+  const { search } = useLocation()
+  return <Navigate to={generatePath(to, params) + search} replace />
+}
 const SWIPE_BACK = Capacitor.isNativePlatform() || import.meta.env.DEV
 const scrollPositions = new Map()
 let skipNextTransition = false
@@ -123,18 +158,29 @@ function AppRoutes({ location }) {
   return (
     <Routes location={location}>
       <Route path="/" element={<Home />} />
-      <Route path="/courses" element={<Courses />} />
-      <Route path="/courses/:id" element={<CourseDetail />} />
-      <Route path="/universities" element={<Universities />} />
-      <Route path="/universities/:id" element={<UniversityDetail />} />
-      <Route path="/videos" element={<Videos />} />
-      <Route path="/shop" element={<Shop />} />
-      <Route path="/shop/:id" element={<ProductDetail />} />
-      <Route path="/profile" element={<Profile />} />
-      <Route path="/admin" element={<Admin />} />
-      <Route path="/contact" element={<Contact />} />
+      <Route path="/learn" element={<Learn />} />
+      <Route path="/learn/course/:id" element={<CourseDetail />} />
+      <Route path="/learn/item/:id" element={<ProductDetail />} />
+      <Route path="/countries" element={<Universities />} />
+      <Route path="/countries/:id" element={<UniversityDetail />} />
+      <Route path="/me" element={<Profile />} />
+      <Route path="/me/help" element={<Contact />} />
       <Route path="/privacy" element={<Privacy />} />
-      <Route path="*" element={<Navigate to="/" replace />} />
+      <Route path="/admin" element={<Admin />} />
+
+      {/* Legacy URLs */}
+      <Route path="/courses" element={<Navigate to="/learn" replace />} />
+      <Route path="/courses/:id" element={<RedirectWithParams to="/learn/course/:id" />} />
+      <Route path="/shop" element={<Navigate to="/learn?tab=materials" replace />} />
+      <Route path="/shop/:id" element={<RedirectWithParams to="/learn/item/:id" />} />
+      <Route path="/universities" element={<Navigate to="/countries" replace />} />
+      <Route path="/universities/:id" element={<RedirectWithParams to="/countries/:id" />} />
+      <Route path="/videos" element={<Navigate to="/" replace />} />
+      <Route path="/stories" element={<Navigate to="/" replace />} />
+      <Route path="/profile" element={<Navigate to="/me" replace />} />
+      <Route path="/contact" element={<Navigate to="/me/help" replace />} />
+
+      <Route path="*" element={<NotFound />} />
     </Routes>
   )
 }
@@ -199,20 +245,26 @@ function AppFrame() {
   }, [refresh])
   const ptr = usePullToRefresh(onRefresh, REFRESH_PATHS.includes(pathname))
 
-  const title =
-    TITLES[pathname] ||
-    (pathname.startsWith('/courses/')
-      ? 'Хөтөлбөр'
-      : pathname.startsWith('/shop/')
-        ? 'Дэлгүүр'
-        : pathname.startsWith('/universities/')
-          ? 'Улс орнууд'
-          : 'Au Pair')
+  const meta = getRouteMeta(pathname)
   const isHome = pathname === '/'
+  const isPush = !TAB_PATHS.includes(pathname)
+
+  const goBack = useCallback(() => {
+    if ((window.history.state?.idx ?? 0) > 0) navigate(-1)
+    else navigate(meta.parent || '/', { replace: true })
+  }, [navigate, meta.parent])
 
   return (
-    <div className="site">
-      <AppHeader title={title} showBrand={isHome} />
+    <div className={isPush ? 'site site--push' : 'site'}>
+      <AppHeader title={meta.title} showBrand={isHome} />
+      <NavBar
+        root={Boolean(meta.root)}
+        minimal={Boolean(meta.minimal)}
+        transparent={Boolean(meta.transparent)}
+        title={meta.title}
+        backLabel={meta.backLabel}
+        onBack={goBack}
+      />
       <OfflineBanner />
       <main className="site__main">
         <div
@@ -232,7 +284,7 @@ function AppFrame() {
         </div>
       )}
       <Footer />
-      <BottomNav />
+      <TabBar />
       <Onboarding />
     </div>
   )
@@ -242,7 +294,9 @@ export default function App() {
   return (
     <AuthProvider>
       <Router>
-        <AppFrame />
+        <LayoutGroup>
+          <AppFrame />
+        </LayoutGroup>
       </Router>
     </AuthProvider>
   )

@@ -653,7 +653,12 @@
   }
 }
 
+/* Mobile uses NavBar; this header is the desktop nav. */
 @media (max-width: 899px) {
+  .app-header {
+    display: none;
+  }
+
   .app-header__brand strong {
     display: inline;
     font-size: 1rem;

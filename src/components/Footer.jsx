@@ -23,10 +23,10 @@ export default function Footer() {
         <div>
           <h4>Цэс</h4>
           <div className="site-footer__links">
-            <Link to="/courses">Хөтөлбөр</Link>
-            <Link to="/universities">Улс орнууд</Link>
-            <Link to="/shop">Дэлгүүр</Link>
-            <Link to="/contact">Холбоо барих</Link>
+            <Link to="/learn">Сурах</Link>
+            <Link to="/countries">Улсууд</Link>
+            <Link to="/learn?tab=materials">Материал</Link>
+            <Link to="/me/help">Холбоо барих</Link>
             <Link to="/privacy">Нууцлалын бодлого</Link>
           </div>
         </div>

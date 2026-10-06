@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { videos, social } from '../data'
 import PageHeader from '../components/PageHeader'
+import StoriesRow from '../components/StoriesRow'
 import './Videos.css'
 
 const FILTERS = [
@@ -23,8 +24,8 @@ export default function Videos() {
     <div className="videos-page screen fade-up">
       <div className="container">
         <PageHeader
-          title="Бичлэг"
-          text="Mongolian AuPair — Facebook & Instagram"
+          title="Түүх"
+          text="Au Pair-уудын түүх, бичлэг — Facebook & Instagram"
           right={
             <a
               className="btn btn-ghost videos-all"
@@ -36,6 +37,8 @@ export default function Videos() {
             </a>
           }
         />
+
+        <StoriesRow className="videos-stories" />
 
         <div className="page-filters" role="tablist">
           {FILTERS.map((f) => (

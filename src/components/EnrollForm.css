@@ -85,3 +85,9 @@
   background: #fef3f2;
   color: #b42318;
 }
+
+.field input.is-readonly {
+  opacity: 0.75;
+  cursor: default;
+}
+

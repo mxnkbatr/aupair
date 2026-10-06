@@ -1,0 +1,73 @@
+.tabbar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 40;
+  width: 100%;
+  height: calc(49px + env(safe-area-inset-bottom, 0px));
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  align-items: start;
+  padding: 0 0 env(safe-area-inset-bottom, 0px);
+  background: rgba(255, 255, 255, 0.94);
+  border-top: 0.5px solid rgba(0, 0, 0, 0.12);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  .tabbar {
+    background: rgba(22, 22, 26, 0.94);
+    border-top-color: rgba(255, 255, 255, 0.1);
+  }
+}
+
+.tabbar__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 1px;
+  min-height: 49px;
+  padding: 4px 2px 0;
+  color: #8e8e96;
+  background: transparent;
+  transition: color 0.15s ease;
+}
+
+.tabbar__item.is-active {
+  color: var(--brand);
+}
+
+.tabbar__icon {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+}
+
+.tabbar__label {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+/* The tab bar handles its own press feedback. */
+.tabbar__item:active {
+  transform: none !important;
+  opacity: 1 !important;
+}
+
+@media (min-width: 900px) {
+  .tabbar {
+    display: none;
+  }
+}

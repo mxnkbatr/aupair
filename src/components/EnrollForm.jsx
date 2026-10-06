@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { api } from '../api'
 import { useAuth } from '../auth'
 import { GERMAN_LEVEL_LABELS, social } from '../data'
+import { celebrate } from '../confetti'
 import { haptic } from '../native'
 import './EnrollForm.css'
 
@@ -26,6 +27,8 @@ export default function EnrollForm({ course, onSuccess }) {
 
   const hasSeats = typeof course.seatsLeft === 'number'
   const full = hasSeats && course.seatsLeft <= 0
+  // Logged-in users with a complete profile only confirm; everyone else fills the full form.
+  const confirmMode = Boolean(user?.name && user?.phone && Number.isInteger(Number(user?.age)) && user?.age)
 
   function update(field) {
     return (e) => setForm({ ...form, [field]: e.target.value })
@@ -40,6 +43,7 @@ export default function EnrollForm({ course, onSuccess }) {
       setDone(res)
       setForm(initialForm(user))
       haptic('success')
+      celebrate()
       onSuccess?.(res)
     } catch (err) {
       setError(err.message)
@@ -57,12 +61,12 @@ export default function EnrollForm({ course, onSuccess }) {
           Бүртгэлийн код: <strong>{done.enrollment?.id}</strong>
         </p>
         {user ? (
-          <Link to="/profile" className="btn btn-primary btn-block">
+          <Link to="/me" className="btn btn-primary btn-block">
             Элсэлтийн явцыг харах
           </Link>
         ) : (
           <p className="enroll-form__ref">
-            <Link to="/profile">Профайл үүсгэвэл</Link> элсэлтийнхээ явцыг апп дээрээс харах
+            <Link to="/me">Профайл үүсгэвэл</Link> элсэлтийнхээ явцыг апп дээрээс харах
             боломжтой.
           </p>
         )}
@@ -73,15 +77,55 @@ export default function EnrollForm({ course, onSuccess }) {
     )
   }
 
+  const summary = (
+    <div className="enroll-form__summary">
+      <strong>{course.title}</strong>
+      <span>
+        {course.priceLabel}
+        {hasSeats ? ` · ${full ? 'Суудал дууссан' : `${course.seatsLeft} суудал үлдсэн`}` : ''}
+      </span>
+    </div>
+  )
+
+  if (confirmMode) {
+    return (
+      <form className="enroll-form" onSubmit={handleSubmit}>
+        {summary}
+
+        <div className="enroll-form__row">
+          <label className="field">
+            <span>Овог нэр</span>
+            <input value={form.name} readOnly aria-readonly="true" className="is-readonly" />
+          </label>
+          <label className="field">
+            <span>Утас</span>
+            <input value={form.phone} readOnly aria-readonly="true" className="is-readonly" />
+          </label>
+        </div>
+
+        <label className="field">
+          <span>Нэмэлт мэдээлэл (заавал биш)</span>
+          <textarea
+            rows={2}
+            value={form.note}
+            onChange={update('note')}
+            placeholder="Асуух зүйл, тохиромжтой цаг..."
+          />
+        </label>
+
+        {error && <div className="alert alert-err">{error}</div>}
+
+        <button type="submit" className="btn btn-primary btn-block" disabled={loading || full}>
+          {full ? 'Суудал дууссан' : loading ? 'Илгээж байна...' : 'Баталгаажуулах'}
+        </button>
+        <p className="enroll-form__ref">Профайлын мэдээллээр бүртгэнэ. Бид удахгүй холбогдоно.</p>
+      </form>
+    )
+  }
+
   return (
     <form className="enroll-form" onSubmit={handleSubmit}>
-      <div className="enroll-form__summary">
-        <strong>{course.title}</strong>
-        <span>
-          {course.priceLabel}
-          {hasSeats ? ` · ${full ? 'Суудал дууссан' : `${course.seatsLeft} суудал үлдсэн`}` : ''}
-        </span>
-      </div>
+      {summary}
 
       <label className="field">
         <span>Овог нэр *</span>

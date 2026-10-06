@@ -22,8 +22,8 @@ export default function ProductDetail() {
         <p style={{ color: 'var(--muted)', marginTop: '0.5rem' }}>
           Бүтээгдэхүүн олдсонгүй
         </p>
-        <Link to="/shop" className="btn btn-primary" style={{ marginTop: '1rem' }}>
-          Дэлгүүр рүү
+        <Link to="/learn?tab=materials" className="btn btn-primary" style={{ marginTop: '1rem' }}>
+          Материал руу
         </Link>
       </div>
     )
@@ -54,7 +54,7 @@ export default function ProductDetail() {
         <section className="pd-hero">
           <div className="pd-hero__visual" aria-hidden>
             <span>{product.tag}</span>
-            <strong>漢</strong>
+            <strong>{product.tag || 'AP'}</strong>
           </div>
           <div className="pd-hero__meta">
             <span className="pd-hero__tag">{product.tag}</span>

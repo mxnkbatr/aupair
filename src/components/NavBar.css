@@ -1,0 +1,155 @@
+:root {
+  --navbar-row: 44px;
+  --navbar-h: calc(var(--navbar-row) + env(safe-area-inset-top, 0px));
+}
+
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  padding-top: env(safe-area-inset-top, 0px);
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.navbar--minimal {
+  min-height: env(safe-area-inset-top, 0px);
+}
+
+.navbar--transparent {
+  position: fixed;
+  left: 0;
+  right: 0;
+}
+
+/* Let taps through to hero content (e.g. share) except the bar's own controls. */
+.navbar--transparent {
+  pointer-events: none;
+}
+
+.navbar--transparent.is-solid,
+.navbar--transparent .navbar__back,
+.navbar--transparent .navbar__side--right > * {
+  pointer-events: auto;
+}
+
+.navbar__bg {
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.94);
+  border-bottom: 0.5px solid rgba(0, 0, 0, 0.12);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  pointer-events: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  .navbar__bg {
+    background: rgba(22, 22, 26, 0.94);
+    border-bottom-color: rgba(255, 255, 255, 0.1);
+  }
+}
+
+.navbar__row {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  height: var(--navbar-row);
+  padding-inline: 8px;
+}
+
+.navbar__side {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+.navbar__side--right {
+  justify-content: flex-end;
+  gap: 4px;
+}
+
+.navbar__title {
+  max-width: 56vw;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: var(--font-display);
+  font-size: 1.0625rem;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+  color: var(--label);
+  text-align: center;
+}
+
+.navbar__back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0 8px 0 0;
+  border: 0;
+  background: transparent;
+  color: var(--brand);
+  font-size: 1.0625rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  cursor: pointer;
+}
+
+.navbar__back span {
+  max-width: 28vw;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Transparent over hero: round dark back button until scrolled. */
+.navbar--transparent:not(.is-solid) .navbar__back {
+  width: 38px;
+  min-width: 38px;
+  min-height: 38px;
+  margin-left: 4px;
+  padding: 0;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.36);
+  color: #fff;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.navbar--transparent:not(.is-solid) .navbar__back span {
+  display: none;
+}
+
+.navbar--transparent:not(.is-solid) .navbar__back svg {
+  margin-right: 2px;
+}
+
+.navbar__icon {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  background: transparent;
+  color: var(--brand);
+  cursor: pointer;
+}
+
+@media (min-width: 900px) {
+  .navbar {
+    display: none;
+  }
+}
+
+/* Sticky filter chips sit under the nav bar on mobile. */
+@media (max-width: 899px) {
+  .site .page-filters,
+  .site .course-filters {
+    top: var(--navbar-h);
+  }
+}

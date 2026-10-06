@@ -1,131 +1,70 @@
-.sheet {
+/* vaul drawer: overlay + docked panel. Solid surface, grabber, safe-area. */
+.sheet__backdrop {
   position: fixed;
   inset: 0;
   z-index: 100;
-  display: grid;
-  align-items: end;
-  justify-items: center;
-}
-
-.sheet__backdrop {
-  position: absolute;
-  inset: 0;
-  border: 0;
-  background: rgba(17, 10, 12, 0.4);
-  animation: backdropIn 0.2s ease backwards;
-}
-
-.sheet.is-closing .sheet__backdrop {
-  animation: backdropOut 0.22s ease forwards;
-}
-
-.sheet.is-closing .sheet__panel {
-  animation: sheetOut 0.22s cubic-bezier(0.4, 0, 1, 1) forwards;
+  background: rgba(0, 0, 0, 0.35);
 }
 
 .sheet__panel {
-  position: relative;
-  z-index: 1;
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 101;
+  display: flex;
+  flex-direction: column;
   width: min(100%, 520px);
-  max-height: min(86dvh, 720px);
-  overflow: auto;
-  border-radius: 22px 22px 0 0;
-  background: #fff;
-  padding: 0.5rem 1rem calc(1.15rem + env(safe-area-inset-bottom, 0px));
-  overscroll-behavior: contain;
-  animation: sheetIn 0.38s cubic-bezier(0.32, 0.72, 0, 1) backwards;
-  box-shadow: 0 -12px 40px rgba(17, 17, 20, 0.12);
+  max-height: min(88dvh, 760px);
+  margin-inline: auto;
+  padding: 0 16px calc(16px + env(safe-area-inset-bottom, 0px));
+  border-radius: var(--r-sheet, 28px) var(--r-sheet, 28px) 0 0;
+  background: var(--surface, #fff);
+  box-shadow: var(--e3);
+  outline: none;
 }
 
 .sheet__handle {
-  width: 40px;
-  height: 4px;
+  flex: 0 0 auto;
+  width: 36px;
+  height: 5px;
+  margin: 8px auto 10px;
   border-radius: 999px;
-  background: rgba(17, 17, 20, 0.14);
-  margin: 0.25rem auto 0.7rem;
+  background: var(--label-3, rgba(17, 17, 20, 0.2));
+  opacity: 0.6;
 }
 
 .sheet__head {
+  flex: 0 0 auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 0.75rem;
-  margin-bottom: 0.8rem;
+  margin-bottom: 0.5rem;
 }
 
 .sheet__head h3 {
-  font-size: 1.05rem;
+  font-size: 1.125rem;
+  font-weight: 700;
 }
 
 .sheet__close {
-  width: 34px;
-  height: 34px;
   border: 0;
-  border-radius: 10px;
-  background: var(--red-soft);
-  color: var(--red);
   cursor: pointer;
-  font-size: 0.85rem;
+  color: var(--label);
 }
 
-@keyframes backdropIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+.sheet__body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 4px;
 }
 
-@keyframes backdropOut {
-  to {
-    opacity: 0;
-  }
-}
-
-@keyframes sheetIn {
-  from {
-    transform: translateY(100%);
-  }
-}
-
-@keyframes sheetOut {
-  to {
-    transform: translateY(100%);
-  }
-}
-
-@keyframes sheetPopIn {
-  from {
-    transform: translateY(16px) scale(0.98);
-    opacity: 0;
-  }
-}
-
-@keyframes sheetPopOut {
-  to {
-    transform: translateY(8px) scale(0.98);
-    opacity: 0;
-  }
-}
-
-@media (min-width: 520px) {
-  .sheet {
-    align-items: center;
-    padding: 1rem;
-  }
-
+@media (min-width: 900px) {
   .sheet__panel {
-    border-radius: 20px;
     max-height: min(80vh, 680px);
-    animation: sheetPopIn 0.26s var(--ease-out) backwards;
-  }
-
-  .sheet.is-closing .sheet__panel {
-    animation: sheetPopOut 0.2s ease forwards;
-  }
-
-  .sheet__handle {
-    display: none;
   }
 }

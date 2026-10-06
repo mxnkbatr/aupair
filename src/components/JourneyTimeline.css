@@ -1,0 +1,140 @@
+.jt {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Compact strip */
+.jt--compact {
+  display: flex;
+  align-items: center;
+}
+
+.jt__dot {
+  flex: 1 1 0;
+  display: flex;
+  align-items: center;
+}
+
+.jt__dot + .jt__dot::before {
+  content: '';
+  flex: 1 1 auto;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--separator);
+}
+
+.jt__dot.is-done + .jt__dot::before,
+.jt__dot.is-now::before {
+  background: var(--brand);
+}
+
+.jt__dot:last-child {
+  flex: 0 0 auto;
+}
+
+.jt__dot i {
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid var(--separator);
+  background: var(--surface);
+  color: #fff;
+}
+
+.jt__dot.is-done i {
+  background: var(--brand);
+  border-color: var(--brand);
+}
+
+.jt__dot.is-now i {
+  border-color: var(--brand);
+  box-shadow: 0 0 0 4px var(--brand-tint);
+}
+
+/* Vertical list */
+.jt--list {
+  display: grid;
+  gap: 0;
+}
+
+.jt--list li {
+  position: relative;
+  display: grid;
+  grid-template-columns: 28px 1fr;
+  gap: 12px;
+  padding-bottom: 18px;
+}
+
+.jt--list li:last-child {
+  padding-bottom: 0;
+}
+
+.jt--list li::before {
+  content: '';
+  position: absolute;
+  left: 13px;
+  top: 28px;
+  bottom: 0;
+  width: 2px;
+  background: var(--separator);
+}
+
+.jt--list li:last-child::before {
+  display: none;
+}
+
+.jt--list li.is-done::before {
+  background: var(--brand);
+}
+
+.jt--list i {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--surface-2);
+  color: var(--label-2);
+  font-style: normal;
+  font-size: 0.8125rem;
+  font-weight: 700;
+}
+
+.jt--list li.is-done i {
+  background: var(--brand);
+  color: #fff;
+}
+
+.jt--list li.is-now i {
+  background: var(--brand-tint);
+  color: var(--brand);
+  box-shadow: 0 0 0 2px var(--brand);
+}
+
+.jt--list strong {
+  display: block;
+  font-size: 0.9375rem;
+  font-weight: 650;
+  line-height: 28px;
+}
+
+.jt--list li:not(.is-done):not(.is-now) strong {
+  color: var(--label-2);
+  font-weight: 600;
+}
+
+.jt--list span {
+  display: block;
+  margin-top: -2px;
+  color: var(--label-2);
+  font-size: 0.8125rem;
+}
+
+.jt--list li.is-now span {
+  color: var(--brand);
+  font-weight: 600;
+}

@@ -351,3 +351,98 @@
     margin-inline: auto;
   }
 }
+
+/* Large title */
+.pf-title {
+  padding: 4px 0 12px;
+}
+
+.pf-title h1 {
+  font-size: 2.125rem;
+  font-weight: 800;
+}
+
+/* Logged-out hero */
+.pf-guest {
+  display: grid;
+  justify-items: start;
+  gap: 8px;
+  padding: 24px 20px;
+  border-radius: var(--r-media);
+  background: linear-gradient(145deg, var(--brand), #b50f32);
+  color: #fff;
+  box-shadow: var(--e2);
+}
+
+.pf-guest__logo {
+  width: 56px;
+  height: 56px;
+  margin-bottom: 4px;
+  border-radius: 16px;
+  background: #fff;
+}
+
+.pf-guest h2 {
+  font-size: 1.625rem;
+}
+
+.pf-guest p {
+  max-width: 30ch;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.9375rem;
+}
+
+.pf-guest__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.pf-guest .pf-guest__primary {
+  background: #fff;
+  color: var(--brand);
+  box-shadow: none;
+}
+
+.pf-guest .pf-guest__ghost {
+  background: rgba(255, 255, 255, 0.18);
+  border: 0;
+  color: #fff;
+}
+
+.pf-perks {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pf-perks li {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 12px;
+}
+
+.pf-perks__icon {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  background: var(--brand-tint);
+  color: var(--brand);
+}
+
+.pf-perks strong {
+  display: block;
+  font-size: 0.9375rem;
+}
+
+.pf-perks li span:not(.pf-perks__icon) {
+  display: block;
+  color: var(--label-2);
+  font-size: 0.8125rem;
+}

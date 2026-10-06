@@ -1,3 +1,4 @@
+import { Capacitor } from '@capacitor/core'
 import { social } from './data'
 
 const ENV_API = import.meta.env.VITE_API_URL?.replace(/\/$/, '')
@@ -24,6 +25,34 @@ export function setToken(token) {
     else localStorage.removeItem(TOKEN_STORAGE)
   } catch {
     // storage unavailable (private mode)
+  }
+  mirrorToken(token)
+}
+
+/**
+ * Native only: WKWebView can purge localStorage, so the token is mirrored to
+ * Capacitor Preferences (Keychain/UserDefaults-backed). localStorage stays the sync source of truth.
+ */
+function mirrorToken(token) {
+  if (!Capacitor.isNativePlatform()) return
+  import('@capacitor/preferences')
+    .then(({ Preferences }) =>
+      token
+        ? Preferences.set({ key: TOKEN_STORAGE, value: token })
+        : Preferences.remove({ key: TOKEN_STORAGE }),
+    )
+    .catch(() => {})
+}
+
+/** Call once before first render: restores the token from Preferences if localStorage lost it. */
+export async function hydrateToken() {
+  if (!Capacitor.isNativePlatform() || getToken()) return
+  try {
+    const { Preferences } = await import('@capacitor/preferences')
+    const { value } = await Preferences.get({ key: TOKEN_STORAGE })
+    if (value) localStorage.setItem(TOKEN_STORAGE, value)
+  } catch {
+    // preferences unavailable
   }
 }
 

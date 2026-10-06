@@ -1,10 +1,13 @@
 import { useCallback, useEffect, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { CaretRight, Path, Bell, Fire, SignIn } from '@phosphor-icons/react'
 import { useAuth } from '../auth'
 import { api } from '../api'
-import { GERMAN_LEVEL_LABELS, INTEREST_LABELS, STATUS_LABELS, social } from '../data'
+import { GERMAN_LEVEL_LABELS, INTEREST_LABELS, STATUS_LABELS } from '../data'
+import AuthModal from '../components/AuthModal'
+import JourneyTimeline from '../components/JourneyTimeline'
 import Sheet from '../components/Sheet'
-import { haptic } from '../native'
+import { confirmDialog, haptic } from '../native'
 import usePullToRefresh from '../hooks/usePullToRefresh'
 import PullIndicator from '../components/PullIndicator'
 import './Profile.css'
@@ -30,147 +33,77 @@ function initials(name) {
     .toUpperCase()
 }
 
-function AuthPanel() {
-  const { login, register } = useAuth()
-  const [mode, setMode] = useState('login')
-  const [form, setForm] = useState({
-    name: '',
-    phone: '',
-    password: '',
-    age: '',
-    germanLevel: 'none',
-  })
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState('')
+function displayName(name) {
+  return String(name || '')
+    .trim()
+    .split(/\s+/)
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase())
+    .join(' ')
+}
 
-  const update = (field) => (e) => setForm({ ...form, [field]: e.target.value })
+const PERKS = [
+  { icon: Path, title: 'Явц хянах', text: 'Элсэлтийн алхам бүрийг утаснаасаа' },
+  { icon: Bell, title: 'Мэдэгдэл', text: 'Статус солигдоход мэдэгдэнэ' },
+  { icon: Fire, title: 'Streak', text: 'Өдөр тутмын герман үг' },
+]
 
-  async function onSubmit(e) {
-    e.preventDefault()
-    setError('')
-    setLoading(true)
-    try {
-      if (mode === 'login') await login({ phone: form.phone, password: form.password })
-      else await register(form)
-      haptic('success')
-    } catch (err) {
-      setError(err.message)
-      setLoading(false)
-      haptic('error')
-    }
-  }
+function LoggedOut() {
+  const location = useLocation()
+  const [auth, setAuth] = useState(() => location.state?.auth || null)
 
   return (
     <>
-      <section className="pf-welcome">
-        <img src="/logo.png" alt="" />
-        <div>
-          <h2>Mongolian Au Pair</h2>
-          <p>Нэвтэрч элсэлтийнхээ явцыг хянаарай</p>
+      <section className="pf-guest">
+        <img src="/logo.png" alt="" className="pf-guest__logo" />
+        <h2>Элсэлтээ утаснаасаа хяна</h2>
+        <p>Нэвтрээд явц, захиалга, зөвлөгөөг нэг дороос.</p>
+        <div className="pf-guest__actions">
+          <button
+            type="button"
+            className="btn pf-guest__primary"
+            onClick={() => {
+              haptic('light')
+              setAuth('login')
+            }}
+          >
+            <SignIn weight="bold" size={18} aria-hidden /> Нэвтрэх
+          </button>
+          <button
+            type="button"
+            className="btn pf-guest__ghost"
+            onClick={() => {
+              haptic('light')
+              setAuth('register')
+            }}
+          >
+            Бүртгэл үүсгэх
+          </button>
         </div>
       </section>
 
-      <div className="pf-segment" role="tablist">
-        {[
-          ['login', 'Нэвтрэх'],
-          ['register', 'Бүртгүүлэх'],
-        ].map(([id, label]) => (
-          <button
-            key={id}
-            type="button"
-            role="tab"
-            aria-selected={mode === id}
-            className={mode === id ? 'is-active' : ''}
-            onClick={() => {
-              setMode(id)
-              setError('')
-            }}
-          >
-            {label}
-          </button>
+      <ul className="pf-perks">
+        {PERKS.map(({ icon: Icon, title, text }) => (
+          <li key={title} className="pf-card">
+            <span className="pf-perks__icon">
+              <Icon weight="duotone" size={22} aria-hidden />
+            </span>
+            <div>
+              <strong>{title}</strong>
+              <span>{text}</span>
+            </div>
+          </li>
         ))}
-      </div>
+      </ul>
 
-      <form className="pf-card pf-form" onSubmit={onSubmit}>
-        {mode === 'register' && (
-          <label className="field">
-            <span>Овог нэр *</span>
-            <input
-              required
-              value={form.name}
-              onChange={update('name')}
-              placeholder="Таны нэр"
-              autoComplete="name"
-            />
-          </label>
-        )}
+      <section className="pf-section">
+        <div className="pf-menu">
+          <Link to="/me/help">
+            Тусламж <CaretRight size={16} weight="bold" aria-hidden />
+          </Link>
+        </div>
+      </section>
 
-        <label className="field">
-          <span>Утас *</span>
-          <input
-            required
-            type="tel"
-            inputMode="tel"
-            value={form.phone}
-            onChange={update('phone')}
-            placeholder="8811 2233"
-            autoComplete="tel"
-          />
-        </label>
-
-        <label className="field">
-          <span>Нууц үг *</span>
-          <input
-            required
-            type="password"
-            minLength={6}
-            value={form.password}
-            onChange={update('password')}
-            placeholder={mode === 'register' ? 'Хамгийн багадаа 6 тэмдэгт' : ''}
-            autoComplete={mode === 'register' ? 'new-password' : 'current-password'}
-          />
-        </label>
-
-        {mode === 'register' && (
-          <div className="pf-row">
-            <label className="field">
-              <span>Нас</span>
-              <input
-                type="number"
-                inputMode="numeric"
-                min="16"
-                max="45"
-                value={form.age}
-                onChange={update('age')}
-                placeholder="20"
-              />
-            </label>
-            <label className="field">
-              <span>Герман хэл</span>
-              <select value={form.germanLevel} onChange={update('germanLevel')}>
-                {Object.entries(GERMAN_LEVEL_LABELS).map(([value, label]) => (
-                  <option key={value} value={value}>
-                    {label}
-                  </option>
-                ))}
-              </select>
-            </label>
-          </div>
-        )}
-
-        {error && <div className="alert alert-err">{error}</div>}
-
-        <button type="submit" className="btn btn-primary btn-block" disabled={loading}>
-          {loading ? 'Түр хүлээнэ үү...' : mode === 'login' ? 'Нэвтрэх' : 'Бүртгүүлэх'}
-        </button>
-
-        {mode === 'login' && (
-          <p className="pf-hint">
-            Нууц үгээ мартсан бол <a href={`tel:${social.phoneTel}`}>{social.phone}</a> руу
-            залгана уу.
-          </p>
-        )}
-      </form>
+      <AuthModal open={Boolean(auth)} mode={auth || 'login'} onClose={() => setAuth(null)} />
     </>
   )
 }
@@ -203,7 +136,7 @@ function EnrollmentCard({ item }) {
   )
 }
 
-function EditSheet({ open, onClose }) {
+function EditSheet({ open, onClose, onDelete, deleting }) {
   const { user, update } = useAuth()
   const [form, setForm] = useState(null)
   const [error, setError] = useState('')
@@ -276,6 +209,17 @@ function EditSheet({ open, onClose }) {
         <button type="submit" className="btn btn-primary btn-block" disabled={loading}>
           {loading ? 'Хадгалж байна...' : 'Хадгалах'}
         </button>
+        {onDelete ? (
+          <button
+            type="button"
+            className="btn btn-ghost btn-block is-danger"
+            style={{ color: 'var(--brand)', marginTop: '0.75rem' }}
+            disabled={deleting}
+            onClick={onDelete}
+          >
+            {deleting ? 'Устгаж байна…' : 'Бүртгэл устгах'}
+          </button>
+        ) : null}
       </form>
     </Sheet>
   )
@@ -377,8 +321,9 @@ function Dashboard() {
   const ptr = usePullToRefresh(load)
 
   async function deleteAccount() {
-    const ok = window.confirm(
+    const ok = await confirmDialog(
       'Таны бүртгэл болон мэдээлэл бүрмөсөн устна. Итгэлтэй байна уу?',
+      { title: 'Бүртгэл устгах', okTitle: 'Устгах', cancelTitle: 'Болих' },
     )
     if (!ok || deleting) return
     setDeleting(true)
@@ -405,7 +350,7 @@ function Dashboard() {
       <section className="pf-hero">
         <span className="pf-hero__avatar">{initials(user.name)}</span>
         <div className="pf-hero__info">
-          <h2>{user.name}</h2>
+          <h2>{displayName(user.name)}</h2>
           <p>{user.phone}</p>
           <p>
             Герман хэл: {GERMAN_LEVEL_LABELS[user.germanLevel] || '—'}
@@ -417,22 +362,31 @@ function Dashboard() {
         </button>
       </section>
 
-      <section className="pf-stats">
-        <div>
-          <strong>{data ? enrollments.length : '–'}</strong>
-          <span>Элсэлт</span>
-        </div>
-        <div>
-          <strong>{data ? orders.length : '–'}</strong>
-          <span>Захиалга</span>
-        </div>
-        <div>
-          <strong>{data ? contacts.length : '–'}</strong>
-          <span>Хүсэлт</span>
-        </div>
-      </section>
+      {data && (enrollments.length > 0 || orders.length > 0 || contacts.length > 0) ? (
+        <section className="pf-stats">
+          <div>
+            <strong>{enrollments.length}</strong>
+            <span>Элсэлт</span>
+          </div>
+          <div>
+            <strong>{orders.length}</strong>
+            <span>Захиалга</span>
+          </div>
+          <div>
+            <strong>{contacts.length}</strong>
+            <span>Хүсэлт</span>
+          </div>
+        </section>
+      ) : null}
 
       {error && <div className="alert alert-err pf-gap">{error}</div>}
+
+      <section className="pf-section">
+        <h3>Миний аялал</h3>
+        <div className="pf-card">
+          <JourneyTimeline user={user} enrollments={enrollments} />
+        </div>
+      </section>
 
       <section className="pf-section">
         <h3>Миний элсэлт</h3>
@@ -446,10 +400,10 @@ function Dashboard() {
           <div className="pf-card pf-empty">
             <p>Та одоогоор бүртгүүлээгүй байна.</p>
             <div className="pf-empty__actions">
-              <Link to="/courses" className="btn btn-primary">
+              <Link to="/learn" className="btn btn-primary">
                 Хэлний анги
               </Link>
-              <Link to="/universities" className="btn btn-ghost">
+              <Link to="/countries" className="btn btn-ghost">
                 Au Pair улсууд
               </Link>
             </div>
@@ -505,29 +459,34 @@ function Dashboard() {
         <h3>Тохиргоо</h3>
         <div className="pf-menu">
           <button type="button" onClick={() => setSheet('edit')}>
-            Хувийн мэдээлэл <span>›</span>
+            Хувийн мэдээлэл <CaretRight size={16} weight="bold" aria-hidden />
           </button>
           <button type="button" onClick={() => setSheet('password')}>
-            Нууц үг солих <span>›</span>
+            Нууц үг солих <CaretRight size={16} weight="bold" aria-hidden />
           </button>
-          <Link to="/privacy">
-            Нууцлалын бодлого <span>›</span>
+          <Link to="/me/help">
+            Тусламж ба холбоо <CaretRight size={16} weight="bold" aria-hidden />
           </Link>
+          <Link to="/privacy">
+            Нууцлалын бодлого <CaretRight size={16} weight="bold" aria-hidden />
+          </Link>
+        </div>
+      </section>
+
+      <section className="pf-section">
+        <div className="pf-menu">
           <button type="button" className="is-danger" onClick={logout}>
             Гарах
-          </button>
-          <button
-            type="button"
-            className="is-danger"
-            disabled={deleting}
-            onClick={deleteAccount}
-          >
-            {deleting ? 'Устгаж байна…' : 'Бүртгэл устгах'}
           </button>
         </div>
       </section>
 
-      <EditSheet open={sheet === 'edit'} onClose={() => setSheet(null)} />
+      <EditSheet
+        open={sheet === 'edit'}
+        onClose={() => setSheet(null)}
+        onDelete={deleteAccount}
+        deleting={deleting}
+      />
       <PasswordSheet open={sheet === 'password'} onClose={() => setSheet(null)} />
     </>
   )
@@ -539,25 +498,10 @@ export default function Profile() {
   return (
     <div className="profile-page">
       <div className="container">
-        {user ? <Dashboard /> : <AuthPanel />}
-
-        <section className="pf-section">
-          <h3>Холбоо барих</h3>
-          <div className="pf-menu">
-            <Link to="/contact">
-              Зурвас илгээх <span>›</span>
-            </Link>
-            <Link to="/privacy">
-              Нууцлалын бодлого <span>›</span>
-            </Link>
-            <a href={`tel:${social.phoneTel}`}>
-              {social.phone} <span>›</span>
-            </a>
-            <a href={social.facebook} target="_blank" rel="noreferrer">
-              Facebook <span>›</span>
-            </a>
-          </div>
-        </section>
+        <header className="pf-title">
+          <h1>Би</h1>
+        </header>
+        {user ? <Dashboard /> : <LoggedOut />}
       </div>
     </div>
   )

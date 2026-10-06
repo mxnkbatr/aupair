@@ -41,6 +41,7 @@ export default function useSwipeBack({ enabled, canStart, pageRef, underRef, onS
       const o = opts.current
       if (!o.enabled || e.touches.length !== 1 || g || settling) return
       if (document.body.style.overflow === 'hidden') return
+      if (document.querySelector('[data-vaul-drawer], .auth, .story-viewer')) return
       const t = e.touches[0]
       if (t.clientX > EDGE || !o.canStart()) return
       g = { x0: t.clientX, y0: t.clientY, active: false, x: 0, t: e.timeStamp, v: 0 }

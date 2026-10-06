@@ -153,3 +153,9 @@
     grid-template-columns: repeat(4, 1fr);
   }
 }
+
+.videos-stories {
+  margin-inline: -0.75rem;
+  margin-top: 8px;
+}
+

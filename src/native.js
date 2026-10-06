@@ -19,6 +19,59 @@ export async function haptic(kind = 'light') {
   }
 }
 
+/** Native iOS/Android confirm dialog on device, window.confirm on web. Resolves to boolean. */
+export async function confirmDialog(message, { title = 'Баталгаажуулах', okTitle = 'Тийм', cancelTitle = 'Болих' } = {}) {
+  if (isNative) {
+    try {
+      const { Dialog } = await import('@capacitor/dialog')
+      const { value } = await Dialog.confirm({
+        title,
+        message,
+        okButtonTitle: okTitle,
+        cancelButtonTitle: cancelTitle,
+      })
+      return value
+    } catch {
+      // fall through to window.confirm
+    }
+  }
+  return window.confirm(message)
+}
+
+/**
+ * Native ActionSheet, or web fallback via window.confirm chain.
+ * options: [{ title, style?: 'destructive'|'cancel'|'default' }]
+ * Resolves to selected index, or -1 if cancelled.
+ */
+export async function presentActionSheet({ title, message, options }) {
+  if (isNative) {
+    try {
+      const { ActionSheet, ActionSheetButtonStyle } = await import('@capacitor/action-sheet')
+      const { index } = await ActionSheet.showActions({
+        title,
+        message,
+        options: options.map((o) => ({
+          title: o.title,
+          style:
+            o.style === 'destructive'
+              ? ActionSheetButtonStyle.Destructive
+              : o.style === 'cancel'
+                ? ActionSheetButtonStyle.Cancel
+                : ActionSheetButtonStyle.Default,
+        })),
+      })
+      return index
+    } catch {
+      // fall through
+    }
+  }
+  const labels = options.filter((o) => o.style !== 'cancel').map((o) => o.title)
+  const pick = window.prompt([title, message, ...labels.map((l, i) => `${i + 1}. ${l}`)].filter(Boolean).join('\n\n'))
+  const n = Number(pick) - 1
+  if (!Number.isFinite(n) || n < 0 || n >= labels.length) return -1
+  return options.findIndex((o) => o.title === labels[n])
+}
+
 export async function openExternal(url) {
   if (isNative) {
     try {
@@ -59,15 +112,14 @@ export async function shareLink({ title, text }) {
   }
 }
 
-const SELECT_HAPTIC = '.page-filters__btn, .course-filters__btn, .pf-segment button, .admin-tab'
+const SELECT_HAPTIC = '.page-filters__btn, .course-filters__btn, .pf-segment button, .admin-tab, .seg button, .chip'
 const TAP_HAPTIC = [
   '.btn',
   '.sheet__close',
-  '.home-shortcut',
   '.home-course',
-  '.home-video',
-  '.home-uni',
-  '.home-shop-item',
+  '.home-country',
+  '.learn-card',
+  '.learn-material',
   '.course-card',
   '.uni-card',
   '.product',
@@ -82,7 +134,7 @@ export function installTapHaptics() {
     'click',
     (e) => {
       const el = e.target.closest?.(`${SELECT_HAPTIC}, ${TAP_HAPTIC}`)
-      if (!el || el.disabled || el.closest('.onb')) return
+      if (!el || el.disabled || el.closest('.onb, [data-pressable]')) return
       haptic(el.matches(SELECT_HAPTIC) ? 'selection' : 'light')
     },
     true,
