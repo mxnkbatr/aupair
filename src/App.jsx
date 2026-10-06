@@ -13,6 +13,7 @@ import {
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { flushSync } from 'react-dom'
 import { LayoutGroup } from 'motion/react'
+import { MagnifyingGlass } from '@phosphor-icons/react'
 import { Capacitor } from '@capacitor/core'
 import AppHeader from './components/AppHeader'
 import NavBar from './components/NavBar'
@@ -23,7 +24,7 @@ import Onboarding from './components/Onboarding'
 import PullIndicator from './components/PullIndicator'
 import usePullToRefresh from './hooks/usePullToRefresh'
 import useSwipeBack from './hooks/useSwipeBack'
-import { reloadIfUpdated } from './native'
+import { haptic, reloadIfUpdated } from './native'
 import Home from './pages/Home'
 import Learn from './pages/Learn'
 import NotFound from './pages/NotFound'
@@ -254,6 +255,21 @@ function AppFrame() {
     else navigate(meta.parent || '/', { replace: true })
   }, [navigate, meta.parent])
 
+  const countriesTrailing =
+    pathname === '/countries' ? (
+      <button
+        type="button"
+        className="navbar__icon"
+        aria-label="Хайх"
+        onClick={() => {
+          haptic('light')
+          window.dispatchEvent(new Event('aupair:countries-search'))
+        }}
+      >
+        <MagnifyingGlass size={20} weight="bold" aria-hidden />
+      </button>
+    ) : null
+
   return (
     <div className={isPush ? 'site site--push' : 'site'}>
       <AppHeader title={meta.title} showBrand={isHome} />
@@ -264,6 +280,7 @@ function AppFrame() {
         title={meta.title}
         backLabel={meta.backLabel}
         onBack={goBack}
+        trailing={countriesTrailing}
       />
       <OfflineBanner />
       <main className="site__main">

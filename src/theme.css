@@ -77,40 +77,7 @@ body::after {
   border-radius: 11px;
 }
 
-.bottomnav,
-.tabbar {
-  border-radius: 0;
-  padding: 0;
-  background: rgba(255, 255, 255, 0.94);
-  border: 0;
-  border-top: 0.5px solid rgba(0, 0, 0, 0.12);
-  box-shadow: none;
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-}
-
-@media (prefers-color-scheme: dark) {
-  .bottomnav,
-  .tabbar {
-    background: rgba(22, 22, 26, 0.94);
-    border-top-color: rgba(255, 255, 255, 0.1);
-  }
-}
-
-.bottomnav__item,
-.tabbar__item {
-  border-radius: 0;
-  color: #8e8e96;
-  background: transparent;
-  box-shadow: none;
-}
-
-.bottomnav__item.is-active,
-.tabbar__item.is-active {
-  color: var(--brand);
-  background: transparent;
-  box-shadow: none;
-}
+/* Tab bar styles live in TabBar.css (floating pill). */
 
 /* Sticky CTA bars — solid, docked */
 .cd-bar,

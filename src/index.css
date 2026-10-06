@@ -117,8 +117,12 @@ p {
 
 .site__main {
   flex: 1 1 auto;
-  padding-bottom: calc(var(--bottom-h) + env(safe-area-inset-bottom, 0px) + 8px);
+  padding-bottom: calc(var(--bottom-h) + env(safe-area-inset-bottom, 0px));
   -webkit-overflow-scrolling: touch;
+}
+
+.site--push .site__main {
+  padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
 }
 
 .container {

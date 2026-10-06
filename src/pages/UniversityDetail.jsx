@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
+import { motion } from 'motion/react'
 import { countries } from '../data'
 import EnrollForm from '../components/EnrollForm'
 import Sheet from '../components/Sheet'
@@ -38,9 +39,11 @@ export default function UniversityDetail() {
       <div className="container">
         <section className="ud-hero">
           <div className="ud-hero__media">
-            <img
+            <motion.img
+              layoutId={`country-img-${uni.id}`}
               src={uni.image}
               alt=""
+              transition={{ type: 'spring', stiffness: 380, damping: 38 }}
               onError={(e) => {
                 e.currentTarget.src = '/cover.jpg'
               }}

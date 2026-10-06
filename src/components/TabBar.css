@@ -1,45 +1,64 @@
 .tabbar {
   position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 40;
-  width: 100%;
-  height: calc(49px + env(safe-area-inset-bottom, 0px));
+  left: 16px;
+  right: 16px;
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 8px);
+  z-index: 50;
+  height: 64px;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  align-items: start;
-  padding: 0 0 env(safe-area-inset-bottom, 0px);
-  background: rgba(255, 255, 255, 0.94);
-  border-top: 0.5px solid rgba(0, 0, 0, 0.12);
+  align-items: center;
+  gap: 2px;
+  padding: 6px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--surface) 92%, transparent);
+  border: 0.5px solid rgba(0, 0, 0, 0.06);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
   user-select: none;
   -webkit-user-select: none;
+  transform: translateY(0);
+  transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 @media (prefers-color-scheme: dark) {
   .tabbar {
-    background: rgba(22, 22, 26, 0.94);
-    border-top-color: rgba(255, 255, 255, 0.1);
+    background: color-mix(in srgb, var(--surface) 92%, transparent);
+    border-color: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
   }
 }
 
+.tabbar.is-hidden {
+  transform: translateY(calc(100% + 24px));
+  pointer-events: none;
+}
+
 .tabbar__item {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: center;
   gap: 1px;
-  min-height: 49px;
-  padding: 4px 2px 0;
-  color: #8e8e96;
-  background: transparent;
-  transition: color 0.15s ease;
+  min-height: 52px;
+  padding: 4px 6px;
+  border-radius: 999px;
+  color: var(--label-2);
+  z-index: 1;
 }
 
 .tabbar__item.is-active {
-  color: var(--brand);
+  color: #fff;
+}
+
+.tabbar__pill {
+  position: absolute;
+  inset: 2px;
+  border-radius: 999px;
+  background: var(--brand);
+  z-index: -1;
 }
 
 .tabbar__icon {
@@ -47,20 +66,23 @@
   place-items: center;
   width: 28px;
   height: 28px;
+  position: relative;
+  z-index: 1;
 }
 
 .tabbar__label {
+  position: relative;
+  z-index: 1;
   max-width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  font-size: 10px;
-  font-weight: 500;
-  line-height: 1.2;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.15;
   letter-spacing: -0.01em;
 }
 
-/* The tab bar handles its own press feedback. */
 .tabbar__item:active {
   transform: none !important;
   opacity: 1 !important;
