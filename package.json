@@ -1,7 +1,7 @@
 {
   "name": "mongolian-aupair",
   "private": true,
-  "version": "1.1.0",
+  "version": "1.1.1",
   "type": "module",
   "scripts": {
     "dev": "concurrently -n web,api -c red,blue \"vite\" \"nodemon server/index.js\"",

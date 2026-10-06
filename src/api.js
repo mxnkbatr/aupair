@@ -71,6 +71,7 @@ export const api = {
   login: (payload) => post('/auth/login', payload),
   me: () => request('/me'),
   updateMe: (payload) => request('/me', { method: 'PATCH', body: JSON.stringify(payload) }),
+  deleteMe: () => request('/me', { method: 'DELETE' }),
   adminData: (key) => request('/admin/data', { headers: { 'x-admin-key': key } }),
   adminSetStatus: (key, collection, id, status) =>
     request(`/admin/${collection}/${id}`, {

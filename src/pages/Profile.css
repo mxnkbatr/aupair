@@ -340,6 +340,10 @@
   color: var(--red);
 }
 
+.pf-menu .is-danger:disabled {
+  opacity: 0.55;
+}
+
 @media (min-width: 900px) {
   .profile-page {
     padding: 1.5rem 0 3rem;

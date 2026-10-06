@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../auth'
+import { api } from '../api'
 import { GERMAN_LEVEL_LABELS, INTEREST_LABELS, STATUS_LABELS, social } from '../data'
 import Sheet from '../components/Sheet'
 import { haptic } from '../native'
@@ -353,9 +354,11 @@ function PasswordSheet({ open, onClose }) {
 
 function Dashboard() {
   const { user, refresh, logout } = useAuth()
+  const navigate = useNavigate()
   const [data, setData] = useState(null)
   const [error, setError] = useState('')
   const [sheet, setSheet] = useState(null)
+  const [deleting, setDeleting] = useState(false)
 
   const load = useCallback(async () => {
     setError('')
@@ -372,6 +375,25 @@ function Dashboard() {
   }, [load])
 
   const ptr = usePullToRefresh(load)
+
+  async function deleteAccount() {
+    const ok = window.confirm(
+      'Таны бүртгэл болон мэдээлэл бүрмөсөн устна. Итгэлтэй байна уу?',
+    )
+    if (!ok || deleting) return
+    setDeleting(true)
+    try {
+      await api.deleteMe()
+      haptic('success')
+      logout()
+      navigate('/', { replace: true })
+    } catch (err) {
+      haptic('error')
+      setError(err.message)
+    } finally {
+      setDeleting(false)
+    }
+  }
 
   const enrollments = data?.enrollments || []
   const orders = data?.orders || []
@@ -488,8 +510,19 @@ function Dashboard() {
           <button type="button" onClick={() => setSheet('password')}>
             Нууц үг солих <span>›</span>
           </button>
+          <Link to="/privacy">
+            Нууцлалын бодлого <span>›</span>
+          </Link>
           <button type="button" className="is-danger" onClick={logout}>
             Гарах
+          </button>
+          <button
+            type="button"
+            className="is-danger"
+            disabled={deleting}
+            onClick={deleteAccount}
+          >
+            {deleting ? 'Устгаж байна…' : 'Бүртгэл устгах'}
           </button>
         </div>
       </section>
@@ -513,6 +546,9 @@ export default function Profile() {
           <div className="pf-menu">
             <Link to="/contact">
               Зурвас илгээх <span>›</span>
+            </Link>
+            <Link to="/privacy">
+              Нууцлалын бодлого <span>›</span>
             </Link>
             <a href={`tel:${social.phoneTel}`}>
               {social.phone} <span>›</span>

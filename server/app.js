@@ -406,6 +406,24 @@ app.patch('/api/me', requireUser, async (req, res) => {
   res.json({ user: publicUser(updated), token })
 })
 
+app.delete('/api/me', requireUser, async (req, res) => {
+  const user = req.user
+  const key = phoneKey(user.phone)
+
+  for (const name of ['enrollments', 'contacts', 'orders']) {
+    const rows = await store.all(name)
+    await Promise.all(
+      rows
+        .filter((row) => row.userId === user.id || (key && phoneKey(row.phone) === key))
+        .map((row) => store.remove(name, row.id)),
+    )
+  }
+
+  const removed = await store.remove('users', user.id)
+  if (!removed) return res.status(401).json({ error: 'Дахин нэвтэрнэ үү' })
+  res.json({ ok: true, message: 'Бүртгэл устгагдлаа' })
+})
+
 app.get('/api/admin/data', requireAdmin, async (_req, res) => {
   const [enrollments, contacts, orders, users] = await Promise.all([
     store.all('enrollments'),

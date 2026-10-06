@@ -17,11 +17,15 @@ async function bootstrapNative() {
   if (!Capacitor.isNativePlatform()) return
   try {
     const { StatusBar, Style } = await import('@capacitor/status-bar')
-    if (Capacitor.getPlatform() === 'ios') {
-      await StatusBar.setStyle({ style: Style.Light })
-    } else {
-      await StatusBar.setStyle({ style: Style.Dark })
-      await StatusBar.setBackgroundColor({ color: '#CC2038' })
+    // Light content chrome (dark icons on white) — matches iOS app chrome
+    await StatusBar.setStyle({ style: Style.Light })
+    if (Capacitor.getPlatform() === 'android') {
+      await StatusBar.setBackgroundColor({ color: '#FFFFFF' })
+    }
+    try {
+      await StatusBar.setOverlaysWebView({ overlay: true })
+    } catch {
+      // older plugin builds may not support overlay
     }
   } catch {
     // Status bar plugin optional on web preview

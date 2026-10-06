@@ -27,6 +27,7 @@ export default function Footer() {
             <Link to="/universities">Улс орнууд</Link>
             <Link to="/shop">Дэлгүүр</Link>
             <Link to="/contact">Холбоо барих</Link>
+            <Link to="/privacy">Нууцлалын бодлого</Link>
           </div>
         </div>
 
@@ -47,7 +48,7 @@ export default function Footer() {
       </div>
       <div className="container site-footer__bottom">
         <span>© {new Date().getFullYear()} Mongolian Au Pair</span>
-        <span>facebook.com/MongolianAuPair</span>
+        <Link to="/privacy">Privacy Policy</Link>
       </div>
     </footer>
   )

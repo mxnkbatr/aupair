@@ -30,6 +30,7 @@ import Shop from './pages/Shop'
 import ProductDetail from './pages/ProductDetail'
 import Profile from './pages/Profile'
 import Contact from './pages/Contact'
+import Privacy from './pages/Privacy'
 import Admin from './pages/Admin'
 import { AuthProvider, useAuth } from './auth'
 import './theme.css'
@@ -44,12 +45,13 @@ const TITLES = {
   '/shop': 'Дэлгүүр',
   '/profile': 'Профайл',
   '/contact': 'Холбоо барих',
+  '/privacy': 'Нууцлал',
   '/admin': 'Админ',
 }
 
 const TAB_PATHS = ['/', '/courses', '/universities', '/shop', '/profile']
 const REFRESH_PATHS = ['/', '/courses', '/universities', '/shop']
-const SWIPE_BACK = Capacitor.getPlatform() === 'ios' || import.meta.env.DEV
+const SWIPE_BACK = Capacitor.isNativePlatform() || import.meta.env.DEV
 const scrollPositions = new Map()
 let skipNextTransition = false
 
@@ -131,6 +133,7 @@ function AppRoutes({ location }) {
       <Route path="/profile" element={<Profile />} />
       <Route path="/admin" element={<Admin />} />
       <Route path="/contact" element={<Contact />} />
+      <Route path="/privacy" element={<Privacy />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   )

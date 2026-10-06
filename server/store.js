@@ -61,6 +61,20 @@ function createFileStore() {
       write(name, list)
       return item
     },
+    async remove(name, id) {
+      const list = read(name)
+      const next = list.filter((x) => x.id !== id)
+      if (next.length === list.length) return false
+      write(name, next)
+      return true
+    },
+    async removeMany(name, query) {
+      const list = read(name)
+      const next = list.filter((x) => !matches(x, query))
+      const removed = list.length - next.length
+      if (removed) write(name, next)
+      return removed
+    },
     async secret() {
       const file = path.join(dir, 'secret.key')
       if (!fs.existsSync(file)) {
@@ -108,6 +122,14 @@ async function createMongoStore() {
         { ...hideId, returnDocument: 'after' },
       )
     },
+    async remove(name, id) {
+      const res = await col(name).deleteOne({ id })
+      return res.deletedCount > 0
+    },
+    async removeMany(name, query) {
+      const res = await col(name).deleteMany(query)
+      return res.deletedCount
+    },
     async secret() {
       const meta = col('meta')
       await meta.updateOne(
@@ -124,7 +146,7 @@ function createMissingStore() {
   const fail = async () => {
     throw Object.assign(new Error('MONGODB_URI тохируулаагүй байна'), { status: 503 })
   }
-  return { kind: 'missing', all: fail, one: fail, insert: fail, update: fail, secret: fail }
+  return { kind: 'missing', all: fail, one: fail, insert: fail, update: fail, remove: fail, removeMany: fail, secret: fail }
 }
 
 export async function createStore() {
