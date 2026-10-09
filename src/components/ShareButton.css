@@ -1,0 +1,27 @@
+.share-btn {
+  position: absolute;
+  top: 0.85rem;
+  right: 0.85rem;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  min-width: 38px;
+  height: 38px;
+  padding: 0 0.6rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.16);
+  color: #fff;
+  backdrop-filter: blur(8px);
+  cursor: pointer;
+}
+
+.share-btn--bottom {
+  top: auto;
+  bottom: 0.85rem;
+}
+
+.share-btn__copied {
+  font-size: 0.75rem;
+  font-weight: 700;
+}

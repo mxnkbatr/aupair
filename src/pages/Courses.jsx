@@ -8,7 +8,7 @@ export default function Courses() {
       <div className="container">
         <PageHeader
           title="Хөтөлбөр"
-          text="Au Pair элсэлт · франц, герман хэлний бэлтгэл — New Residence 726-1"
+          text="Герман хэлний A1, A2 анги · Au Pair бэлтгэл"
         />
         <CourseGrid showFilters />
       </div>

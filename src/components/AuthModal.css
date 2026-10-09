@@ -1,0 +1,201 @@
+.auth {
+  position: fixed;
+  inset: 0;
+  z-index: 250;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+  color: var(--label);
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+.auth__top {
+  flex: 0 0 auto;
+  display: grid;
+  grid-template-columns: 44px 1fr 44px;
+  align-items: center;
+  height: 52px;
+  padding-inline: 8px;
+}
+
+.auth__icon {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--label);
+  cursor: pointer;
+}
+
+.auth__dots {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+}
+
+.auth__dots i {
+  width: 22px;
+  height: 4px;
+  border-radius: 999px;
+  background: var(--separator);
+  transition: background 0.2s ease, width 0.25s var(--ease-out);
+}
+
+.auth__dots i.is-done {
+  background: var(--accent);
+}
+
+.auth__dots i.is-now {
+  width: 32px;
+  background: var(--brand);
+}
+
+.auth__body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 8px 20px 24px;
+}
+
+.auth__form {
+  display: grid;
+  gap: 14px;
+  width: min(100%, 440px);
+  margin-inline: auto;
+  align-content: start;
+}
+
+.auth__logo {
+  width: 64px;
+  height: 64px;
+  border-radius: 18px;
+  box-shadow: var(--e2);
+}
+
+.auth__form h1 {
+  font-size: 2rem;
+  line-height: 1.15;
+}
+
+.auth__sub {
+  margin-top: -6px;
+  color: var(--label-2);
+  font-size: 0.9375rem;
+}
+
+.auth__step {
+  color: var(--brand);
+  font-size: 0.8125rem;
+  font-weight: 700;
+}
+
+.auth__field input {
+  min-height: 52px;
+  font-size: 1.0625rem;
+  background: var(--surface);
+  border: 0.5px solid var(--separator);
+}
+
+.auth__phone {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: stretch;
+  border-radius: var(--r-field);
+  background: var(--surface);
+  border: 0.5px solid var(--separator);
+  overflow: hidden;
+}
+
+.auth__phone:focus-within {
+  border-color: rgba(232, 23, 63, 0.4);
+  box-shadow: 0 0 0 4px rgba(232, 23, 63, 0.1);
+}
+
+.auth__phone b {
+  display: grid;
+  place-items: center;
+  padding: 0 14px;
+  background: var(--surface-2);
+  font-size: 1.0625rem;
+  font-weight: 700;
+}
+
+.auth__phone input,
+.auth__phone input:focus {
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  background: transparent;
+}
+
+.auth__password {
+  position: relative;
+}
+
+.auth__password input {
+  padding-right: 52px;
+}
+
+.auth__eye {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 100%;
+  border: 0;
+  background: transparent;
+  color: var(--label-2);
+  cursor: pointer;
+}
+
+.auth__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.auth__link {
+  justify-self: center;
+  min-height: 44px;
+  padding: 0 12px;
+  border: 0;
+  background: transparent;
+  color: var(--brand);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.auth__forgot {
+  display: grid;
+  gap: 8px;
+  padding: 14px;
+  border-radius: var(--r-card);
+  background: var(--surface);
+  border: var(--card-border);
+}
+
+.auth__forgot p {
+  color: var(--label-2);
+  font-size: 0.875rem;
+}
+
+.auth__switch {
+  text-align: center;
+  color: var(--label-2);
+  font-size: 0.9375rem;
+}
+
+.auth__switch button {
+  border: 0;
+  background: transparent;
+  color: var(--brand);
+  font-weight: 700;
+  cursor: pointer;
+}

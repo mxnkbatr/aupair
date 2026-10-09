@@ -14,6 +14,8 @@ dist-ssr
 
 # Runtime data
 server/data/*.json
+server/data/*.tmp
+server/data/secret.key
 
 # Capacitor / Android
 android/.gradle

@@ -1,30 +1,16 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { api } from '../api'
-import { countries, social } from '../data'
+import { motion } from 'motion/react'
+import { countries } from '../data'
 import EnrollForm from '../components/EnrollForm'
 import Sheet from '../components/Sheet'
+import ShareButton from '../components/ShareButton'
 import './UniversityDetail.css'
 
 export default function UniversityDetail() {
   const { id } = useParams()
   const uni = useMemo(() => countries.find((u) => u.id === id), [id])
   const [open, setOpen] = useState(false)
-  const [seatsLeft, setSeatsLeft] = useState(uni?.seatsLeft)
-
-  useEffect(() => {
-    if (!uni) return undefined
-    let alive = true
-    api
-      .getCourse(uni.id)
-      .then((data) => {
-        if (alive && typeof data.seatsLeft === 'number') setSeatsLeft(data.seatsLeft)
-      })
-      .catch(() => {})
-    return () => {
-      alive = false
-    }
-  }, [uni])
 
   if (!uni) {
     return (
@@ -33,28 +19,19 @@ export default function UniversityDetail() {
         <p style={{ color: 'var(--muted)', marginTop: '0.5rem' }}>
           Au Pair улс олдсонгүй
         </p>
-        <Link to="/universities" className="btn btn-primary" style={{ marginTop: '1rem' }}>
-          Улс орнууд руу
+        <Link to="/countries" className="btn btn-primary" style={{ marginTop: '1rem' }}>
+          Улсууд руу
         </Link>
       </div>
     )
   }
 
-  const seats = typeof seatsLeft === 'number' ? seatsLeft : uni.seatsLeft
-  const total = uni.seats || 10
-  const full = typeof seats === 'number' && seats <= 0
-  const filled =
-    typeof seats === 'number'
-      ? Math.min(100, Math.round(((total - seats) / total) * 100))
-      : 0
+  const isOpen = uni.open !== false
 
   const course = {
     id: uni.id,
     title: `${uni.nameMn} Au Pair`,
     priceLabel: uni.priceLabel || 'Зөвлөгөө үнэгүй',
-    seatsLeft: seats,
-    seats: total,
-    level: 'Au Pair',
   }
 
   return (
@@ -62,9 +39,11 @@ export default function UniversityDetail() {
       <div className="container">
         <section className="ud-hero">
           <div className="ud-hero__media">
-            <img
+            <motion.img
+              layoutId={`country-img-${uni.id}`}
               src={uni.image}
               alt=""
+              transition={{ type: 'spring', stiffness: 380, damping: 38 }}
               onError={(e) => {
                 e.currentTarget.src = '/cover.jpg'
               }}
@@ -75,6 +54,11 @@ export default function UniversityDetail() {
               {uni.badge ? <span className="ud-hero__badge">{uni.badge}</span> : null}
             </div>
             <p className="ud-hero__city">{uni.city}</p>
+            <ShareButton
+              className="share-btn--bottom"
+              title={`${uni.nameMn} Au Pair`}
+              text={`${uni.nameMn} Au Pair — элсэлт`}
+            />
           </div>
 
           <div className="ud-hero__copy">
@@ -110,17 +94,6 @@ export default function UniversityDetail() {
             <strong>{uni.tuition}</strong>
           </div>
         </section>
-
-        {typeof seats === 'number' ? (
-          <section className="ud-block">
-            <h2>Суудал</h2>
-            <p>
-              {full
-                ? 'Энэ улсын суудал дууссан байна.'
-                : `${seats} суудал үлдсэн · ${filled}% дүүрсэн`}
-            </p>
-          </section>
-        ) : null}
 
         <section className="ud-block">
           <h2>Яагаад энэ улс?</h2>
@@ -159,26 +132,20 @@ export default function UniversityDetail() {
 
       <div className="ud-bar">
         <div className="ud-bar__meta">
-          <small>{full ? 'Суудал' : 'Элсэлт'}</small>
-          <strong>{full ? 'Дууссан' : 'Нээлттэй'}</strong>
+          <small>Элсэлт</small>
+          <strong>{isOpen ? 'Нээлттэй' : 'Урьдчилсан бүртгэл'}</strong>
         </div>
         <button
           type="button"
           className="btn btn-primary ud-bar__cta"
           onClick={() => setOpen(true)}
-          disabled={full}
         >
-          {full ? 'Суудал дууссан' : 'Элсэх'}
+          {isOpen ? 'Элсэх' : 'Бүртгүүлэх'}
         </button>
       </div>
 
       <Sheet open={open} onClose={() => setOpen(false)} title={`${uni.nameMn} руу элсэх`}>
-        <EnrollForm
-          course={course}
-          onSuccess={(res) => {
-            if (typeof res.seatsLeft === 'number') setSeatsLeft(res.seatsLeft)
-          }}
-        />
+        <EnrollForm course={course} />
       </Sheet>
     </div>
   )

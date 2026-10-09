@@ -1,275 +1,229 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { countries, social } from '../data'
+import { motion, useReducedMotion } from 'motion/react'
+import { CaretRight, MagnifyingGlass, X } from '@phosphor-icons/react'
+import { countries } from '../data'
+import Pressable from '../components/Pressable'
+import { haptic } from '../native'
 import './Universities.css'
 
 const FILTERS = [
   { id: 'all', label: 'Бүгд' },
-  { id: 'open', label: 'Элсэлт нээлттэй' },
-  { id: 'german', label: 'Герман хэл' },
-  { id: 'french', label: 'Франц хэл' },
-  { id: 'north', label: 'Хойд Европ' },
+  { id: 'german', label: 'Герман хэлтэй' },
+  { id: 'french', label: 'Франц хэлтэй' },
+  { id: 'north', label: 'Англи хэлтэй' },
 ]
+
+const FLAGS = {
+  germany: '🇩🇪',
+  france: '🇫🇷',
+  austria: '🇦🇹',
+  switzerland: '🇨🇭',
+  belgium: '🇧🇪',
+  netherlands: '🇳🇱',
+  denmark: '🇩🇰',
+}
 
 function matchesFilter(country, filter) {
   if (filter === 'all') return true
-  if (filter === 'open') return country.open
   return country.langGroup === filter
+}
+
+function matchesQuery(country, q) {
+  if (!q) return true
+  const hay = `${country.nameMn} ${country.name} ${country.city} ${country.language}`.toLowerCase()
+  return hay.includes(q)
+}
+
+function pillsFor(uni) {
+  const out = []
+  if (uni.duration) out.push(uni.duration.includes('12') ? '1 жил' : uni.duration)
+  if (uni.badge) out.push(uni.badge)
+  else if (uni.open) out.push('Нээлттэй')
+  return out.slice(0, 2)
 }
 
 export default function Universities() {
   const [filter, setFilter] = useState('all')
-  const [slide, setSlide] = useState(0)
-
-  const featured = useMemo(
-    () => countries.filter((u) => u.featured),
-    [],
-  )
-
-  const list = useMemo(
-    () => countries.filter((u) => matchesFilter(u, filter)),
-    [filter],
-  )
+  const [query, setQuery] = useState('')
+  const [searching, setSearching] = useState(false)
+  const inputRef = useRef(null)
+  const reduce = useReducedMotion()
 
   useEffect(() => {
-    if (featured.length < 2) return undefined
-    const timer = setInterval(() => {
-      setSlide((i) => (i + 1) % featured.length)
-    }, 4200)
-    return () => clearInterval(timer)
-  }, [featured.length])
+    function onToggle() {
+      setSearching((v) => {
+        const next = !v
+        if (!next) setQuery('')
+        return next
+      })
+    }
+    function onOpen() {
+      setSearching(true)
+    }
+    window.addEventListener('aupair:countries-search', onToggle)
+    window.addEventListener('aupair:countries-search-open', onOpen)
+    return () => {
+      window.removeEventListener('aupair:countries-search', onToggle)
+      window.removeEventListener('aupair:countries-search-open', onOpen)
+    }
+  }, [])
 
-  const current = featured[slide] || featured[0]
+  useEffect(() => {
+    if (searching) inputRef.current?.focus()
+  }, [searching])
+
+  const q = query.trim().toLowerCase()
+  const list = useMemo(
+    () => countries.filter((u) => matchesFilter(u, filter) && matchesQuery(u, q)),
+    [filter, q],
+  )
+  const featured = useMemo(
+    () => countries.find((u) => u.id === 'germany') || countries.find((u) => u.featured),
+    [],
+  )
+  const showFeatured = featured && filter === 'all' && !q
+  const rows = showFeatured ? list.filter((u) => u.id !== featured.id) : list
 
   return (
-    <div className="uni-page fade-up">
+    <div className="uni-page">
       <div className="container">
-        {current ? (
-          <section className="uni-banner" aria-label="Au Pair улс орнууд">
-            <div className="uni-banner__frame">
-              {featured.map((uni, i) => (
-                <Link
-                  key={uni.id}
-                  to={`/universities/${uni.id}`}
-                  className={
-                    i === slide
-                      ? 'uni-banner__slide is-active'
-                      : 'uni-banner__slide'
-                  }
-                  aria-hidden={i !== slide}
-                  tabIndex={i === slide ? 0 : -1}
-                >
-                  <img
-                    src={uni.image}
-                    alt=""
-                    loading={i === 0 ? 'eager' : 'lazy'}
-                    onError={(e) => {
-                      e.currentTarget.src = '/cover.jpg'
-                    }}
-                  />
-                  <div className="uni-banner__shade" aria-hidden />
-                  <div className="uni-banner__body">
-                    <span className="uni-banner__kicker">Au Pair · элсэлт авч байна</span>
-                    <strong>{uni.nameMn}</strong>
-                    <p>
-                      {uni.city} · {uni.language}
-                    </p>
-                    <em>Элсэх →</em>
-                  </div>
-                </Link>
-              ))}
-            </div>
+        <header className="uni-head">
+          <h1>Улсууд</h1>
+          <p>Au Pair хийх Европын 7 улс</p>
+        </header>
 
-            <div className="uni-banner__dots" role="tablist" aria-label="Слайд">
-              {featured.map((uni, i) => (
-                <button
-                  key={uni.id}
-                  type="button"
-                  className={i === slide ? 'is-on' : ''}
-                  aria-label={`${uni.short} слайд`}
-                  aria-selected={i === slide}
-                  onClick={() => setSlide(i)}
-                />
-              ))}
-            </div>
-          </section>
+        {searching ? (
+          <div className="uni-search">
+            <MagnifyingGlass size={18} weight="bold" aria-hidden />
+            <input
+              ref={inputRef}
+              type="search"
+              inputMode="search"
+              placeholder="Улс хайх…"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              aria-label="Улс хайх"
+            />
+            <button
+              type="button"
+              className="uni-search__clear"
+              aria-label="Хайх хаах"
+              onClick={() => {
+                haptic('light')
+                setSearching(false)
+                setQuery('')
+              }}
+            >
+              <X size={16} weight="bold" aria-hidden />
+            </button>
+          </div>
         ) : null}
 
-        <div className="page-filters" role="tablist">
+        <div className="uni-chips" role="tablist" aria-label="Хэлний шүүлтүүр">
           {FILTERS.map((f) => (
             <button
               key={f.id}
               type="button"
-              className={
-                filter === f.id ? 'page-filters__btn is-active' : 'page-filters__btn'
-              }
-              onClick={() => setFilter(f.id)}
+              role="tab"
+              aria-selected={filter === f.id}
+              className={filter === f.id ? 'uni-chip is-active' : 'uni-chip'}
+              onClick={() => {
+                haptic('selection')
+                setFilter(f.id)
+              }}
             >
               {f.label}
             </button>
           ))}
         </div>
 
-        <p className="uni-count">
-          {list.length} улс · Au Pair элсэлт {list.some((c) => c.open) ? 'нээлттэй' : ''}
-        </p>
-
-        <div className="uni-grid">
-          {list.map((uni) => {
-            const seats = uni.seatsLeft
-            const total = uni.seats || 10
-            const filled =
-              typeof seats === 'number'
-                ? Math.min(100, Math.round(((total - seats) / total) * 100))
-                : 0
-            return (
-              <article key={uni.id} className="uni-card">
-                <Link to={`/universities/${uni.id}`} className="uni-card__media">
-                  <img
-                    src={uni.image}
-                    alt={uni.nameMn}
-                    loading="lazy"
-                    onError={(e) => {
-                      e.currentTarget.src = '/cover.jpg'
-                    }}
-                  />
-                  <div className="uni-card__overlay" aria-hidden />
-                  <div className="uni-card__media-top">
-                    <span className="uni-card__mark">{uni.short}</span>
-                    {uni.badge ? <span className="uni-card__badge">{uni.badge}</span> : null}
-                  </div>
-                  <div className="uni-card__media-bottom">
-                    <span>{uni.city}</span>
-                    <strong>{uni.language}</strong>
-                  </div>
-                </Link>
-
-                <div className="uni-card__body">
-                  <h2>
-                    <Link to={`/universities/${uni.id}`}>{uni.nameMn}</Link>
-                  </h2>
-                  <p className="uni-card__en">{uni.name} Au Pair</p>
-
-                  <ul className="uni-card__facts">
-                    <li>
-                      <PinIcon />
-                      <span>{uni.city}</span>
-                    </li>
-                    <li>
-                      <BookIcon />
-                      <span>{uni.language}</span>
-                    </li>
-                    <li>
-                      <CalIcon />
-                      <span>{uni.intake}</span>
-                    </li>
-                    <li>
-                      <LevelIcon />
-                      <span>{uni.duration}</span>
-                    </li>
-                  </ul>
-
-                  {typeof seats === 'number' ? (
-                    <p className="uni-card__en" style={{ marginTop: '0.35rem' }}>
-                      {seats} суудал үлдсэн · {filled}% дүүрсэн
-                    </p>
-                  ) : null}
-
-                  <div className="uni-card__foot">
-                    <div className="uni-card__price">
-                      <small>Нөхцөл</small>
-                      <strong>{uni.tuition}</strong>
-                    </div>
-                    <Link to={`/universities/${uni.id}`} className="uni-card__cta">
-                      Элсэх
-                    </Link>
-                  </div>
-                </div>
-              </article>
-            )
-          })}
-        </div>
-
-        {list.length === 0 ? (
-          <p className="uni-empty">Энэ шүүлтээр улс олдсонгүй.</p>
+        {showFeatured ? (
+          <Pressable
+            as={Link}
+            to={`/countries/${featured.id}`}
+            className="uni-featured"
+            scale={0.97}
+          >
+            <motion.img
+              layoutId={reduce ? undefined : `country-img-${featured.id}`}
+              src={featured.image}
+              alt=""
+              transition={{ type: 'spring', stiffness: 380, damping: 38 }}
+              onError={(e) => {
+                e.currentTarget.src = '/cover.jpg'
+              }}
+            />
+            <span className="uni-featured__shade" aria-hidden />
+            <em className="uni-featured__badge">Эрэлттэй</em>
+            <span className="uni-featured__body">
+              <strong>
+                {FLAGS[featured.id]} {featured.nameMn}
+              </strong>
+              <small>
+                {featured.city} · {featured.language}
+              </small>
+            </span>
+          </Pressable>
         ) : null}
 
-        <div className="uni-cta">
-          <div>
-            <h3>Ямар улс руу явахаа мэдэхгүй байна уу?</h3>
-            <p>
-              Нас, хэл, зорилгоо хэлээд тохирох Au Pair улс, гэр бүл, визийн процессыг хамт хийнэ.
-            </p>
-          </div>
-          <div className="uni-cta__actions">
-            <a href={`tel:${social.phoneTel}`} className="btn btn-primary">
-              Залгах
-            </a>
-            <a
-              href={social.messenger}
-              target="_blank"
-              rel="noreferrer"
-              className="btn btn-ghost"
+        <ul className="uni-list">
+          {rows.map((uni) => (
+            <li key={uni.id}>
+              <Pressable
+                as={Link}
+                to={`/countries/${uni.id}`}
+                className="uni-row"
+                scale={0.97}
+                aria-label={`${uni.nameMn} — ${uni.city}`}
+              >
+                <motion.img
+                  className="uni-row__photo"
+                  layoutId={reduce ? undefined : `country-img-${uni.id}`}
+                  src={uni.image}
+                  alt=""
+                  loading="lazy"
+                  transition={{ type: 'spring', stiffness: 380, damping: 38 }}
+                  onError={(e) => {
+                    e.currentTarget.src = '/cover.jpg'
+                  }}
+                />
+                <div className="uni-row__body">
+                  <strong>
+                    {FLAGS[uni.id] || ''} {uni.nameMn}
+                  </strong>
+                  <span>
+                    {uni.city} · {uni.language}
+                  </span>
+                  <div className="uni-row__pills">
+                    {pillsFor(uni).map((p) => (
+                      <em key={p}>{p}</em>
+                    ))}
+                  </div>
+                </div>
+                <CaretRight className="uni-row__chev" size={18} weight="bold" aria-hidden />
+              </Pressable>
+            </li>
+          ))}
+        </ul>
+
+        {list.length === 0 ? (
+          <div className="uni-empty">
+            <p>🌍 Улс олдсонгүй</p>
+            <button
+              type="button"
+              className="btn btn-primary"
+              onClick={() => {
+                setFilter('all')
+                setQuery('')
+                setSearching(false)
+              }}
             >
-              Messenger
-            </a>
+              Бүгдийг харах
+            </button>
           </div>
-        </div>
+        ) : null}
       </div>
     </div>
-  )
-}
-
-function PinIcon() {
-  return (
-    <svg viewBox="0 0 24 24" width="15" height="15" fill="none" aria-hidden>
-      <path
-        d="M12 20s5-4 5-7.8A5 5 0 0 0 7 12.2C7 16 12 20 12 20Z"
-        stroke="currentColor"
-        strokeWidth="1.7"
-        strokeLinejoin="round"
-      />
-      <circle cx="12" cy="12.2" r="1.5" stroke="currentColor" strokeWidth="1.5" />
-    </svg>
-  )
-}
-
-function BookIcon() {
-  return (
-    <svg viewBox="0 0 24 24" width="15" height="15" fill="none" aria-hidden>
-      <path
-        d="M5 6a2 2 0 0 1 2-2h11v14H7a2 2 0 0 0-2 2V6Z"
-        stroke="currentColor"
-        strokeWidth="1.7"
-        strokeLinejoin="round"
-      />
-    </svg>
-  )
-}
-
-function CalIcon() {
-  return (
-    <svg viewBox="0 0 24 24" width="15" height="15" fill="none" aria-hidden>
-      <rect x="4.5" y="6" width="15" height="13" rx="2" stroke="currentColor" strokeWidth="1.7" />
-      <path
-        d="M8 4.5V7M16 4.5V7M4.5 10h15"
-        stroke="currentColor"
-        strokeWidth="1.7"
-        strokeLinecap="round"
-      />
-    </svg>
-  )
-}
-
-function LevelIcon() {
-  return (
-    <svg viewBox="0 0 24 24" width="15" height="15" fill="none" aria-hidden>
-      <path
-        d="M5 17h4V7H5v10Zm5 0h4V4h-4v13Zm5 0h4v-8h-4v8Z"
-        stroke="currentColor"
-        strokeWidth="1.7"
-        strokeLinejoin="round"
-      />
-    </svg>
   )
 }

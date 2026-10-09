@@ -8,7 +8,7 @@ export default function Footer() {
       <div className="container site-footer__grid">
         <div>
           <div className="site-footer__brand">
-            <img src="/logo.svg" alt="Mongolian Au Pair" />
+            <img src="/logo.png" alt="Mongolian Au Pair" />
             <div>
               <strong>Mongolian Au Pair</strong>
               <p>Европ руу соёл солилцоо · 2005 оноос</p>
@@ -23,10 +23,11 @@ export default function Footer() {
         <div>
           <h4>Цэс</h4>
           <div className="site-footer__links">
-            <Link to="/courses">Хөтөлбөр</Link>
-            <Link to="/universities">Улс орнууд</Link>
-            <Link to="/shop">Дэлгүүр</Link>
-            <Link to="/profile">Холбоо барих</Link>
+            <Link to="/learn">Сурах</Link>
+            <Link to="/countries">Улсууд</Link>
+            <Link to="/learn?tab=materials">Материал</Link>
+            <Link to="/me/help">Холбоо барих</Link>
+            <Link to="/privacy">Нууцлалын бодлого</Link>
           </div>
         </div>
 
@@ -47,7 +48,7 @@ export default function Footer() {
       </div>
       <div className="container site-footer__bottom">
         <span>© {new Date().getFullYear()} Mongolian Au Pair</span>
-        <span>facebook.com/MongolianAuPair</span>
+        <Link to="/privacy">Privacy Policy</Link>
       </div>
     </footer>
   )

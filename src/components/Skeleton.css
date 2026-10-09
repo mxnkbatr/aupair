@@ -1,0 +1,37 @@
+.sk {
+  display: block;
+  max-width: 100%;
+  background: linear-gradient(
+    90deg,
+    var(--surface-2) 0%,
+    color-mix(in srgb, var(--surface-2) 55%, var(--surface)) 50%,
+    var(--surface-2) 100%
+  );
+  background-size: 200% 100%;
+  animation: skeleton 1.2s ease-in-out infinite;
+}
+
+.sk-row {
+  display: flex;
+  gap: 12px;
+  overflow: hidden;
+  padding-inline: 12px;
+}
+
+.sk-row > .sk {
+  flex: 0 0 auto;
+}
+
+.sk-list {
+  display: grid;
+  gap: 12px;
+}
+
+.sk-card {
+  display: grid;
+  gap: 10px;
+  padding: 16px;
+  border-radius: var(--r-card);
+  background: var(--surface);
+  border: var(--card-border);
+}

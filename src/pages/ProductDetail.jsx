@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { api } from '../api'
+import { useAuth } from '../auth'
 import { products, social } from '../data'
 import Sheet from '../components/Sheet'
 import './ProductDetail.css'
@@ -9,7 +10,8 @@ export default function ProductDetail() {
   const { id } = useParams()
   const product = useMemo(() => products.find((p) => p.id === id), [id])
   const [open, setOpen] = useState(false)
-  const [form, setForm] = useState({ name: '', phone: '' })
+  const { user } = useAuth()
+  const [form, setForm] = useState({ name: user?.name || '', phone: user?.phone || '' })
   const [loading, setLoading] = useState(false)
   const [status, setStatus] = useState(null)
 
@@ -20,8 +22,8 @@ export default function ProductDetail() {
         <p style={{ color: 'var(--muted)', marginTop: '0.5rem' }}>
           Бүтээгдэхүүн олдсонгүй
         </p>
-        <Link to="/shop" className="btn btn-primary" style={{ marginTop: '1rem' }}>
-          Дэлгүүр рүү
+        <Link to="/learn?tab=materials" className="btn btn-primary" style={{ marginTop: '1rem' }}>
+          Материал руу
         </Link>
       </div>
     )
@@ -38,7 +40,7 @@ export default function ProductDetail() {
         items: [{ id: product.id, name: product.name, price: product.price }],
       })
       setStatus({ ok: true, text: res.message || 'Захиалга бүртгэгдлээ' })
-      setForm({ name: '', phone: '' })
+      setForm({ name: user?.name || '', phone: user?.phone || '' })
     } catch (err) {
       setStatus({ ok: false, text: err.message })
     } finally {
@@ -52,7 +54,7 @@ export default function ProductDetail() {
         <section className="pd-hero">
           <div className="pd-hero__visual" aria-hidden>
             <span>{product.tag}</span>
-            <strong>漢</strong>
+            <strong>{product.tag || 'AP'}</strong>
           </div>
           <div className="pd-hero__meta">
             <span className="pd-hero__tag">{product.tag}</span>

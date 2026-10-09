@@ -1,18 +1,27 @@
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
+import { motion } from 'motion/react'
+import { CaretDown, Fire } from '@phosphor-icons/react'
 import { api } from '../api'
 import { coursesFallback, social } from '../data'
 import EnrollForm from '../components/EnrollForm'
 import Sheet from '../components/Sheet'
+import ShareButton from '../components/ShareButton'
+import Skeleton from '../components/Skeleton'
 import './CourseDetail.css'
+
+const FAQ = [
+  { q: 'Төлбөр хэд вэ?', a: 'Зөвлөгөө үнэгүй. Ангийн төлбөрийг бүртгэлийн дараа тохиролцоно.' },
+  { q: 'Хаана сурна вэ?', a: 'Улаанбаатар дахь танхимд. Хуваарийг доорх мэдээллээс харна уу.' },
+  { q: 'Хэзээ эхлэх вэ?', a: 'Элсэлт нээлттэй үед шинэ бүлэг нээгдэнэ. Бүртгүүлээд бидэнтэй холбогдоорой.' },
+]
 
 export default function CourseDetail() {
   const { id } = useParams()
-  const [course, setCourse] = useState(
-    () => coursesFallback.find((c) => c.id === id) || null,
-  )
+  const [course, setCourse] = useState(() => coursesFallback.find((c) => c.id === id) || null)
   const [open, setOpen] = useState(false)
   const [error, setError] = useState('')
+  const [faqOpen, setFaqOpen] = useState(0)
 
   useEffect(() => {
     let alive = true
@@ -36,11 +45,11 @@ export default function CourseDetail() {
 
   if (error) {
     return (
-      <div className="container fade-up" style={{ padding: '2rem 0' }}>
+      <div className="container cd-error">
         <h1>Олдсонгүй</h1>
-        <p style={{ color: 'var(--muted)', marginTop: '0.5rem' }}>{error}</p>
-        <Link to="/courses" className="btn btn-primary" style={{ marginTop: '1rem' }}>
-          Буцах
+        <p>{error}</p>
+        <Link to="/learn" className="btn btn-primary">
+          Сурах руу буцах
         </Link>
       </div>
     )
@@ -48,76 +57,67 @@ export default function CourseDetail() {
 
   if (!course) {
     return (
-      <div className="container course-detail-loading fade-up">
-        <div className="course-detail-loading__block" />
-        <div className="course-detail-loading__block is-short" />
+      <div className="course-detail-loading" aria-label="Ачаалж байна" role="status">
+        <Skeleton w="100%" h={300} r={0} />
+        <div className="container course-detail-loading__body">
+          <Skeleton h={64} r={24} />
+          <Skeleton h={120} r={24} />
+        </div>
       </div>
     )
   }
 
-  const full = course.seatsLeft === 0
-  const seats = course.seatsLeft
-  const total = course.seats || 16
-  const filled =
-    typeof seats === 'number'
-      ? Math.min(100, Math.round(((total - seats) / total) * 100))
-      : 40
+  const seats = course.seatsLeft ?? course.seats
+  const hasSeats = typeof seats === 'number'
+  const full = hasSeats && seats <= 0
+  const level = String(course.level || course.hsk || 'A1').replace(/^DE\s*/i, '')
+  const hero = course.image || '/cover.jpg'
 
   return (
-    <div className="course-detail fade-up">
-      <div className="container">
-        <section className="cd-hero">
-          <div className="cd-hero__banner">
-            <div className="cd-hero__badge-row">
-              <span className="cd-hero__hsk">{course.hsk || 'AP'}</span>
-              {course.badge ? (
-                <span className="cd-hero__status">{course.badge}</span>
-              ) : null}
-            </div>
-            <span className="cd-hero__level">{course.level}</span>
-            <h1>{course.title}</h1>
-            {course.subtitle ? <p>{course.subtitle}</p> : null}
+    <div className="course-detail">
+      <section className="cd-hero cd-hero--bleed">
+        <motion.img
+          layoutId={`course-img-${course.id}`}
+          src={hero}
+          alt=""
+          transition={{ type: 'spring', stiffness: 380, damping: 38 }}
+          onError={(e) => {
+            e.currentTarget.src = '/cover.jpg'
+          }}
+        />
+        <div className="cd-hero__shade" aria-hidden />
+        <ShareButton title={course.title} text={`${course.title} — элсэлт`} />
+        <div className="cd-hero__content container">
+          <div className="cd-hero__badge-row">
+            <span className="cd-hero__status">{level}</span>
+            <span className="cd-hero__status is-open">● Элсэлт нээлттэй</span>
           </div>
-        </section>
+          <motion.h1 layoutId={`course-title-${course.id}`}>{course.title}</motion.h1>
+          {course.subtitle ? <p>{course.subtitle}</p> : null}
+        </div>
+      </section>
 
-        <section className="cd-stats" aria-label="Үндсэн мэдээлэл">
-          <div className="cd-stat">
-            <span className="cd-stat__label">Хугацаа</span>
+      <div className="container">
+        <section className="cd-facts" aria-label="Үндсэн мэдээлэл">
+          <div>
+            <span>Хугацаа</span>
             <strong>{course.duration}</strong>
           </div>
-          <div className="cd-stat">
-            <span className="cd-stat__label">Хэлбэр</span>
+          <div>
+            <span>Хэлбэр</span>
             <strong>{course.mode}</strong>
           </div>
-          <div className="cd-stat">
-            <span className="cd-stat__label">Суудал</span>
-            <strong>
-              {typeof seats === 'number' ? (full ? 'Дууссан' : seats) : '—'}
-            </strong>
+          <div>
+            <span>Хуваарь</span>
+            <strong>{course.schedule || '—'}</strong>
           </div>
         </section>
 
-        {course.schedule ? (
-          <section className="cd-schedule">
-            <div>
-              <span>Хуваарь</span>
-              <strong>{course.schedule}</strong>
-            </div>
-            <a href={`tel:${social.phoneTel}`} className="cd-schedule__call">
-              Залгах
-            </a>
-          </section>
-        ) : null}
-
-        {typeof seats === 'number' && !full ? (
+        {hasSeats && !full ? (
           <section className="cd-seats">
-            <div className="cd-seats__row">
-              <span>{seats} суудал үлдсэн</span>
-              <span>{filled}% дүүрсэн</span>
-            </div>
-            <div className="cd-seats__bar" aria-hidden>
-              <i style={{ width: `${filled}%` }} />
-            </div>
+            <span>
+              <Fire weight="fill" size={16} aria-hidden /> {seats} суудал үлдсэн
+            </span>
           </section>
         ) : null}
 
@@ -134,33 +134,39 @@ export default function CourseDetail() {
           </ul>
         </section>
 
-        <section className="cd-block cd-block--soft">
-          <h2>Яагаад Mongolian Au Pair?</h2>
-          <div className="cd-why">
-            <div>
-              <strong>2005 оноос</strong>
-              <span>3,000+ залуусыг Европ руу зуучилсан</span>
-            </div>
-            <div>
-              <strong>Албан ёсны хөтөлбөр</strong>
-              <span>1969 оны Олон Улсын Конвенц</span>
-            </div>
-            <div>
-              <strong>Хэлний бэлтгэл</strong>
-              <span>Франц, герман хэлний ангитай</span>
-            </div>
+        <section className="cd-block">
+          <h2>Түгээмэл асуулт</h2>
+          <div className="cd-faq">
+            {FAQ.map((item, i) => (
+              <button
+                key={item.q}
+                type="button"
+                className={faqOpen === i ? 'cd-faq__item is-open' : 'cd-faq__item'}
+                onClick={() => setFaqOpen(faqOpen === i ? -1 : i)}
+              >
+                <span>
+                  <strong>{item.q}</strong>
+                  {faqOpen === i ? <p>{item.a}</p> : null}
+                </span>
+                <CaretDown size={18} weight="bold" aria-hidden />
+              </button>
+            ))}
           </div>
         </section>
+
+        <p className="cd-help">
+          Асуулт байна уу?{' '}
+          <a href={`tel:${social.phoneTel}`}>Залгах</a> ·{' '}
+          <a href={social.messenger} target="_blank" rel="noreferrer">
+            Messenger
+          </a>
+        </p>
       </div>
 
       <div className="cd-bar">
-        <div className="cd-bar__price">
-          <small>Төлбөр</small>
-          <strong>{course.priceLabel}</strong>
-        </div>
         <button
           type="button"
-          className="btn btn-primary cd-bar__cta"
+          className="btn btn-primary cd-bar__cta cd-bar__cta--full"
           onClick={() => setOpen(true)}
           disabled={full}
         >
@@ -168,7 +174,7 @@ export default function CourseDetail() {
         </button>
       </div>
 
-      <Sheet open={open} onClose={() => setOpen(false)} title="Ангид бүртгүүлэх">
+      <Sheet open={open} onClose={() => setOpen(false)} title="Бүртгүүлэх">
         <EnrollForm
           course={course}
           onSuccess={(res) => {

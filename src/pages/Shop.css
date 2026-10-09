@@ -45,7 +45,7 @@
 }
 
 .product:hover {
-  border-color: rgba(227, 30, 36, 0.14);
+  border-color: rgba(227, 30, 57, 0.14);
   box-shadow: 0 10px 28px rgba(17, 17, 20, 0.06);
   transform: translateY(-1px);
 }
@@ -135,7 +135,7 @@
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
-  border: 1.5px solid rgba(227, 30, 36, 0.28);
+  border: 1.5px solid rgba(227, 30, 57, 0.28);
   border-radius: 999px;
   padding: 0.48rem 0.85rem;
   background: #fff;
@@ -157,7 +157,7 @@
 
 .product__cta.is-on {
   background: var(--red-soft);
-  border-color: rgba(227, 30, 36, 0.16);
+  border-color: rgba(227, 30, 57, 0.16);
   color: var(--red);
 }
 
@@ -190,7 +190,7 @@
   left: 12%;
   bottom: 8%;
   transform: rotate(-6deg);
-  background: linear-gradient(160deg, #9e1c20, #5c0d10);
+  background: linear-gradient(160deg, #9e1c2e, #5c0d10);
 }
 
 .art-book i:nth-child(2) {

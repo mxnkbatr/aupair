@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { api } from '../api'
+import { useAuth } from '../auth'
 import { products, social } from '../data'
 import PageHeader from '../components/PageHeader'
 import Sheet from '../components/Sheet'
@@ -24,7 +25,8 @@ export default function Shop() {
   const [filter, setFilter] = useState('all')
   const [cart, setCart] = useState([])
   const [open, setOpen] = useState(false)
-  const [form, setForm] = useState({ name: '', phone: '' })
+  const { user } = useAuth()
+  const [form, setForm] = useState({ name: user?.name || '', phone: user?.phone || '' })
   const [loading, setLoading] = useState(false)
   const [status, setStatus] = useState(null)
 
@@ -59,7 +61,7 @@ export default function Shop() {
       })
       setStatus({ ok: true, text: res.message || 'Захиалга бүртгэгдлээ' })
       setCart([])
-      setForm({ name: '', phone: '' })
+      setForm({ name: user?.name || '', phone: user?.phone || '' })
     } catch (err) {
       setStatus({ ok: false, text: err.message })
     } finally {
@@ -105,7 +107,7 @@ export default function Shop() {
             const visual = VISUAL[item.tag] || 'book'
             return (
               <article key={item.id} className="product">
-                <Link to={`/shop/${item.id}`} className="product__main">
+                <Link to={`/learn/item/${item.id}`} className="product__main">
                   <div className={`product__media is-${visual}`} aria-hidden>
                     <span className="product__badge">{item.tag}</span>
                     <ProductArt type={visual} />
@@ -224,7 +226,7 @@ function ProductArt({ type }) {
   if (type === 'merch') {
     return (
       <div className="art art-merch">
-        <b>漢</b>
+        <b>DE</b>
       </div>
     )
   }

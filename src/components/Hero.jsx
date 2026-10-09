@@ -8,8 +8,8 @@ export default function Hero() {
         <div className="hero__banner">
           <img
             className="hero__photo"
-            src="https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=1800&q=80"
-            alt="Mongolian Au Pair — Европ руу соёл солилцоо"
+            src="https://images.unsplash.com/photo-1467269204594-9661b134dd2b?auto=format&fit=crop&w=1800&q=80"
+            alt="Mongolian Au Pair — Герман руу соёл солилцоо"
             onError={(e) => {
               e.currentTarget.src = '/cover.jpg'
             }}
@@ -18,22 +18,22 @@ export default function Hero() {
 
           <div className="hero__content">
             <p className="hero__live fade-up">
-              <i /> Элсэлт авч байна
+              <i /> Элсэлт авч байна · Герман хэл A1, A2
             </p>
 
             <h1 className="hero__title fade-up-delay">
-              Au Pair-аар
-              <span> Европ </span>
-              руу
+              Соёл солилцоогоор
+              <span> дэлхийд </span>
+              хөл тавь.
             </h1>
 
             <p className="hero__lead fade-up-2">
-              Гэр бүлд амьдарч, хэл сурна.
+              2005 оноос хойш · Герман · Франц · Австри · Швейцарь · Бельги · Нидерланд · Дани
             </p>
 
             <div className="hero__actions fade-up-3">
-              <Link to="/universities" className="btn btn-primary hero__cta">
-                Элсэх
+              <Link to="/learn" className="btn btn-primary hero__cta">
+                Хэлний ангид бүртгүүлэх
               </Link>
             </div>
           </div>

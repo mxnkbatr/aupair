@@ -6,25 +6,13 @@ import './CourseGrid.css'
 
 const FILTERS = [
   { id: 'all', label: 'Бүгд' },
-  { id: 'open', label: 'Элсэлт нээлттэй' },
-  { id: 'french', label: 'Франц' },
-  { id: 'german', label: 'Герман' },
+  { id: 'A1', label: 'A1' },
+  { id: 'A2', label: 'A2' },
 ]
 
 function matchesFilter(course, filter) {
   if (course.type === 'country') return false
-  if (filter === 'all') return true
-  if (filter === 'open') {
-    return Boolean(course.badge) || (typeof course.seatsLeft === 'number' && course.seatsLeft > 0)
-  }
-  if (filter === 'french') {
-    return String(course.hsk || course.title || '').toLowerCase().includes('fr') ||
-      String(course.title || '').includes('Франц')
-  }
-  if (filter === 'german') {
-    return String(course.hsk || '').includes('DE') || String(course.title || '').includes('Герман')
-  }
-  return true
+  return filter === 'all' || course.level === filter
 }
 
 export default function CourseGrid({
@@ -34,24 +22,22 @@ export default function CourseGrid({
 }) {
   const [filter, setFilter] = useState('all')
   const [list, setList] = useState(coursesFallback)
-  const [loading, setLoading] = useState(true)
+  const loading = list.length === 0
 
   useEffect(() => {
     let alive = true
-    setLoading(true)
-    api
-      .getCourses()
-      .then((data) => {
-        if (alive) setList(data)
-      })
-      .catch(() => {
-        if (alive) setList(coursesFallback)
-      })
-      .finally(() => {
-        if (alive) setLoading(false)
-      })
+    const load = () =>
+      api
+        .getCourses()
+        .then((data) => {
+          if (alive) setList(data)
+        })
+        .catch(() => {})
+    load()
+    window.addEventListener('app:refresh', load)
     return () => {
       alive = false
+      window.removeEventListener('app:refresh', load)
     }
   }, [])
 
@@ -68,7 +54,7 @@ export default function CourseGrid({
             <span className="eyebrow">Хөтөлбөр</span>
             <h2>Элсэлт нээлттэй ангиуд</h2>
           </div>
-          <Link to="/courses" className="link-more">
+          <Link to="/learn" className="link-more">
             Бүгдийг харах →
           </Link>
         </div>
@@ -179,7 +165,7 @@ function CourseCard({ course }) {
           <strong>{course.priceLabel || course.price}</strong>
         </div>
         <Link
-          to={`/courses/${course.id}`}
+          to={`/learn/course/${course.id}`}
           className={`course-card__cta${full ? ' is-disabled' : ''}`}
           aria-disabled={full}
           onClick={(e) => {

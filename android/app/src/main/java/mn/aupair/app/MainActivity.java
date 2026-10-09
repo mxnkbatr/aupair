@@ -1,4 +1,4 @@
-package mn.mongolianaupair.app;
+package mn.aupair.app;
 
 import com.getcapacitor.BridgeActivity;
 

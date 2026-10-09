@@ -1,0 +1,400 @@
+/*
+ * Native surface layer — solid cards/sheets; glass only on tab bar + nav.
+ * Loaded after page/component stylesheets.
+ */
+
+body {
+  background: var(--bg);
+  background-attachment: fixed;
+  color: var(--label);
+  font-family: var(--font-ui);
+}
+
+body::after {
+  display: none;
+}
+
+.page-header h1,
+.page-hero > h1 {
+  font-family: var(--font-display);
+  font-size: 2.125rem; /* 34px large title */
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.page-hero {
+  padding-top: 0.5rem;
+}
+
+.page-hero > p {
+  margin-top: 0.35rem;
+  color: var(--label-2);
+  font-size: 0.9375rem;
+}
+
+.block-head h2,
+.section-head h2 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+/* Glass chrome: ONLY header + tab bar */
+.app-header {
+  background: rgba(255, 255, 255, 0.94);
+  border-bottom: 0.5px solid rgba(0, 0, 0, 0.12);
+  box-shadow: none;
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+}
+
+@media (prefers-color-scheme: dark) {
+  .app-header {
+    background: rgba(22, 22, 26, 0.94);
+    border-bottom-color: rgba(255, 255, 255, 0.1);
+  }
+}
+
+.app-header__icon {
+  min-width: 44px;
+  min-height: 44px;
+  background: var(--surface-2);
+  border: 0;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .app-header__icon:hover,
+  .app-header__icon.is-on {
+    background: var(--brand-tint);
+  }
+}
+
+.app-header__brand img {
+  border-radius: 11px;
+}
+
+/* Tab bar styles live in TabBar.css (floating pill). */
+
+/* Sticky CTA bars — solid, docked */
+.cd-bar,
+.ud-bar,
+.pd-bar {
+  margin-inline: 0;
+  border-radius: 0;
+  border: 0;
+  border-top: 0.5px solid var(--separator);
+  background: var(--surface);
+  box-shadow: var(--e3);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  bottom: 0;
+  padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+}
+
+.site--push .cd-bar,
+.site--push .ud-bar,
+.site--push .pd-bar {
+  bottom: 0;
+}
+
+.site--push .bottomnav,
+.site--push .tabbar {
+  display: none;
+}
+
+/* Buttons */
+.btn {
+  border-radius: 999px;
+  min-height: 44px;
+}
+
+.btn-primary {
+  background: var(--brand);
+  box-shadow: var(--e1);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .btn-primary:hover:not(:disabled) {
+    background: var(--brand-press);
+  }
+}
+
+.btn-ghost {
+  background: var(--surface);
+  border: 0.5px solid var(--separator);
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.app-header__cta {
+  display: none;
+}
+
+.uni-card__cta {
+  box-shadow: var(--e1);
+}
+
+.product__cta {
+  border: 0.5px solid rgba(232, 23, 63, 0.25);
+}
+
+.page-filters,
+.course-filters {
+  background: linear-gradient(180deg, var(--bg) 70%, transparent);
+}
+
+.page-filters__btn,
+.course-filters__btn,
+.admin-tab,
+.app-header__chip {
+  border: 0.5px solid var(--separator);
+  background: var(--surface);
+  box-shadow: var(--e1);
+}
+
+.page-filters__btn.is-active,
+.course-filters__btn.is-active,
+.admin-tab.is-active {
+  background: var(--brand);
+  border-color: transparent;
+  color: #fff;
+  box-shadow: var(--e1);
+}
+
+/* Cards — solid */
+.home-shortcut,
+.home-course,
+.home-video,
+.home-uni,
+.portal__side-item,
+.portal__chip,
+.course-card,
+.uni-card,
+.product,
+.cd-stat,
+.cd-seats,
+.cd-block,
+.ud-facts > div,
+.ud-block,
+.pd-block,
+.contact-form,
+.admin-login,
+.pf-card,
+.pf-enroll,
+.pf-menu,
+.pf-stats div,
+.app-header__result,
+.home-card,
+.journey-card,
+.learn-card,
+.story-card {
+  background: var(--surface);
+  border: var(--card-border);
+  border-radius: var(--r-card);
+  box-shadow: var(--e1);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .home-shortcut:hover,
+  .home-course:hover,
+  .home-video:hover,
+  .home-uni:hover,
+  .portal__side-item:hover,
+  .course-card:hover,
+  .uni-card:hover,
+  .product:hover {
+    box-shadow: var(--e2);
+  }
+}
+
+.cd-block--soft {
+  background: var(--surface);
+}
+
+.cd-why > div,
+.cd-list li,
+.ud-list li,
+.ud-reqs li,
+.pd-list li,
+.pd-note,
+.pd-form__item,
+.shop-checkout__list li,
+.app-header__quick-card {
+  background: var(--surface-2);
+  border: 0;
+  border-radius: var(--r-inner);
+  box-shadow: none;
+}
+
+.cd-schedule,
+.ud-help {
+  border-radius: var(--r-card);
+  border: 0.5px solid rgba(232, 23, 63, 0.12);
+  background: var(--brand-tint);
+}
+
+.product__media,
+.home-course__art,
+.home-shop-item__art {
+  border: 0;
+  border-radius: var(--r-inner);
+}
+
+.hero__banner,
+.portal__featured,
+.uni-banner__frame,
+.ud-hero__media,
+.cd-hero__banner,
+.pd-hero__visual,
+.reel-card__media,
+.uni-cta,
+.pf-welcome,
+.pf-hero,
+.contact-aside > div {
+  border-radius: var(--r-media);
+  border: 0;
+  box-shadow: var(--e2);
+}
+
+.cd-hero__hsk,
+.ud-hero__badge,
+.uni-card__badge,
+.cd-hero__status,
+.pd-hero__visual span {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  background: rgba(255, 255, 255, 0.92);
+}
+
+.field input,
+.field select,
+.field textarea,
+.contact-form input,
+.contact-form select,
+.contact-form textarea,
+.admin-toolbar select,
+.admin-item__head select {
+  background: var(--surface-2);
+  border: 1px solid transparent;
+  border-radius: var(--r-field);
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus,
+.contact-form input:focus,
+.contact-form select:focus,
+.contact-form textarea:focus {
+  background: var(--surface);
+  border-color: rgba(232, 23, 63, 0.35);
+  box-shadow: 0 0 0 4px rgba(232, 23, 63, 0.1);
+}
+
+.alert {
+  border-radius: 16px;
+}
+
+/* Sheets — solid, docked */
+.sheet__backdrop {
+  background: rgba(0, 0, 0, 0.35);
+}
+
+.sheet__panel {
+  border-radius: var(--r-sheet) var(--r-sheet) 0 0;
+  background: var(--surface);
+  border: 0;
+  box-shadow: var(--e3);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.sheet__close {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--label);
+  padding: 0;
+}
+
+.sheet__close-circle {
+  width: 30px;
+  height: 30px;
+  border-radius: 999px;
+  background: var(--surface-2);
+  display: grid;
+  place-items: center;
+}
+
+.sheet .field input,
+.sheet .field select,
+.sheet .field textarea {
+  background: var(--surface-2);
+  border-color: transparent;
+}
+
+.pf-segment {
+  border-radius: 999px;
+  background: var(--surface-2);
+}
+
+.pf-segment button {
+  border-radius: 999px;
+}
+
+.pf-segment button.is-active {
+  background: var(--surface);
+  box-shadow: var(--e1);
+}
+
+.pf-hero__edit,
+.share-btn {
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  background: var(--surface);
+  border: 0.5px solid var(--separator);
+}
+
+.offline-banner {
+  top: calc(var(--nav-h) + env(safe-area-inset-top, 0px) + 8px);
+  width: max-content;
+  max-width: calc(100% - 2rem);
+  margin: 0 auto;
+  border-radius: 999px;
+  background: rgba(17, 17, 20, 0.88);
+  box-shadow: var(--e2);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.offline-banner.is-online {
+  background: rgba(22, 163, 74, 0.95);
+}
+
+.onb {
+  background: var(--bg);
+}
+
+.onb__media {
+  border-radius: var(--r-media);
+  box-shadow: var(--e2);
+}
+
+.onb__skip {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  color: var(--label-2);
+  font-weight: 600;
+  min-height: 44px;
+}
