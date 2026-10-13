@@ -4,55 +4,95 @@
   list-style: none;
 }
 
-/* Compact strip */
+/* Compact strip — one continuous track + evenly spaced steps */
 .jt--compact {
+  --jt-dot: 16px;
+  --jt-n: 6;
+  --jt-progress: 0;
+  position: relative;
   display: flex;
-  align-items: center;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0;
+  padding: 2px 0 0;
 }
 
-.jt__dot {
-  flex: 1 1 0;
-  display: flex;
-  align-items: center;
-}
-
-.jt__dot + .jt__dot::before {
-  content: '';
-  flex: 1 1 auto;
+.jt__track,
+.jt__fill {
+  position: absolute;
+  left: calc(100% / var(--jt-n) / 2);
+  right: calc(100% / var(--jt-n) / 2);
+  top: calc(var(--jt-dot) / 2);
   height: 3px;
+  margin-top: -1.5px;
   border-radius: 2px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.jt__track {
   background: var(--separator);
 }
 
-.jt__dot.is-done + .jt__dot::before,
-.jt__dot.is-now::before {
+.jt__fill {
+  right: auto;
+  width: calc((100% - 100% / var(--jt-n)) * var(--jt-progress));
+  max-width: calc(100% - 100% / var(--jt-n));
   background: var(--brand);
 }
 
-.jt__dot:last-child {
-  flex: 0 0 auto;
+.jt__step {
+  position: relative;
+  z-index: 1;
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
 }
 
-.jt__dot i {
+.jt__step i {
   flex: 0 0 auto;
   display: grid;
   place-items: center;
-  width: 16px;
-  height: 16px;
+  width: var(--jt-dot);
+  height: var(--jt-dot);
   border-radius: 50%;
   border: 2px solid var(--separator);
   background: var(--surface);
   color: #fff;
+  box-sizing: border-box;
 }
 
-.jt__dot.is-done i {
+.jt__step.is-done i {
   background: var(--brand);
   border-color: var(--brand);
 }
 
-.jt__dot.is-now i {
+.jt__step.is-now i {
   border-color: var(--brand);
-  box-shadow: 0 0 0 4px var(--brand-tint);
+  background: var(--surface);
+  box-shadow: 0 0 0 3px var(--brand-tint);
+}
+
+.jt__label {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 9px;
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  text-align: center;
+  color: var(--label-2);
+}
+
+.jt__step.is-done .jt__label,
+.jt__step.is-now .jt__label {
+  color: var(--label);
+  font-weight: 700;
 }
 
 /* Vertical list */

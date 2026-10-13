@@ -127,21 +127,24 @@ export default function Onboarding() {
                 <img src={countries.find((c) => c.id === 'austria')?.image || countries[0].image} alt="" />
                 <img src={countries.find((c) => c.id === 'switzerland')?.image || countries[0].image} alt="" />
               </div>
-              <span className="onb__kicker">{social.since} оноос</span>
+              <span className="onb__kicker">Албан ёсны · {social.since} оноос</span>
               <h2>{social.placed} залуу Европ руу явсан</h2>
-              <p>Албан ёсны Au Pair хөтөлбөр, 1969 оны конвенцийн дагуу. Чи дараагийнх нь болоорой.</p>
+              <p>
+                Mongolian Au Pair Agency — IAPA гишүүн, албан ёсны Au Pair хөтөлбөр. Чи дараагийнх нь
+                болоорой.
+              </p>
               <ul className="onb__stats">
                 <li>
-                  <strong>7</strong>
+                  <strong>{social.years}</strong>
+                  <span>жил</span>
+                </li>
+                <li>
+                  <strong>{social.partnerCountries}</strong>
                   <span>улс</span>
                 </li>
                 <li>
-                  <strong>A1–B1</strong>
-                  <span>хэлний анги</span>
-                </li>
-                <li>
-                  <strong>0₮</strong>
-                  <span>зөвлөгөө</span>
+                  <strong>IAPA</strong>
+                  <span>гишүүн</span>
                 </li>
               </ul>
             </motion.section>

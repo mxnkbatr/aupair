@@ -3,7 +3,8 @@ import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { CaretRight, Path, Bell, Fire, SignIn } from '@phosphor-icons/react'
 import { useAuth } from '../auth'
 import { api } from '../api'
-import { GERMAN_LEVEL_LABELS, INTEREST_LABELS, STATUS_LABELS } from '../data'
+import { GERMAN_LEVEL_LABELS, INTEREST_LABELS, STATUS_LABELS, org, social } from '../data'
+import AgencyCard from '../components/AgencyCard'
 import AuthModal from '../components/AuthModal'
 import JourneyTimeline from '../components/JourneyTimeline'
 import Sheet from '../components/Sheet'
@@ -96,9 +97,27 @@ function LoggedOut() {
       </ul>
 
       <section className="pf-section">
+        <h3>Байгууллага</h3>
+        <AgencyCard compact />
+      </section>
+
+      <section className="pf-section">
+        <h3>Цэс</h3>
         <div className="pf-menu">
+          <Link to="/countries">
+            Au Pair улсууд <CaretRight size={16} weight="bold" aria-hidden />
+          </Link>
           <Link to="/me/help">
-            Тусламж <CaretRight size={16} weight="bold" aria-hidden />
+            Тусламж ба холбоо <CaretRight size={16} weight="bold" aria-hidden />
+          </Link>
+          <a href={`tel:${social.phoneTel}`}>
+            Залгах · {social.phone} <CaretRight size={16} weight="bold" aria-hidden />
+          </a>
+          <a href={org.website} target="_blank" rel="noreferrer">
+            Албан ёсны вэбсайт <CaretRight size={16} weight="bold" aria-hidden />
+          </a>
+          <Link to="/privacy">
+            Нууцлалын бодлого <CaretRight size={16} weight="bold" aria-hidden />
           </Link>
         </div>
       </section>
@@ -381,12 +400,17 @@ function Dashboard() {
 
       {error && <div className="alert alert-err pf-gap">{error}</div>}
 
-      <section className="pf-section">
-        <h3>Миний аялал</h3>
-        <div className="pf-card">
-          <JourneyTimeline user={user} enrollments={enrollments} />
-        </div>
-      </section>
+      {user.inProgram ? (
+        <section className="pf-section">
+          <h3>Миний аялал</h3>
+          <div className="pf-card">
+            <JourneyTimeline user={user} mode="program" />
+            <Link to="/me/program" className="btn btn-primary btn-block" style={{ marginTop: 12 }}>
+              Checklist · баримт илгээх
+            </Link>
+          </div>
+        </section>
+      ) : null}
 
       <section className="pf-section">
         <h3>Миний элсэлт</h3>
@@ -456,6 +480,11 @@ function Dashboard() {
       )}
 
       <section className="pf-section">
+        <h3>Байгууллага</h3>
+        <AgencyCard compact />
+      </section>
+
+      <section className="pf-section">
         <h3>Тохиргоо</h3>
         <div className="pf-menu">
           <button type="button" onClick={() => setSheet('edit')}>
@@ -464,9 +493,18 @@ function Dashboard() {
           <button type="button" onClick={() => setSheet('password')}>
             Нууц үг солих <CaretRight size={16} weight="bold" aria-hidden />
           </button>
+          <Link to="/countries">
+            Au Pair улсууд <CaretRight size={16} weight="bold" aria-hidden />
+          </Link>
           <Link to="/me/help">
             Тусламж ба холбоо <CaretRight size={16} weight="bold" aria-hidden />
           </Link>
+          <a href={`tel:${social.phoneTel}`}>
+            Залгах · {social.phone} <CaretRight size={16} weight="bold" aria-hidden />
+          </a>
+          <a href={org.website} target="_blank" rel="noreferrer">
+            Албан ёсны вэбсайт <CaretRight size={16} weight="bold" aria-hidden />
+          </a>
           <Link to="/privacy">
             Нууцлалын бодлого <CaretRight size={16} weight="bold" aria-hidden />
           </Link>

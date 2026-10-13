@@ -68,9 +68,9 @@
   --radius: var(--r-card);
   --radius-sm: 12px;
   --radius-lg: var(--r-media);
-  --nav-h: 52px;
+  --nav-h: 56px;
   /* Floating pill tab: 64px bar + 24px clearance */
-  --bottom-h: 88px;
+  --bottom-h: 80px;
   --font-body: var(--font-ui);
   --font-cn: var(--font-ui);
   --shadow-soft: var(--e1);

@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { social } from '../data'
+import { org, social } from '../data'
 import './Privacy.css'
 
 export default function Privacy() {
@@ -17,9 +17,13 @@ export default function Privacy() {
           <h2>Монгол хэл</h2>
           <h3>1. Бид хэн бэ</h3>
           <p>
-            Mongolian Au Pair («бид», «манай») нь Au Pair хөтөлбөр, герман хэлний сургалт болон
-            холбоотой үйлчилгээ үзүүлдэг байгууллага юм. Энэхүү бодлого нь апп болон вэбсайтаар
-            цуглуулсан хувийн мэдээллийг хэрхэн ашиглахыг тайлбарлана.
+            {org.legalName} («бид», «манай») нь {org.since} оноос хойш үйл ажиллагаа явуулдаг албан
+            ёсны Au Pair агентлаг бөгөөд International Au Pair Association (IAPA)-ийн гишүүн юм.{' '}
+            {org.aboutShort} Энэхүү бодлого нь апп ({org.shortName}) болон{' '}
+            <a href={org.website} target="_blank" rel="noreferrer">
+              mongolianaupair.com
+            </a>{' '}
+            вэбсайтаар цуглуулсан хувийн мэдээллийг хэрхэн ашиглахыг тайлбарлана.
           </p>
 
           <h3>2. Ямар мэдээлэл цуглуулдаг вэ</h3>
@@ -69,9 +73,13 @@ export default function Privacy() {
           <h2>English</h2>
           <h3>1. Who we are</h3>
           <p>
-            Mongolian Au Pair (“we”, “our”) provides Au Pair programs, German language courses, and
-            related services. This policy explains how we handle personal data collected through our
-            app and website.
+            {org.legalName} (“we”, “our”) is an official Au Pair agency operating since {org.since}
+            and a member of the International Au Pair Association (IAPA). {org.taglineEn}. This
+            policy explains how we handle personal data collected through our app and{' '}
+            <a href={org.website} target="_blank" rel="noreferrer">
+              mongolianaupair.com
+            </a>
+            .
           </p>
 
           <h3>2. What we collect</h3>

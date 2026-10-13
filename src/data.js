@@ -5,26 +5,114 @@ export const navLinks = [
   { to: '/me', label: 'Би' },
 ]
 
+/**
+ * Official agency profile — sourced from mongolianaupair.com
+ * Use `org` for branding copy; `social` keeps phone/email/links for existing call sites.
+ */
+export const org = {
+  name: 'Mongolian Au Pair',
+  legalName: 'Mongolian Au Pair Agency',
+  shortName: 'Au Pair',
+  tagline: 'Европ руу хаалга · 2005 оноос хойш соёлын солилцоо',
+  taglineEn: 'Gateway to Europe | Cultural Exchange Since 2005',
+  about:
+    'Монгол залууст Европын орнуудад амьдрангаа хэл сурч, дэлхийн соёлтой танилцах шилдэг боломжийг олгодог албан ёсны Au Pair агентлаг. Сүүлийн 20 жилийн турш 3,000 гаруй залуусыг хөгжлийн замд нь хөтөлсөн.',
+  aboutShort:
+    '2005 оноос хойш Монгол залууст Европын Au Pair хөтөлбөр, хэлний бэлтгэл, визний зөвлөгөөг нэг дороос үзүүлдэг.',
+  story:
+    'Герман улсын Au Pair хөтөлбөрт хамрагдсан үүсгэн байгуулагчийн туршлагаас эхэлсэн. Бидний түүх зүгээр нэг бизнес биш — боломжийн тухай түүх юм.',
+  founderQuote: 'Туршлага бол ирээдүйг харах хамгийн тод дуран юм.',
+  founderTitle: 'Үүсгэн байгуулагч',
+  website: 'https://mongolianaupair.com/',
+  since: '2005',
+  years: '20+',
+  placed: '3,000+',
+  partnerCountries: '55',
+  reliability: 'IAPA',
+  certifications: [
+    {
+      id: 'iapa',
+      name: 'IAPA',
+      label: 'International Au Pair Association гишүүн',
+      short: 'IAPA баталгаажсан',
+    },
+  ],
+  values: [
+    {
+      id: 'integrity',
+      title: 'Шударга байдал',
+      text: 'Байршуулалт бүрд ил тод, ёс зүйтэй ажиллана.',
+    },
+    {
+      id: 'excellence',
+      title: 'Чанар',
+      text: 'Гэр бүл болон Au Pair-д хамгийн өндөр түвшний дэмжлэг.',
+    },
+    {
+      id: 'community',
+      title: 'Нийгэмлэг',
+      text: 'Хөтөлбөрийн дараа ч үргэлжлэх дэмжлэгийн сүлжээ.',
+    },
+    {
+      id: 'growth',
+      title: 'Хөгжил',
+      text: 'Соёл солилцоогоор хувь хүний болон мэргэжлийн өсөлт.',
+    },
+  ],
+  steps: [
+    {
+      id: 'train',
+      title: 'Сургалтад суух',
+      text: 'Германыг сонгосон бол A1 түвшний сургалт, Гёте шалгалт.',
+    },
+    {
+      id: 'exam',
+      title: 'Шалгалт өгөх',
+      text: 'Хэлний анхан шатны түвшин тогтоох шалгалт өгнө.',
+    },
+    {
+      id: 'family',
+      title: 'Айлаа сонгох',
+      text: 'Хүсэл сонирхолд нийцсэн баталгаат зочин айл олж өгнө.',
+    },
+    {
+      id: 'visa',
+      title: 'Виз мэдүүлэх',
+      text: 'Бичиг баримт, аяллын бэлтгэлд мэргэжлийн зөвлөгөө.',
+    },
+  ],
+  highlights: [
+    { id: 'network', title: 'Олон улсын сүлжээ', text: 'Европын баталгаат гэр бүлүүдтэй холбоно.' },
+    { id: 'support', title: 'Бодит дэмжлэг', text: 'Манай хамт олон 24/7 туслахад бэлэн.' },
+    { id: 'price', title: 'Ил тод үнэ', text: 'Нууц төлбөргүй. Ил тод нөхцөл.' },
+    { id: 'safety', title: 'Аюулгүй байдал', text: 'Гэр бүл бүрийг нарийн шалгана.' },
+  ],
+  programCountries: ['Герман', 'Австри', 'Франц', 'Швейцарь', 'Бельги', 'Нидерланд', 'Дани'],
+}
+
 export const social = {
   facebook: 'https://www.facebook.com/MongolianAuPair',
   messenger: 'https://m.me/MongolianAuPair',
   instagram: 'https://www.instagram.com/mongolian.aupair',
-  website: 'https://mongolianaupair.com/',
-  email: 'office@mongolianaupair.com',
-  emailAlt: 'info@mongolianaupair.com',
+  website: org.website,
+  email: 'info@mongolianaupair.com',
+  emailAlt: 'office@mongolianaupair.com',
   phone: '+976 7711-6906',
   phoneAlt: '+976 7711-6906',
   phoneTel: '+97677116906',
   phoneAltTel: '+97677116906',
   address:
     'Улаанбаатар хот, Сүхбаатар дүүрэг, 11-р хороо, 7-р хороолол, Нью Резиденс хотхон, 726-р байр, 1 тоот',
+  addressShort: 'Улаанбаатар, Монгол',
   city: 'Улаанбаатар',
   map: 'https://maps.google.com/maps?q=New+Residence+Sukhbaatar+Ulaanbaatar',
-  followers: 'Албан ёсны',
-  recommend: '1969 оны конвенц',
+  followers: 'Албан ёсны агентлаг',
+  recommend: 'IAPA гишүүн · 1969 оны конвенц',
   hours: 'Нээлттэй',
-  since: '2005',
-  placed: '3,000+',
+  since: org.since,
+  placed: org.placed,
+  years: org.years,
+  partnerCountries: org.partnerCountries,
 }
 
 export const GERMAN_LEVEL_LABELS = {
@@ -70,7 +158,7 @@ export const feed = {
     to: '/learn',
     image:
       'https://images.unsplash.com/photo-1467269204594-9661b134dd2b?auto=format&fit=crop&w=1400&q=80',
-    source: 'Mongolian AuPair',
+    source: 'Mongolian Au Pair Agency',
   },
 }
 

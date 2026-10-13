@@ -14,6 +14,9 @@ export const TAB_ITEMS = [
 
 export const TAB_PATHS = TAB_ITEMS.map((t) => t.to)
 
+const pillSpring = { type: 'spring', stiffness: 560, damping: 30, mass: 0.7 }
+const iconSpring = { type: 'spring', stiffness: 640, damping: 22, mass: 0.55 }
+
 export default function TabBar() {
   const { pathname } = useLocation()
   const reduce = useReducedMotion()
@@ -60,20 +63,32 @@ export default function TabBar() {
                 <motion.span
                   layoutId="tabbar-pill"
                   className="tabbar__pill"
-                  transition={{ type: 'spring', stiffness: 500, damping: 35 }}
+                  transition={pillSpring}
                 />
               ) : isActive ? (
                 <span className="tabbar__pill" />
               ) : null}
               <motion.span
                 className="tabbar__icon"
-                animate={{ scale: isActive && !reduce ? [0.9, 1.06, 1] : 1 }}
-                whileTap={reduce ? undefined : { scale: 0.9 }}
-                transition={{ type: 'spring', stiffness: 500, damping: 28 }}
+                animate={{
+                  scale: isActive && !reduce ? [0.82, 1.14, 1] : 1,
+                  y: isActive && !reduce ? [2, -2, 0] : 0,
+                }}
+                whileTap={reduce ? undefined : { scale: 0.86 }}
+                transition={iconSpring}
               >
                 <Icon size={24} weight={isActive ? 'fill' : 'regular'} aria-hidden />
               </motion.span>
-              {isActive ? <span className="tabbar__label">{label}</span> : null}
+              {isActive ? (
+                <motion.span
+                  className="tabbar__label"
+                  initial={reduce ? false : { opacity: 0, y: 4 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ type: 'spring', stiffness: 480, damping: 28 }}
+                >
+                  {label}
+                </motion.span>
+              ) : null}
             </>
           )}
         </NavLink>

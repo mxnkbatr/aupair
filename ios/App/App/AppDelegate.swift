@@ -7,8 +7,28 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+        // After the bridge mounts, strip Safari-like WebView chrome.
+        DispatchQueue.main.async { [weak self] in
+            self?.hardenWebView()
+        }
         return true
+    }
+
+    /// Disable browser back-swipe, scrollbars, and white overscroll flash.
+    private func hardenWebView() {
+        guard
+            let root = window?.rootViewController as? CAPBridgeViewController,
+            let webView = root.webView
+        else { return }
+
+        webView.allowsBackForwardNavigationGestures = false
+        webView.isOpaque = true
+        webView.backgroundColor = UIColor(red: 0.949, green: 0.949, blue: 0.969, alpha: 1)
+        webView.scrollView.backgroundColor = webView.backgroundColor
+        webView.scrollView.showsVerticalScrollIndicator = false
+        webView.scrollView.showsHorizontalScrollIndicator = false
+        webView.scrollView.contentInsetAdjustmentBehavior = .never
+        webView.scrollView.alwaysBounceHorizontal = false
     }
 
     func applicationWillResignActive(_ application: UIApplication) {
@@ -26,7 +46,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func applicationDidBecomeActive(_ application: UIApplication) {
-        // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+        hardenWebView()
     }
 
     func applicationWillTerminate(_ application: UIApplication) {

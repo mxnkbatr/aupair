@@ -16,6 +16,8 @@ dist-ssr
 server/data/*.json
 server/data/*.tmp
 server/data/secret.key
+server/data/firebase-adminsdk.json
+*-firebase-adminsdk-*.json
 
 # Capacitor / Android
 android/.gradle
@@ -27,6 +29,8 @@ android/.idea
 *.apk
 *.aab
 *.keystore
+android/app/google-services.json
+ios/**/GoogleService-Info.plist
 
 # Editor directories and files
 .vscode/*

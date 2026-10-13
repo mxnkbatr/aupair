@@ -1,0 +1,152 @@
+.program-page {
+  padding-bottom: 16px;
+}
+
+.program-kicker {
+  color: var(--brand);
+  font-size: 0.8125rem;
+  font-weight: 700;
+}
+
+.program-card {
+  margin-top: 12px;
+  padding: 16px;
+  border-radius: var(--r-card);
+  background: var(--surface);
+  border: 0.5px solid var(--separator);
+  box-shadow: var(--e1);
+}
+
+.program-note strong {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 0.8125rem;
+}
+
+.program-note p {
+  margin: 0;
+  color: var(--label-2);
+  white-space: pre-wrap;
+  font-size: 0.9375rem;
+}
+
+.program-progress__row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: baseline;
+  margin-bottom: 10px;
+}
+
+.program-progress__row span {
+  color: var(--label-2);
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+.program-progress__bar {
+  height: 8px;
+  border-radius: 999px;
+  background: var(--surface-2);
+  overflow: hidden;
+}
+
+.program-progress__bar i {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--accent);
+}
+
+.program-progress__warn {
+  margin-top: 8px;
+  color: var(--brand);
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+.program-docs {
+  list-style: none;
+  margin: 16px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.program-doc {
+  display: grid;
+  grid-template-columns: 28px 1fr auto;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 64px;
+  padding: 12px 14px;
+  border: 0;
+  border-radius: var(--r-card);
+  background: var(--surface);
+  box-shadow: var(--e1);
+  text-align: left;
+  color: var(--label);
+  cursor: pointer;
+}
+
+.program-doc__body {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.program-doc__body strong {
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+
+.program-doc__body small {
+  color: var(--label-2);
+  font-size: 0.8125rem;
+}
+
+.program-doc__body em {
+  color: var(--brand);
+  font-size: 0.75rem;
+  font-style: normal;
+}
+
+.program-doc svg.is-ok {
+  color: var(--success);
+}
+.program-doc svg.is-bad {
+  color: var(--brand);
+}
+.program-doc svg.is-wait {
+  color: var(--warning);
+}
+.program-doc svg.is-empty {
+  color: var(--label-3);
+}
+
+.program-doc__ext {
+  color: var(--label-3);
+}
+
+.program-help {
+  margin-top: 20px;
+  text-align: center;
+  color: var(--label-2);
+  font-size: 0.875rem;
+}
+
+.program-help a {
+  color: var(--brand);
+  font-weight: 600;
+}
+
+.program-form {
+  display: grid;
+  gap: 12px;
+}
+
+.program-form__hint {
+  color: var(--label-2);
+  font-size: 0.875rem;
+}

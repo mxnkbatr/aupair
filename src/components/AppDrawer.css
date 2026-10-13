@@ -1,0 +1,118 @@
+.app-drawer {
+  position: fixed;
+  inset: 0;
+  z-index: 220;
+}
+
+.app-drawer__backdrop {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  background: rgba(12, 12, 14, 0.4);
+  animation: appDrawerFade 0.2s ease both;
+}
+
+.app-drawer__panel {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: min(86vw, 320px);
+  padding: env(safe-area-inset-top, 0px) 0 env(safe-area-inset-bottom, 0px);
+  background: var(--surface);
+  box-shadow: -12px 0 40px rgba(0, 0, 0, 0.14);
+  display: flex;
+  flex-direction: column;
+  animation: appDrawerSlide 0.28s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.app-drawer__top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 16px 12px;
+}
+
+.app-drawer__brand {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  min-width: 0;
+}
+
+.app-drawer__brand img {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+.app-drawer__brand strong {
+  display: block;
+  font-size: 1rem;
+  font-weight: 750;
+  letter-spacing: -0.02em;
+}
+
+.app-drawer__brand span {
+  display: block;
+  margin-top: 2px;
+  color: var(--label-2);
+  font-size: 0.72rem;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.app-drawer__close {
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  border: 0.5px solid var(--separator);
+  border-radius: 50%;
+  background: var(--bg);
+  color: var(--label);
+  cursor: pointer;
+}
+
+.app-drawer__nav {
+  display: grid;
+  gap: 4px;
+  padding: 8px 12px 20px;
+}
+
+.app-drawer__nav a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 48px;
+  padding: 0 12px;
+  border-radius: 14px;
+  color: var(--label);
+  font-weight: 650;
+  font-size: 0.95rem;
+}
+
+.app-drawer__nav a:active {
+  background: var(--bg);
+  transform: scale(0.98);
+}
+
+@keyframes appDrawerFade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes appDrawerSlide {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}

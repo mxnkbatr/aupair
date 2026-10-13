@@ -61,11 +61,18 @@ export default function Universities() {
     function onOpen() {
       setSearching(true)
     }
+    function onQuery(e) {
+      const next = String(e?.detail || '')
+      setSearching(true)
+      if (next) setQuery(next)
+    }
     window.addEventListener('aupair:countries-search', onToggle)
     window.addEventListener('aupair:countries-search-open', onOpen)
+    window.addEventListener('aupair:countries-search-query', onQuery)
     return () => {
       window.removeEventListener('aupair:countries-search', onToggle)
       window.removeEventListener('aupair:countries-search-open', onOpen)
+      window.removeEventListener('aupair:countries-search-query', onQuery)
     }
   }, [])
 

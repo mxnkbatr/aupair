@@ -1,0 +1,138 @@
+.agency-card {
+  display: grid;
+  gap: 14px;
+  padding: 16px;
+  border-radius: var(--r-card);
+  background: var(--surface);
+  border: 0.5px solid var(--separator);
+  box-shadow: var(--e1);
+}
+
+.agency-card__head {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 12px;
+  align-items: center;
+}
+
+.agency-card__head img {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  object-fit: cover;
+  box-shadow: 0 4px 12px rgba(232, 23, 63, 0.18);
+}
+
+.agency-card__kicker {
+  margin: 0;
+  color: var(--brand);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.agency-card__head strong {
+  display: block;
+  margin-top: 2px;
+  font-family: var(--font-ui);
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--label);
+}
+
+.agency-card__head span {
+  display: block;
+  margin-top: 2px;
+  color: var(--label-2);
+  font-size: 0.78rem;
+  font-weight: 500;
+  line-height: 1.35;
+}
+
+.agency-card__about {
+  margin: 0;
+  color: var(--label-2);
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.45;
+}
+
+.agency-card__stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.agency-card__stats li {
+  display: grid;
+  gap: 2px;
+  padding: 10px 6px;
+  border-radius: 14px;
+  background: var(--bg);
+  text-align: center;
+}
+
+.agency-card__stats strong {
+  font-family: var(--font-ui);
+  font-size: 0.95rem;
+  font-weight: 750;
+  letter-spacing: -0.02em;
+  color: var(--label);
+}
+
+.agency-card__stats span {
+  color: var(--label-2);
+  font-size: 0.65rem;
+  font-weight: 600;
+}
+
+.agency-card__certs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.agency-card__pill {
+  padding: 0.35rem 0.65rem;
+  border-radius: 999px;
+  background: var(--brand-tint);
+  color: var(--brand);
+  font-size: 0.7rem;
+  font-weight: 750;
+}
+
+.agency-card__contact {
+  display: grid;
+  gap: 0.35rem;
+  padding-top: 4px;
+  border-top: 0.5px solid var(--separator);
+}
+
+.agency-card__contact a {
+  color: var(--brand);
+  font-size: 0.88rem;
+  font-weight: 650;
+}
+
+.agency-card__contact p {
+  margin: 0.35rem 0 0;
+  color: var(--label-2);
+  font-size: 0.78rem;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.agency-card--compact .agency-card__stats {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+@media (max-width: 360px) {
+  .agency-card__stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

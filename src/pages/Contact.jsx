@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { api } from '../api'
 import { useAuth } from '../auth'
-import { social } from '../data'
+import { org, social } from '../data'
+import AgencyCard from '../components/AgencyCard'
 import './Contact.css'
 
 export default function Contact() {
@@ -35,7 +36,7 @@ export default function Contact() {
       <span className="eyebrow">Холбоо барих</span>
       <h1>Элсэлт & зөвлөгөө</h1>
       <p>
-        Au Pair элсэлт, хэлний бэлтгэл — формыг бөглөөрэй. Бид удахгүй холбогдоно.
+        {org.legalName} — Au Pair элсэлт, хэлний бэлтгэл. Формыг бөглөөрэй, бид удахгүй холбогдоно.
       </p>
 
       <div className="contact-layout">
@@ -92,18 +93,21 @@ export default function Contact() {
         </form>
 
         <aside className="contact-aside">
-          <div>
+          <AgencyCard />
+          <div className="contact-aside__links">
             <h2>Шууд холбоо</h2>
+            <a href={social.messenger} target="_blank" rel="noreferrer">
+              Messenger
+            </a>
             <a href={social.facebook} target="_blank" rel="noreferrer">
               facebook.com/MongolianAuPair
             </a>
-            <a href={`mailto:${social.email}`}>{social.email}</a>
-            <p>{social.phone}</p>
-            <p>{social.address}</p>
-          </div>
-          <div className="contact-aside__badge">
-            <img src="/logo.png" alt="Mongolian Au Pair" />
-            <p>Европ руу соёл солилцоо · 2005 оноос</p>
+            <a href={social.instagram} target="_blank" rel="noreferrer">
+              Instagram @mongolian.aupair
+            </a>
+            <a href={social.map} target="_blank" rel="noreferrer">
+              Газрын зураг дээр харах
+            </a>
           </div>
         </aside>
       </div>

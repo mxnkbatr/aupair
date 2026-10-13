@@ -1,4 +1,5 @@
 import react from '@vitejs/plugin-react'
+import { VitePWA } from 'vite-plugin-pwa'
 import { defineConfig } from 'vite'
 
 // Touch devices apply :hover on tap and keep it until the next tap elsewhere,
@@ -22,7 +23,78 @@ const hoverOnlyOnPointer = () => ({
 hoverOnlyOnPointer.postcss = true
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    react(),
+    VitePWA({
+      registerType: 'autoUpdate',
+      includeAssets: [
+        'favicon.png',
+        'apple-touch-icon.png',
+        'logo.png',
+        'cover.jpg',
+        'icons/icon-192.png',
+        'icons/icon-512.png',
+      ],
+      manifest: {
+        name: 'Mongolian Au Pair',
+        short_name: 'Au Pair',
+        description: 'Албан ёсны Au Pair хөтөлбөр · 2005 оноос · IAPA гишүүн',
+        lang: 'mn',
+        theme_color: '#f2f2f7',
+        background_color: '#f2f2f7',
+        display: 'standalone',
+        orientation: 'portrait',
+        start_url: '/',
+        scope: '/',
+        icons: [
+          {
+            src: '/icons/icon-192.png',
+            sizes: '192x192',
+            type: 'image/png',
+            purpose: 'any',
+          },
+          {
+            src: '/icons/icon-512.png',
+            sizes: '512x512',
+            type: 'image/png',
+            purpose: 'any',
+          },
+          {
+            src: '/icons/icon-512.png',
+            sizes: '512x512',
+            type: 'image/png',
+            purpose: 'maskable',
+          },
+        ],
+      },
+      workbox: {
+        navigateFallback: '/index.html',
+        globPatterns: ['**/*.{js,css,html,ico,png,svg,jpg,jpeg,webp,woff2,webmanifest}'],
+        runtimeCaching: [
+          {
+            urlPattern: ({ request }) => request.destination === 'image',
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'images',
+              expiration: { maxEntries: 80, maxAgeSeconds: 60 * 60 * 24 * 30 },
+            },
+          },
+          {
+            urlPattern: ({ url }) => url.pathname.startsWith('/api/'),
+            handler: 'NetworkFirst',
+            options: {
+              cacheName: 'api',
+              networkTimeoutSeconds: 8,
+              expiration: { maxEntries: 40, maxAgeSeconds: 60 * 60 },
+            },
+          },
+        ],
+      },
+      devOptions: {
+        enabled: false,
+      },
+    }),
+  ],
   base: '/',
   css: {
     postcss: { plugins: [hoverOnlyOnPointer()] },

@@ -4,6 +4,16 @@ import crypto from 'node:crypto'
 import { courses } from './courses.js'
 import { createStore } from './store.js'
 import { GERMAN_LEVEL_LABELS, products } from '../src/data.js'
+import {
+  PROGRAM_CATEGORIES,
+  PROGRAM_CATEGORY_LABELS,
+  PROGRAM_STAGES,
+  DOC_STATUSES,
+  emptyChecklist,
+  mergeChecklist,
+  checklistSummary,
+} from './program.js'
+import { sendPushToTokens } from './fcm.js'
 
 const TOKEN_TTL_MS = 30 * 24 * 60 * 60 * 1000
 
@@ -109,8 +119,10 @@ async function requireUser(req, res, next) {
   next()
 }
 
-function publicUser(user) {
-  return {
+function publicUser(user, { includeChecklist = false } = {}) {
+  const inProgram = Boolean(user.inProgram)
+  const checklist = inProgram ? mergeChecklist(user.programChecklist) : []
+  const base = {
     id: user.id,
     name: user.name,
     phone: user.phone,
@@ -118,6 +130,26 @@ function publicUser(user) {
     age: user.age ?? null,
     germanLevel: user.germanLevel || 'none',
     createdAt: user.createdAt,
+    inProgram,
+    programCategory: inProgram && PROGRAM_CATEGORIES.includes(user.programCategory)
+      ? user.programCategory
+      : null,
+    programStage: inProgram ? Math.min(5, Math.max(1, Number(user.programStage) || 1)) : null,
+    programNote: inProgram ? String(user.programNote || '') : '',
+    programSummary: inProgram ? checklistSummary(checklist) : null,
+  }
+  if (includeChecklist && inProgram) base.programChecklist = checklist
+  return base
+}
+
+function adminUser(user) {
+  const base = publicUser(user, { includeChecklist: true })
+  const tokens = Array.isArray(user.pushTokens) ? user.pushTokens : []
+  return {
+    ...base,
+    programEnrolledAt: user.programEnrolledAt || null,
+    programNote: String(user.programNote || ''),
+    pushTokenCount: tokens.length,
   }
 }
 
@@ -357,7 +389,69 @@ app.get('/api/me', requireUser, async (req, res) => {
     store.all('contacts', mine),
     store.all('orders', mine),
   ])
-  res.json({ user: publicUser(req.user), enrollments, contacts, orders })
+  res.json({
+    user: publicUser(req.user, { includeChecklist: true }),
+    enrollments,
+    contacts,
+    orders,
+    programMeta: {
+      stages: PROGRAM_STAGES,
+      categories: PROGRAM_CATEGORY_LABELS,
+    },
+  })
+})
+
+/** User submits / updates one checklist item (link + note). Only when inProgram. */
+app.patch('/api/me/program-docs/:key', requireUser, async (req, res) => {
+  const user = req.user
+  if (!user.inProgram) {
+    return res.status(403).json({ error: 'Та хөтөлбөрт ороогүй байна' })
+  }
+  const key = clean(req.params.key, 40)
+  const checklist = mergeChecklist(user.programChecklist)
+  const idx = checklist.findIndex((d) => d.key === key)
+  if (idx < 0) return res.status(404).json({ error: 'Баримт олдсонгүй' })
+
+  const link = clean(req.body?.link, 500)
+  const note = clean(req.body?.note, 500)
+  if (!link && !note) {
+    return res.status(400).json({ error: 'Линк эсвэл тайлбар оруулна уу' })
+  }
+
+  checklist[idx] = {
+    ...checklist[idx],
+    link,
+    note,
+    status: 'submitted',
+    updatedAt: new Date().toISOString(),
+  }
+
+  const updated = await store.update('users', user.id, {
+    programChecklist: checklist,
+    updatedAt: new Date().toISOString(),
+  })
+  if (!updated) return res.status(401).json({ error: 'Дахин нэвтэрнэ үү' })
+  res.json({ user: publicUser(updated, { includeChecklist: true }), item: checklist[idx] })
+})
+
+/** Save / refresh FCM device token for the signed-in user. */
+app.post('/api/me/push-token', requireUser, async (req, res) => {
+  const token = clean(req.body?.token, 4096)
+  const platform = clean(req.body?.platform, 20) || 'unknown'
+  if (!token) return res.status(400).json({ error: 'Token шаардлагатай' })
+
+  const existing = Array.isArray(req.user.pushTokens) ? req.user.pushTokens : []
+  const next = [
+    { token, platform, updatedAt: new Date().toISOString() },
+    ...existing.filter((t) => t.token !== token),
+  ].slice(0, 8)
+
+  const updated = await store.update('users', req.user.id, {
+    pushTokens: next,
+    updatedAt: new Date().toISOString(),
+  })
+  if (!updated) return res.status(401).json({ error: 'Дахин нэвтэрнэ үү' })
+  res.json({ ok: true, count: next.length })
 })
 
 app.patch('/api/me', requireUser, async (req, res) => {
@@ -431,7 +525,118 @@ app.get('/api/admin/data', requireAdmin, async (_req, res) => {
     store.all('orders'),
     store.all('users'),
   ])
-  res.json({ enrollments, contacts, orders, users: users.map(publicUser) })
+  const mapped = users.map(adminUser)
+  const programUsers = mapped.filter((u) => u.inProgram)
+  const pendingDocs = programUsers.reduce(
+    (n, u) => n + (u.programSummary?.submitted || 0),
+    0,
+  )
+  res.json({
+    enrollments,
+    contacts,
+    orders,
+    users: mapped,
+    program: {
+      users: programUsers,
+      pendingDocs,
+      enrolled: programUsers.length,
+    },
+    programMeta: {
+      stages: PROGRAM_STAGES,
+      categories: PROGRAM_CATEGORY_LABELS,
+      docStatuses: DOC_STATUSES,
+    },
+  })
+})
+
+/** Admin enrolls / updates program fields for a user. */
+app.patch('/api/admin/users/:id/program', requireAdmin, async (req, res) => {
+  const user = await store.one('users', { id: req.params.id })
+  if (!user) return res.status(404).json({ error: 'Хэрэглэгч олдсонгүй' })
+
+  const body = req.body || {}
+  const patch = { updatedAt: new Date().toISOString() }
+
+  if (body.inProgram !== undefined) {
+    const on = Boolean(body.inProgram)
+    patch.inProgram = on
+    if (on) {
+      patch.programStage = Math.min(5, Math.max(1, Number(body.programStage) || user.programStage || 1))
+      patch.programCategory = PROGRAM_CATEGORIES.includes(body.programCategory)
+        ? body.programCategory
+        : user.programCategory || 'standard'
+      patch.programChecklist = mergeChecklist(
+        body.resetChecklist ? emptyChecklist() : user.programChecklist?.length ? user.programChecklist : emptyChecklist(),
+      )
+      if (body.programNote !== undefined) patch.programNote = clean(body.programNote, 500)
+      if (!user.programEnrolledAt) patch.programEnrolledAt = new Date().toISOString()
+    } else {
+      patch.programStage = null
+      patch.programCategory = null
+      // keep checklist history on user for audit; hide via inProgram flag
+    }
+  } else if (user.inProgram) {
+    if (body.programStage !== undefined) {
+      const stage = Number(body.programStage)
+      if (!Number.isInteger(stage) || stage < 1 || stage > 5) {
+        return res.status(400).json({ error: 'Шат 1–5 байна' })
+      }
+      patch.programStage = stage
+    }
+    if (body.programCategory !== undefined) {
+      if (!PROGRAM_CATEGORIES.includes(body.programCategory)) {
+        return res.status(400).json({ error: 'Ангилал буруу байна' })
+      }
+      patch.programCategory = body.programCategory
+    }
+    if (body.programNote !== undefined) patch.programNote = clean(body.programNote, 500)
+    if (body.resetChecklist) {
+      patch.programChecklist = emptyChecklist()
+    }
+  } else {
+    return res.status(400).json({ error: 'Эхлээд хөтөлбөрт оруулна уу' })
+  }
+
+  const updated = await store.update('users', user.id, patch)
+  if (!updated) return res.status(404).json({ error: 'Хэрэглэгч олдсонгүй' })
+  res.json({ ok: true, user: adminUser(updated) })
+})
+
+/** Admin reviews / edits one checklist document. */
+app.patch('/api/admin/users/:id/program-docs/:key', requireAdmin, async (req, res) => {
+  const user = await store.one('users', { id: req.params.id })
+  if (!user) return res.status(404).json({ error: 'Хэрэглэгч олдсонгүй' })
+  if (!user.inProgram) return res.status(400).json({ error: 'Хэрэглэгч хөтөлбөрт ороогүй' })
+
+  const key = clean(req.params.key, 40)
+  const body = req.body || {}
+  const status = body.status !== undefined ? clean(body.status, 20) : undefined
+  if (status !== undefined && !DOC_STATUSES.includes(status)) {
+    return res.status(400).json({ error: 'Төлөв буруу байна' })
+  }
+
+  const checklist = mergeChecklist(user.programChecklist)
+  const idx = checklist.findIndex((d) => d.key === key)
+  if (idx < 0) return res.status(404).json({ error: 'Баримт олдсонгүй' })
+
+  const next = { ...checklist[idx], updatedAt: new Date().toISOString() }
+  if (status !== undefined) next.status = status
+  if (body.adminNote !== undefined) next.adminNote = clean(body.adminNote, 500)
+  if (body.link !== undefined) next.link = clean(body.link, 500)
+  if (body.note !== undefined) next.note = clean(body.note, 500)
+  if (status === 'empty') {
+    next.link = body.link !== undefined ? next.link : ''
+    next.note = body.note !== undefined ? next.note : ''
+    next.adminNote = body.adminNote !== undefined ? next.adminNote : ''
+  }
+  checklist[idx] = next
+
+  const updated = await store.update('users', user.id, {
+    programChecklist: checklist,
+    updatedAt: new Date().toISOString(),
+  })
+  if (!updated) return res.status(404).json({ error: 'Хэрэглэгч олдсонгүй' })
+  res.json({ ok: true, user: adminUser(updated), item: checklist[idx] })
 })
 
 app.patch('/api/admin/:collection/:id', requireAdmin, async (req, res) => {
@@ -449,6 +654,34 @@ app.patch('/api/admin/:collection/:id', requireAdmin, async (req, res) => {
   })
   if (!item) return res.status(404).json({ error: 'Олдсонгүй' })
   res.json({ ok: true, item })
+})
+
+/** Admin sends a push notification to one user or all users with tokens. */
+app.post('/api/admin/notify', requireAdmin, async (req, res) => {
+  const title = clean(req.body?.title, 120)
+  const body = clean(req.body?.body, 500)
+  const url = clean(req.body?.url, 200)
+  const userId = clean(req.body?.userId, 80)
+  if (!title || !body) {
+    return res.status(400).json({ error: 'Гарчиг болон мессеж оруулна уу' })
+  }
+
+  const users = userId
+    ? [await store.one('users', { id: userId })].filter(Boolean)
+    : await store.all('users')
+
+  if (userId && !users.length) {
+    return res.status(404).json({ error: 'Хэрэглэгч олдсонгүй' })
+  }
+
+  const tokens = users.flatMap((u) => (u.pushTokens || []).map((t) => t.token)).filter(Boolean)
+  if (!tokens.length) {
+    return res.status(400).json({ error: 'Push token бүртгэлтэй төхөөрөмж алга' })
+  }
+
+  const result = await sendPushToTokens(tokens, { title, body, url: url || undefined })
+  if (result.error) return res.status(503).json({ error: result.error })
+  res.json({ ok: true, ...result, recipients: users.length, tokens: tokens.length })
 })
 
 app.use('/api', (_req, res) => {

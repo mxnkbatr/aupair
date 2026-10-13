@@ -43,29 +43,31 @@
 .contact-aside {
   display: grid;
   gap: 1rem;
+  align-content: start;
 }
 
-.contact-aside > div {
+.contact-aside__links {
   padding: 1.25rem;
-  border-radius: var(--radius);
-  background: var(--ink);
+  border-radius: var(--r-card);
+  background: var(--label);
   color: #fff;
 }
 
-.contact-aside h2 {
-  margin-bottom: 0.8rem;
-  font-size: 1.15rem;
+.contact-aside__links h2 {
+  margin: 0 0 0.8rem;
+  font-size: 1.05rem;
+  color: #fff;
 }
 
-.contact-aside a,
-.contact-aside p {
+.contact-aside__links a {
   display: block;
-  color: rgba(255, 255, 255, 0.78);
-  margin-top: 0.45rem;
+  color: rgba(255, 255, 255, 0.82);
+  margin-top: 0.5rem;
   font-weight: 600;
+  font-size: 0.9rem;
 }
 
-.contact-aside a:hover {
+.contact-aside__links a:hover {
   color: #fff;
 }
 

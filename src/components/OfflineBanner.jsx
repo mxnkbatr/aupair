@@ -1,5 +1,10 @@
 import { useEffect, useState } from 'react'
+import { Capacitor } from '@capacitor/core'
 import './OfflineBanner.css'
+
+const OFFLINE_COPY = Capacitor.isNativePlatform()
+  ? 'Интернэт холболт алга · зарим мэдээлэл шинэчлэгдэхгүй'
+  : 'Интернэт холболт алга · хадгалсан мэдээлэл харагдаж байна'
 
 export default function OfflineBanner() {
   const [online, setOnline] = useState(() => navigator.onLine)
@@ -30,7 +35,7 @@ export default function OfflineBanner() {
 
   return (
     <div className={`offline-banner${online ? ' is-online' : ''}`} role="status">
-      {online ? 'Интернэт сэргэлээ' : 'Интернэт холболт алга · хадгалсан мэдээлэл харагдаж байна'}
+      {online ? 'Интернэт сэргэлээ' : OFFLINE_COPY}
     </div>
   )
 }

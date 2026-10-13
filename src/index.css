@@ -30,6 +30,7 @@ body {
   position: relative;
   z-index: 1;
   min-height: 100dvh;
+  isolation: isolate;
 }
 
 a {
@@ -117,7 +118,7 @@ p {
 
 .site__main {
   flex: 1 1 auto;
-  padding-bottom: calc(var(--bottom-h) + env(safe-area-inset-bottom, 0px));
+  padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px));
   -webkit-overflow-scrolling: touch;
 }
 
@@ -245,7 +246,7 @@ p {
 }
 
 .btn:active:not(:disabled) {
-  transform: scale(0.97);
+  transform: scale(0.95);
 }
 
 .btn:disabled {
@@ -254,15 +255,19 @@ p {
 }
 
 .btn-primary {
-  background: var(--red-grad);
+  background: linear-gradient(160deg, color-mix(in srgb, var(--brand) 88%, #fff), var(--brand-press));
   color: #fff;
-  box-shadow: 0 6px 18px rgba(204, 32, 56, 0.18);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.22) inset,
+    0 8px 20px color-mix(in srgb, var(--brand) 28%, transparent);
 }
 
 .btn-primary:hover:not(:disabled) {
-  background: var(--red-grad-hover);
+  background: linear-gradient(160deg, var(--brand), var(--brand-press));
   transform: translateY(-1px);
-  box-shadow: var(--shadow-lift);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.2) inset,
+    0 12px 26px color-mix(in srgb, var(--brand) 34%, transparent);
 }
 
 .btn-ghost {
@@ -634,14 +639,20 @@ img {
 }
 
 html.is-native {
-  background: var(--bg-app, #fff);
+  background: var(--bg);
+  scroll-behavior: auto;
+  overscroll-behavior: none;
+  touch-action: pan-y;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 html.is-native body {
   -webkit-user-select: none;
   user-select: none;
-  overscroll-behavior-x: none;
-  overscroll-behavior-y: auto;
+  -webkit-touch-callout: none;
+  overscroll-behavior: none;
+  touch-action: pan-y;
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
 }
@@ -655,6 +666,21 @@ html.is-native *::-webkit-scrollbar {
   display: none;
   width: 0;
   height: 0;
+}
+
+html.is-native img,
+html.is-native a {
+  -webkit-touch-callout: none;
+  -webkit-user-drag: none;
+  user-drag: none;
+}
+
+html.is-native a,
+html.is-native button,
+html.is-native [role='button'],
+html.is-native [data-pressable] {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 
 @media (hover: none) {
@@ -677,7 +703,7 @@ html.is-native textarea {
 
 @media (hover: none) {
   :where(a[class], button, [role='button']):active {
-    transform: scale(0.97);
+    transform: scale(0.95);
     opacity: 0.88;
     transition-duration: 0.08s;
   }
