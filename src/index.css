@@ -645,6 +645,7 @@ html.is-native {
   touch-action: pan-y;
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
+  cursor: default;
 }
 
 html.is-native body {
@@ -655,11 +656,14 @@ html.is-native body {
   touch-action: pan-y;
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
+  background-attachment: scroll;
+  cursor: default;
 }
 
 html.is-native,
 html.is-native * {
   scrollbar-width: none;
+  cursor: inherit;
 }
 
 html.is-native *::-webkit-scrollbar {
@@ -681,6 +685,13 @@ html.is-native [role='button'],
 html.is-native [data-pressable] {
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
+  cursor: default;
+}
+
+/* Pressable owns press feedback — avoid double web-like fade on every link */
+html.is-native :where(a[class], button, [role='button']):active {
+  transform: none;
+  opacity: 1;
 }
 
 @media (hover: none) {

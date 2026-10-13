@@ -5,9 +5,13 @@
 
 body {
   background: var(--bg);
-  background-attachment: fixed;
+  background-attachment: scroll;
   color: var(--label);
   font-family: var(--font-ui);
+}
+
+html.is-native body {
+  background-attachment: scroll;
 }
 
 body::after {

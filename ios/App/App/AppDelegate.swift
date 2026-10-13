@@ -7,42 +7,49 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // After the bridge mounts, strip Safari-like WebView chrome.
         DispatchQueue.main.async { [weak self] in
             self?.hardenWebView()
         }
         return true
     }
 
-    /// Disable browser back-swipe, scrollbars, and white overscroll flash.
+    /// Make WKWebView behave like a native shell, not Safari.
     private func hardenWebView() {
         guard
             let root = window?.rootViewController as? CAPBridgeViewController,
             let webView = root.webView
         else { return }
 
+        let bg = UIColor(red: 0.949, green: 0.949, blue: 0.969, alpha: 1)
+
         webView.allowsBackForwardNavigationGestures = false
+        webView.allowsLinkPreview = false
         webView.isOpaque = true
-        webView.backgroundColor = UIColor(red: 0.949, green: 0.949, blue: 0.969, alpha: 1)
-        webView.scrollView.backgroundColor = webView.backgroundColor
+        webView.backgroundColor = bg
+        webView.scrollView.backgroundColor = bg
         webView.scrollView.showsVerticalScrollIndicator = false
         webView.scrollView.showsHorizontalScrollIndicator = false
         webView.scrollView.contentInsetAdjustmentBehavior = .never
         webView.scrollView.alwaysBounceHorizontal = false
+        webView.scrollView.bounces = true
+        webView.scrollView.decelerationRate = .normal
+        webView.scrollView.delaysContentTouches = false
+        webView.scrollView.canCancelContentTouches = true
+        webView.scrollView.isDirectionalLockEnabled = true
+
+        // Kill the translucent under-scroll look that screams “browser”.
+        if #available(iOS 15.0, *) {
+            webView.underPageBackgroundColor = bg
+        }
     }
 
     func applicationWillResignActive(_ application: UIApplication) {
-        // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
-        // Use this method to pause ongoing tasks, disable timers, and invalidate graphics rendering callbacks. Games should use this method to pause the game.
     }
 
     func applicationDidEnterBackground(_ application: UIApplication) {
-        // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
-        // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
     }
 
     func applicationWillEnterForeground(_ application: UIApplication) {
-        // Called as part of the transition from the background to the active state; here you can undo many of the changes made on entering the background.
     }
 
     func applicationDidBecomeActive(_ application: UIApplication) {
@@ -50,19 +57,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func applicationWillTerminate(_ application: UIApplication) {
-        // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
 
     func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey: Any] = [:]) -> Bool {
-        // Called when the app was launched with a url. Feel free to add additional processing here,
-        // but if you want the App API to support tracking app url opens, make sure to keep this call
         return ApplicationDelegateProxy.shared.application(app, open: url, options: options)
     }
 
     func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
-        // Called when the app was launched with an activity, including Universal Links.
-        // Feel free to add additional processing here, but if you want the App API to support
-        // tracking app url opens, make sure to keep this call
         return ApplicationDelegateProxy.shared.application(application, continue: userActivity, restorationHandler: restorationHandler)
     }
 

@@ -32,8 +32,9 @@
   --e2: 0 10px 30px rgba(16, 16, 24, 0.1);
   --e3: 0 -8px 32px rgba(16, 16, 24, 0.12);
 
-  --font-ui: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter', system-ui, sans-serif;
-  --font-display: 'Onest', -apple-system, 'SF Pro Display', sans-serif;
+  /* System UI — feels native in Capacitor WebView (no Google Fonts flash). */
+  --font-ui: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', Roboto, system-ui, sans-serif;
+  --font-display: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Segoe UI', system-ui, sans-serif;
 
   /* Legacy aliases — keep existing CSS working */
   --red: var(--brand);

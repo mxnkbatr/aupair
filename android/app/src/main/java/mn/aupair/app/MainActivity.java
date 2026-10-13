@@ -20,7 +20,7 @@ public class MainActivity extends BridgeActivity {
         hardenWebView();
     }
 
-    /** Make the Capacitor WebView feel less like a browser chrome. */
+    /** Make the Capacitor WebView feel less like Chrome. */
     private void hardenWebView() {
         if (getBridge() == null) return;
         WebView webView = getBridge().getWebView();
@@ -31,6 +31,8 @@ public class MainActivity extends BridgeActivity {
         webView.setHorizontalScrollBarEnabled(false);
         webView.setHapticFeedbackEnabled(true);
         webView.setBackgroundColor(Color.parseColor("#F2F2F7"));
+        webView.setLongClickable(false);
+        webView.setOnLongClickListener(v -> true);
 
         WebSettings settings = webView.getSettings();
         settings.setSupportZoom(false);
@@ -38,5 +40,7 @@ public class MainActivity extends BridgeActivity {
         settings.setDisplayZoomControls(false);
         settings.setLoadWithOverviewMode(false);
         settings.setUseWideViewPort(true);
+        settings.setTextZoom(100);
+        settings.setMediaPlaybackRequiresUserGesture(true);
     }
 }

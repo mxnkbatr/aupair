@@ -1,24 +1,5 @@
 .home {
   padding-bottom: 8px;
-  position: relative;
-}
-
-/* Soft brand atmosphere — not a full-screen mesh */
-.home::before {
-  content: '';
-  position: absolute;
-  inset: -40px 0 auto;
-  height: 280px;
-  pointer-events: none;
-  z-index: 0;
-  background:
-    radial-gradient(ellipse 70% 80% at 12% 0%, color-mix(in srgb, var(--brand) 16%, transparent), transparent 70%),
-    radial-gradient(ellipse 55% 70% at 88% 8%, color-mix(in srgb, var(--accent) 14%, transparent), transparent 68%);
-}
-
-.home > * {
-  position: relative;
-  z-index: 1;
 }
 
 .home-section {
