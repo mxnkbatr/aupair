@@ -14,6 +14,19 @@ import {
   checklistSummary,
 } from './program.js'
 import { sendPushToTokens } from './fcm.js'
+import {
+  defaultHomework,
+  homeworkSummary,
+  normalizeHomework,
+  HW_STATUSES,
+} from './courseProgress.js'
+import {
+  formatSchedule,
+  isClassSoon,
+  nextClassAt,
+  normalizeSchedule,
+  WEEKDAY_LABELS,
+} from './classRoom.js'
 
 const TOKEN_TTL_MS = 30 * 24 * 60 * 60 * 1000
 
@@ -263,6 +276,8 @@ app.post('/api/enrollments', async (req, res) => {
     germanLevel,
     note,
     status: 'pending',
+    attendanceCount: 0,
+    homework: course.kind === 'course' ? [] : undefined,
     createdAt: new Date().toISOString(),
   }
   await store.insert('enrollments', enrollment)
@@ -384,21 +399,141 @@ app.post('/api/auth/login', limitAuth, async (req, res) => {
 
 app.get('/api/me', requireUser, async (req, res) => {
   const mine = { userId: req.user.id }
-  const [enrollments, contacts, orders] = await Promise.all([
+  const [enrollments, contacts, orders, allGroups, allNotifs] = await Promise.all([
     store.all('enrollments', mine),
     store.all('contacts', mine),
     store.all('orders', mine),
+    store.all('classGroups'),
+    store.all('notifications'),
   ])
+  const acceptedIds = new Set(
+    enrollments.filter((e) => e.status === 'accepted').map((e) => e.courseId),
+  )
+  const classGroups = (allGroups || []).filter((g) => acceptedIds.has(g.courseId || g.id))
+  const notifications = (allNotifs || [])
+    .filter((n) => {
+      if (n.userId && n.userId === req.user.id) return true
+      if (n.audience === 'all') return true
+      if (n.audience === 'students') {
+        return enrollments.some((e) => e.kind === 'course' && e.status === 'accepted')
+      }
+      if (n.audience === 'aupair') {
+        return (
+          req.user.inProgram ||
+          enrollments.some((e) => e.kind === 'country' && e.status === 'accepted')
+        )
+      }
+      return false
+    })
+    .slice(0, 40)
   res.json({
     user: publicUser(req.user, { includeChecklist: true }),
     enrollments,
     contacts,
     orders,
+    classGroups,
+    notifications,
     programMeta: {
       stages: PROGRAM_STAGES,
       categories: PROGRAM_CATEGORY_LABELS,
+      weekdays: WEEKDAY_LABELS,
     },
   })
+})
+
+async function userAcceptedForCourse(userId, courseId) {
+  const list = await store.all('enrollments', { userId })
+  return list.some((e) => e.courseId === courseId && e.status === 'accepted')
+}
+
+async function upsertClassGroup(courseId, patch) {
+  const course = courses.find((c) => c.id === courseId)
+  if (!course) return null
+  const id = courseId
+  const prev = await store.one('classGroups', { id })
+  const schedule = normalizeSchedule(patch.schedule ?? prev?.schedule ?? {})
+  const doc = {
+    id,
+    courseId,
+    kind: course.kind,
+    courseTitle: course.title,
+    schedule,
+    teacherName: clean(patch.teacherName ?? schedule.teacherName ?? prev?.teacherName, 80),
+    homeworkBank:
+      patch.homeworkBank !== undefined
+        ? patch.homeworkBank
+        : Array.isArray(prev?.homeworkBank)
+          ? prev.homeworkBank
+          : [],
+    updatedAt: new Date().toISOString(),
+    createdAt: prev?.createdAt || new Date().toISOString(),
+  }
+  if (prev) return store.update('classGroups', id, doc)
+  return store.insert('classGroups', doc)
+}
+
+async function pushToCourseEnrolled(courseId, { title, body, url }) {
+  const enrolled = (await store.all('enrollments', { courseId })).filter(
+    (e) => e.status === 'accepted' && e.userId,
+  )
+  const userIds = [...new Set(enrolled.map((e) => e.userId))]
+  const users = (
+    await Promise.all(userIds.map((uid) => store.one('users', { id: uid })))
+  ).filter(Boolean)
+  const tokens = users.flatMap((u) => (u.pushTokens || []).map((t) => t.token)).filter(Boolean)
+  if (!tokens.length) return { sent: 0, failed: 0, recipients: users.length, tokens: 0 }
+  const result = await sendPushToTokens(tokens, { title, body, url })
+  return { ...result, recipients: users.length, tokens: tokens.length }
+}
+
+/** Classroom schedule for an enrolled student. */
+app.get('/api/me/classes/:courseId', requireUser, async (req, res) => {
+  const courseId = clean(req.params.courseId, 60)
+  if (!(await userAcceptedForCourse(req.user.id, courseId))) {
+    return res.status(403).json({ error: 'Энэ ангид бүртгэлгүй байна' })
+  }
+  const group = (await store.one('classGroups', { id: courseId })) || null
+  const next = group?.schedule ? nextClassAt(group.schedule) : null
+  res.json({
+    group,
+    scheduleLabel: group?.schedule ? formatSchedule(group.schedule) : '',
+    nextClassAt: next ? next.toISOString() : null,
+    soon: group?.schedule ? isClassSoon(group.schedule) : false,
+  })
+})
+
+/** Group chat messages — only accepted classmates. */
+app.get('/api/me/classes/:courseId/messages', requireUser, async (req, res) => {
+  const courseId = clean(req.params.courseId, 60)
+  if (!(await userAcceptedForCourse(req.user.id, courseId))) {
+    return res.status(403).json({ error: 'Энэ ангид бүртгэлгүй байна' })
+  }
+  const all = await store.all('classMessages', { courseId })
+  const messages = all
+    .sort((a, b) => String(a.createdAt || '').localeCompare(String(b.createdAt || '')))
+    .slice(-100)
+  res.json({ messages })
+})
+
+app.post('/api/me/classes/:courseId/messages', requireUser, async (req, res) => {
+  const courseId = clean(req.params.courseId, 60)
+  if (!(await userAcceptedForCourse(req.user.id, courseId))) {
+    return res.status(403).json({ error: 'Энэ ангид бүртгэлгүй байна' })
+  }
+  const text = clean(req.body?.text, 1000)
+  if (!text) return res.status(400).json({ error: 'Зурвас хоосон байна' })
+
+  const msg = {
+    id: id(),
+    courseId,
+    userId: req.user.id,
+    userName: req.user.name || 'Сурагч',
+    role: 'student',
+    text,
+    createdAt: new Date().toISOString(),
+  }
+  await store.insert('classMessages', msg)
+  res.status(201).json({ ok: true, message: msg })
 })
 
 /** User submits / updates one checklist item (link + note). Only when inProgram. */
@@ -648,40 +783,430 @@ app.patch('/api/admin/:collection/:id', requireAdmin, async (req, res) => {
     return res.status(400).json({ error: 'Төлөв буруу байна' })
   }
 
-  const item = await store.update(collection, itemId, {
+  const patch = {
     status,
     updatedAt: new Date().toISOString(),
-  })
+  }
+
+  if (collection === 'enrollments' && status === 'accepted') {
+    const prev = await store.one(collection, { id: itemId })
+    if (prev?.kind === 'course') {
+      const hw = normalizeHomework(prev.homework)
+      if (hw.length === 0) patch.homework = defaultHomework(prev.courseId)
+      if (typeof prev.attendanceCount !== 'number') patch.attendanceCount = 0
+    }
+    // Au Pair улсын элсэлт зөвшөөрөгдөхөд автоматаар хөтөлбөрт оруулна
+    if (prev?.kind === 'country' && prev.userId) {
+      const enrollee = await store.one('users', { id: prev.userId })
+      if (enrollee && !enrollee.inProgram) {
+        await store.update('users', enrollee.id, {
+          inProgram: true,
+          programStage: Number(enrollee.programStage) || 1,
+          programCategory: PROGRAM_CATEGORIES.includes(enrollee.programCategory)
+            ? enrollee.programCategory
+            : 'standard',
+          programChecklist: mergeChecklist(
+            enrollee.programChecklist?.length ? enrollee.programChecklist : emptyChecklist(),
+          ),
+          programEnrolledAt: enrollee.programEnrolledAt || new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        })
+      }
+    }
+  }
+
+  const item = await store.update(collection, itemId, patch)
   if (!item) return res.status(404).json({ error: 'Олдсонгүй' })
   res.json({ ok: true, item })
 })
 
-/** Admin sends a push notification to one user or all users with tokens. */
+/** Admin: change enrollment type (course ↔ country) and target program. */
+app.patch('/api/admin/enrollments/:id/assign', requireAdmin, async (req, res) => {
+  const prev = await store.one('enrollments', { id: req.params.id })
+  if (!prev) return res.status(404).json({ error: 'Олдсонгүй' })
+
+  const body = req.body || {}
+  const patch = { updatedAt: new Date().toISOString() }
+
+  if (body.kind !== undefined) {
+    if (body.kind !== 'course' && body.kind !== 'country') {
+      return res.status(400).json({ error: 'Төрөл буруу (course | country)' })
+    }
+    patch.kind = body.kind
+  }
+
+  if (body.courseId !== undefined) {
+    const courseId = clean(body.courseId, 60)
+    const course = courses.find((c) => c.id === courseId)
+    if (!course) return res.status(404).json({ error: 'Хөтөлбөр олдсонгүй' })
+    const nextKind = patch.kind || prev.kind
+    if (course.kind !== nextKind) {
+      return res.status(400).json({
+        error:
+          nextKind === 'course'
+            ? 'Сургалтын анги сонгоно уу'
+            : 'Au Pair улс сонгоно уу',
+      })
+    }
+    patch.courseId = course.id
+    patch.courseTitle = course.title
+    patch.kind = course.kind
+  }
+
+  if (body.courseTitle !== undefined && body.courseId === undefined) {
+    patch.courseTitle = clean(body.courseTitle, 160)
+  }
+
+  // Switching to course: ensure progress fields exist
+  const finalKind = patch.kind || prev.kind
+  if (finalKind === 'course') {
+    if (typeof prev.attendanceCount !== 'number' && patch.attendanceCount === undefined) {
+      patch.attendanceCount = prev.attendanceCount ?? 0
+    }
+    if (!Array.isArray(prev.homework) && patch.homework === undefined) {
+      patch.homework = []
+    }
+  }
+
+  const item = await store.update('enrollments', prev.id, patch)
+  if (!item) return res.status(404).json({ error: 'Олдсонгүй' })
+  res.json({ ok: true, item })
+})
+
+/** Admin: attendance + homework for a course enrollment. */
+app.patch('/api/admin/enrollments/:id/progress', requireAdmin, async (req, res) => {
+  const prev = await store.one('enrollments', { id: req.params.id })
+  if (!prev) return res.status(404).json({ error: 'Олдсонгүй' })
+  if (prev.kind !== 'course') {
+    return res.status(400).json({ error: 'Зөвхөн хэлний сургалтын бүртгэлд ашиглана' })
+  }
+
+  const body = req.body || {}
+  const patch = { updatedAt: new Date().toISOString() }
+
+  if (body.attendanceCount !== undefined) {
+    const n = Number.parseInt(body.attendanceCount, 10)
+    if (!Number.isInteger(n) || n < 0 || n > 999) {
+      return res.status(400).json({ error: 'Ирцийн тоо буруу' })
+    }
+    patch.attendanceCount = n
+  }
+
+  if (body.homework !== undefined) {
+    patch.homework = normalizeHomework(body.homework)
+  }
+
+  if (body.addHomework) {
+    const title = clean(
+      typeof body.addHomework === 'string' ? body.addHomework : body.addHomework.title,
+      120,
+    )
+    if (!title) return res.status(400).json({ error: 'Даалгаврын нэр оруулна уу' })
+    const list = normalizeHomework(prev.homework)
+    list.push({
+      id: id(),
+      title,
+      hint: clean(typeof body.addHomework === 'object' ? body.addHomework.hint : '', 160),
+      status: 'pending',
+      note: '',
+      updatedAt: new Date().toISOString(),
+    })
+    patch.homework = list
+  }
+
+  if (body.homeworkId && body.homeworkStatus) {
+    if (!HW_STATUSES.includes(body.homeworkStatus)) {
+      return res.status(400).json({ error: 'Даалгаврын төлөв буруу' })
+    }
+    const list = normalizeHomework(prev.homework)
+    const idx = list.findIndex((h) => h.id === clean(body.homeworkId, 40))
+    if (idx < 0) return res.status(404).json({ error: 'Даалгавар олдсонгүй' })
+    list[idx] = {
+      ...list[idx],
+      status: body.homeworkStatus,
+      updatedAt: new Date().toISOString(),
+    }
+    patch.homework = list
+  }
+
+  const item = await store.update('enrollments', prev.id, patch)
+  if (!item) return res.status(404).json({ error: 'Олдсонгүй' })
+  res.json({
+    ok: true,
+    item,
+    homeworkSummary: homeworkSummary(item.homework),
+  })
+})
+
+/** Student: mark own homework done / pending. */
+app.patch('/api/me/enrollments/:id/homework/:hwId', async (req, res) => {
+  const user = await authUser(req)
+  if (!user) return res.status(401).json({ error: 'Нэвтэрнэ үү' })
+
+  const prev = await store.one('enrollments', { id: req.params.id })
+  if (!prev || prev.userId !== user.id) {
+    return res.status(404).json({ error: 'Бүртгэл олдсонгүй' })
+  }
+
+  const status = clean(req.body?.status, 20)
+  if (!HW_STATUSES.includes(status)) {
+    return res.status(400).json({ error: 'Төлөв буруу' })
+  }
+
+  const list = normalizeHomework(prev.homework)
+  const idx = list.findIndex((h) => h.id === clean(req.params.hwId, 40))
+  if (idx < 0) return res.status(404).json({ error: 'Даалгавар олдсонгүй' })
+
+  list[idx] = { ...list[idx], status, updatedAt: new Date().toISOString() }
+  const item = await store.update('enrollments', prev.id, {
+    homework: list,
+    updatedAt: new Date().toISOString(),
+  })
+  res.json({ ok: true, item, homeworkSummary: homeworkSummary(list) })
+})
+
+/** Admin: set classroom schedule (shared by all accepted students in courseId). */
+app.put('/api/admin/classes/:courseId', requireAdmin, async (req, res) => {
+  const courseId = clean(req.params.courseId, 60)
+  const group = await upsertClassGroup(courseId, {
+    schedule: req.body?.schedule,
+    teacherName: req.body?.teacherName,
+  })
+  if (!group) return res.status(404).json({ error: 'Хөтөлбөр олдсонгүй' })
+  res.json({ ok: true, group, scheduleLabel: formatSchedule(group.schedule) })
+})
+
+/**
+ * Багш/админ: ангийн бүх элссэн сурагчид даалгавар тавих.
+ * body: { title, hint? }
+ */
+app.post('/api/admin/classes/:courseId/homework', requireAdmin, async (req, res) => {
+  const courseId = clean(req.params.courseId, 60)
+  const course = courses.find((c) => c.id === courseId)
+  if (!course) return res.status(404).json({ error: 'Хөтөлбөр олдсонгүй' })
+  if (course.kind === 'country') {
+    return res.status(400).json({ error: 'Зөвхөн хэлний ангид даалгавар тавина' })
+  }
+
+  const title = clean(req.body?.title, 120)
+  const hint = clean(req.body?.hint, 160)
+  if (!title) return res.status(400).json({ error: 'Даалгаврын нэр оруулна уу' })
+
+  const hwId = id()
+  const now = new Date().toISOString()
+  const hwItem = {
+    id: hwId,
+    title,
+    hint,
+    status: 'pending',
+    note: '',
+    updatedAt: now,
+    assignedAt: now,
+  }
+
+  const enrolled = (await store.all('enrollments', { courseId })).filter(
+    (e) => e.status === 'accepted' && e.kind === 'course',
+  )
+  let updated = 0
+  for (const e of enrolled) {
+    const list = normalizeHomework(e.homework)
+    list.push({ ...hwItem })
+    await store.update('enrollments', e.id, {
+      homework: list,
+      updatedAt: now,
+    })
+    updated += 1
+  }
+
+  // classGroup дээр жагсаалт хадгална (админ харах)
+  const group = (await store.one('classGroups', { id: courseId })) || {
+    id: courseId,
+    courseId,
+    kind: 'course',
+    courseTitle: course.title,
+  }
+  const bank = Array.isArray(group.homeworkBank) ? group.homeworkBank : []
+  bank.unshift({ id: hwId, title, hint, createdAt: now })
+  await upsertClassGroup(courseId, {
+    homeworkBank: bank.slice(0, 40),
+    teacherName: group.teacherName,
+    schedule: group.schedule,
+  })
+
+  // Сурагчдад push (байвал)
+  await pushToCourseEnrolled(courseId, {
+    title: `${course.title} · шинэ даалгавар`,
+    body: title + (hint ? ` — ${hint}` : ''),
+    url: '/learn?tab=schedule',
+  }).catch(() => null)
+
+  res.status(201).json({ ok: true, homework: hwItem, assignedTo: updated })
+})
+
+/** Admin: push class reminder to all accepted students in a course/country. */
+app.post('/api/admin/classes/:courseId/notify', requireAdmin, async (req, res) => {
+  const courseId = clean(req.params.courseId, 60)
+  const course = courses.find((c) => c.id === courseId)
+  if (!course) return res.status(404).json({ error: 'Хөтөлбөр олдсонгүй' })
+
+  const group = (await store.one('classGroups', { id: courseId })) || null
+  const label = group?.schedule ? formatSchedule(group.schedule) : ''
+  const isAuPair = course.kind === 'country'
+  const title =
+    clean(req.body?.title, 120) ||
+    (isAuPair ? `${course.title} · уулзалт` : `${course.title} · хичээл`)
+  const body =
+    clean(req.body?.body, 500) ||
+    (label
+      ? `${label}${group?.schedule?.room ? ` · ${group.schedule.room}` : ''}${group?.teacherName ? ` · ${group.teacherName}` : ''}`
+      : 'Удахгүй эхэлнэ. Апп руу орж шалгаарай.')
+  const url = isAuPair ? '/countries' : '/learn?tab=myclass'
+
+  const result = await pushToCourseEnrolled(courseId, { title, body, url })
+  if (result.error) return res.status(503).json({ error: result.error })
+  if (!result.tokens) {
+    return res.status(400).json({ error: 'Энэ ангийн сурагчдад push token алга' })
+  }
+  res.json({ ok: true, ...result })
+})
+
+/** Admin: post as teacher in class chat. */
+app.post('/api/admin/classes/:courseId/messages', requireAdmin, async (req, res) => {
+  const courseId = clean(req.params.courseId, 60)
+  const course = courses.find((c) => c.id === courseId)
+  if (!course) return res.status(404).json({ error: 'Хөтөлбөр олдсонгүй' })
+  const text = clean(req.body?.text, 1000)
+  if (!text) return res.status(400).json({ error: 'Зурвас хоосон байна' })
+  const teacherName = clean(req.body?.teacherName, 80) || 'Багш'
+
+  const msg = {
+    id: id(),
+    courseId,
+    userId: 'teacher',
+    userName: teacherName,
+    role: 'teacher',
+    text,
+    createdAt: new Date().toISOString(),
+  }
+  await store.insert('classMessages', msg)
+  res.status(201).json({ ok: true, message: msg })
+})
+
+/** Cron-friendly: notify classes starting within the next `withinHours` (default 2). */
+app.post('/api/admin/notify-upcoming-classes', requireAdmin, async (req, res) => {
+  const withinHours = Math.min(12, Math.max(1, Number(req.body?.withinHours) || 2))
+  const groups = await store.all('classGroups')
+  const results = []
+  for (const group of groups) {
+    if (!isClassSoon(group.schedule, withinHours * 60 * 60 * 1000)) continue
+    const label = formatSchedule(group.schedule)
+    const isAuPair = group.kind === 'country'
+    const result = await pushToCourseEnrolled(group.courseId, {
+      title: isAuPair ? `${group.courseTitle} · уулзалт` : `${group.courseTitle} · хичээл эхэлнэ`,
+      body: `${label}${group.schedule?.room ? ` · ${group.schedule.room}` : ''}`,
+      url: isAuPair ? '/countries' : '/learn?tab=myclass',
+    })
+    results.push({ courseId: group.courseId, ...result })
+  }
+  res.json({ ok: true, withinHours, notified: results.length, results })
+})
+
+/**
+ * Admin → хүүхдүүд рүү мэдэгдэл.
+ * audience: all | students | aupair | user (userId шаардлагатай)
+ * In-app хадгална; push token байвал FCM илгээнэ.
+ */
 app.post('/api/admin/notify', requireAdmin, async (req, res) => {
   const title = clean(req.body?.title, 120)
   const body = clean(req.body?.body, 500)
   const url = clean(req.body?.url, 200)
   const userId = clean(req.body?.userId, 80)
+  const audience = clean(req.body?.audience, 20) || (userId ? 'user' : 'all')
   if (!title || !body) {
     return res.status(400).json({ error: 'Гарчиг болон мессеж оруулна уу' })
   }
+  if (!['all', 'students', 'aupair', 'user'].includes(audience)) {
+    return res.status(400).json({ error: 'Хүлээн авагч буруу (all|students|aupair|user)' })
+  }
+  if (audience === 'user' && !userId) {
+    return res.status(400).json({ error: 'Хэрэглэгч сонгоно уу' })
+  }
 
-  const users = userId
-    ? [await store.one('users', { id: userId })].filter(Boolean)
-    : await store.all('users')
+  const allUsers = await store.all('users')
+  const enrollments = await store.all('enrollments')
+  const acceptedByUser = new Map()
+  for (const e of enrollments) {
+    if (e.status !== 'accepted' || !e.userId) continue
+    const list = acceptedByUser.get(e.userId) || []
+    list.push(e)
+    acceptedByUser.set(e.userId, list)
+  }
 
-  if (userId && !users.length) {
-    return res.status(404).json({ error: 'Хэрэглэгч олдсонгүй' })
+  let users = []
+  if (audience === 'user') {
+    users = allUsers.filter((u) => u.id === userId)
+    if (!users.length) return res.status(404).json({ error: 'Хэрэглэгч олдсонгүй' })
+  } else if (audience === 'students') {
+    users = allUsers.filter((u) =>
+      (acceptedByUser.get(u.id) || []).some((e) => e.kind === 'course'),
+    )
+  } else if (audience === 'aupair') {
+    users = allUsers.filter(
+      (u) =>
+        u.inProgram || (acceptedByUser.get(u.id) || []).some((e) => e.kind === 'country'),
+    )
+  } else {
+    users = allUsers
+  }
+
+  if (!users.length) {
+    return res.status(400).json({ error: 'Энэ бүлэгт хэрэглэгч алга' })
+  }
+
+  const now = new Date().toISOString()
+  const batchId = crypto.randomUUID()
+
+  // Broadcast нэг бичлэг (all/students/aupair) эсвэл user бүрт
+  if (audience === 'user') {
+    await store.insert('notifications', {
+      id: crypto.randomUUID(),
+      batchId,
+      userId: users[0].id,
+      audience: 'user',
+      title,
+      body,
+      url: url || '',
+      createdAt: now,
+    })
+  } else {
+    await store.insert('notifications', {
+      id: crypto.randomUUID(),
+      batchId,
+      audience,
+      title,
+      body,
+      url: url || '',
+      createdAt: now,
+    })
   }
 
   const tokens = users.flatMap((u) => (u.pushTokens || []).map((t) => t.token)).filter(Boolean)
-  if (!tokens.length) {
-    return res.status(400).json({ error: 'Push token бүртгэлтэй төхөөрөмж алга' })
+  let push = { sent: 0, failed: 0, tokens: tokens.length }
+  if (tokens.length) {
+    const result = await sendPushToTokens(tokens, { title, body, url: url || undefined })
+    if (result.error) {
+      push = { ...push, error: result.error, sent: 0 }
+    } else {
+      push = { ...push, ...result }
+    }
   }
 
-  const result = await sendPushToTokens(tokens, { title, body, url: url || undefined })
-  if (result.error) return res.status(503).json({ error: result.error })
-  res.json({ ok: true, ...result, recipients: users.length, tokens: tokens.length })
+  res.json({
+    ok: true,
+    recipients: users.length,
+    inApp: true,
+    ...push,
+  })
 })
 
 app.use('/api', (_req, res) => {

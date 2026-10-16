@@ -41,13 +41,16 @@ export default function JourneyTimeline({
   enrollments,
   compact = false,
   mode = 'auto',
+  /** Optional country-specific / mock stages (same shape as PROGRAM_STAGES). */
+  stages: stagesOverride,
 }) {
   const isProgram = mode === 'program' || (mode === 'auto' && user?.inProgram)
+  const programSource = stagesOverride?.length ? stagesOverride : PROGRAM_STAGES
   const steps = isProgram
-    ? PROGRAM_STAGES.map((s, i) => ({
+    ? programSource.map((s, i) => ({
         id: String(s.id),
         label: s.label,
-        short: PROGRAM_SHORT[i] || s.label,
+        short: s.short || PROGRAM_SHORT[i] || s.label,
         hint: s.hint,
       }))
     : JOURNEY_STEPS

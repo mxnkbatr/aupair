@@ -20,7 +20,7 @@ function initials(name) {
 }
 
 /**
- * Root tabs: logo + flex search + notification + profile.
+ * Root tabs: logo + search + bell + avatar.
  * Push screens: back + centered title + trailing.
  */
 export default function NavBar({
@@ -104,7 +104,13 @@ export default function NavBar({
 
           <div className="navbar__actions">
             <NotificationMenu variant="icon" />
-            <Link to="/me" className="navbar__avatar" aria-label="Би">
+            <Link
+              to="/me"
+              state={user ? undefined : { auth: 'login' }}
+              className="navbar__avatar"
+              aria-label={user ? 'Би' : 'Нэвтрэх'}
+              onClick={() => haptic('selection')}
+            >
               {user ? initials(user.name) : <UserCircle size={22} weight="fill" aria-hidden />}
             </Link>
           </div>

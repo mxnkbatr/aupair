@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 import { motion, useReducedMotion } from 'motion/react'
 import { MessengerLogo, Phone } from '@phosphor-icons/react'
 import { useAuth } from '../auth'
-import { countries, org, social } from '../data'
+import { countries, newsItems, org, social } from '../data'
 import JourneyTimeline, {
   JOURNEY_STEPS,
   journeyIndex,
@@ -152,7 +152,7 @@ export default function Home() {
 
       <Reveal className="home-section" delay={0.12} reduce={reduce}>
         <div className="container block-head">
-          <h2>Улсууд</h2>
+          <h2>Au Pair</h2>
           <Link to="/countries" className="link-more">
             Бүгд
           </Link>
@@ -185,7 +185,35 @@ export default function Home() {
         </div>
       </Reveal>
 
-      <Reveal className="container home-section home-section--end" delay={0.18} reduce={reduce}>
+      <Reveal className="home-section" delay={0.16} reduce={reduce}>
+        <div className="container block-head">
+          <h2>Мэдээ</h2>
+          <Link to="/news" className="link-more">
+            Бүгд
+          </Link>
+        </div>
+        <div className="container home-news">
+          {newsItems.slice(0, 4).map((item) => (
+            <Pressable key={item.id} as={Link} to={item.href} className="home-news__card">
+              <img
+                src={item.image}
+                alt=""
+                loading="lazy"
+                onError={(e) => {
+                  e.currentTarget.src = '/cover.jpg'
+                }}
+              />
+              <span className="home-news__body">
+                <em>{item.tag}</em>
+                <strong>{item.title}</strong>
+                <small>{item.dateLabel}</small>
+              </span>
+            </Pressable>
+          ))}
+        </div>
+      </Reveal>
+
+      <Reveal className="container home-section home-section--end" delay={0.2} reduce={reduce}>
         <div className="advice-card">
           <h2>Зөвлөгөө авах</h2>
           <p>

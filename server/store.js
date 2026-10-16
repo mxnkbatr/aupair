@@ -3,7 +3,15 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
-export const COLLECTIONS = ['users', 'enrollments', 'contacts', 'orders']
+export const COLLECTIONS = [
+  'users',
+  'enrollments',
+  'contacts',
+  'orders',
+  'classGroups',
+  'classMessages',
+  'notifications',
+]
 
 const MONGODB_URI = process.env.MONGODB_URI || ''
 const MONGODB_DB = process.env.MONGODB_DB || 'mongolian_aupair'
@@ -97,10 +105,15 @@ async function createMongoStore() {
     col('users').createIndex({ id: 1 }, { unique: true }),
     col('users').createIndex({ phoneKey: 1 }, { unique: true }),
     col('enrollments').createIndex({ courseId: 1 }),
-    ...['enrollments', 'contacts', 'orders'].flatMap((name) => [
-      col(name).createIndex({ id: 1 }, { unique: true }),
-      col(name).createIndex({ userId: 1 }),
-    ]),
+    ...['enrollments', 'contacts', 'orders', 'classGroups', 'classMessages', 'notifications'].flatMap(
+      (name) => [
+        col(name).createIndex({ id: 1 }, { unique: true }),
+        col(name).createIndex({ userId: 1 }),
+      ],
+    ),
+    col('classMessages').createIndex({ courseId: 1, createdAt: -1 }),
+    col('classGroups').createIndex({ courseId: 1 }, { unique: true }),
+    col('notifications').createIndex({ createdAt: -1 }),
   ]).catch((err) => console.warn('Mongo index:', err.message))
 
   return {

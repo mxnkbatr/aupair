@@ -49,7 +49,7 @@ export default function CourseDetail() {
         <h1>Олдсонгүй</h1>
         <p>{error}</p>
         <Link to="/learn" className="btn btn-primary">
-          Сурах руу буцах
+          Сургалт руу буцах
         </Link>
       </div>
     )

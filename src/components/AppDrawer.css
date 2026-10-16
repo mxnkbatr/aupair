@@ -1,118 +1,128 @@
-.app-drawer {
+/* Floating iOS 26 sheet — app brand colors, not docked to edges */
+
+.app-drawer__backdrop {
   position: fixed;
   inset: 0;
   z-index: 220;
-}
-
-.app-drawer__backdrop {
-  position: absolute;
-  inset: 0;
-  border: 0;
-  background: rgba(12, 12, 14, 0.4);
-  animation: appDrawerFade 0.2s ease both;
+  background: rgba(16, 16, 24, 0.28);
 }
 
 .app-drawer__panel {
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  width: min(86vw, 320px);
-  padding: env(safe-area-inset-top, 0px) 0 env(safe-area-inset-bottom, 0px);
-  background: var(--surface);
-  box-shadow: -12px 0 40px rgba(0, 0, 0, 0.14);
+  position: fixed;
+  left: 12px;
+  right: 12px;
+  bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+  z-index: 221;
   display: flex;
   flex-direction: column;
-  animation: appDrawerSlide 0.28s cubic-bezier(0.22, 1, 0.36, 1) both;
+  width: auto;
+  max-width: 400px;
+  margin-inline: auto;
+  padding: 0 14px 16px;
+  border-radius: 28px;
+  background: color-mix(in srgb, var(--surface, #fff) 82%, transparent);
+  border: 0.5px solid color-mix(in srgb, var(--separator, #e4e4ea) 80%, transparent);
+  box-shadow:
+    0 0 0 0.5px rgba(255, 255, 255, 0.4) inset,
+    0 16px 48px rgba(16, 16, 24, 0.18),
+    0 4px 12px rgba(232, 23, 63, 0.06);
+  backdrop-filter: blur(36px) saturate(180%);
+  -webkit-backdrop-filter: blur(36px) saturate(180%);
+  outline: none;
+  color: var(--label, #0b0b0f);
 }
 
-.app-drawer__top {
+.app-drawer__grab {
+  width: 36px;
+  height: 4px;
+  margin: 10px auto 4px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--label) 18%, transparent);
+}
+
+.app-drawer__head {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
   gap: 12px;
-  padding: 16px 16px 12px;
+  padding: 4px 2px 14px;
 }
 
 .app-drawer__brand {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  min-width: 0;
+  margin: 0;
+  color: var(--brand, #e8173f);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
-.app-drawer__brand img {
-  width: 36px;
-  height: 36px;
-  border-radius: 10px;
-  object-fit: cover;
+.app-drawer__head h2 {
+  margin: 3px 0 0;
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1.15;
+  color: var(--label, #0b0b0f);
 }
 
-.app-drawer__brand strong {
-  display: block;
-  font-size: 1rem;
-  font-weight: 750;
-  letter-spacing: -0.02em;
-}
-
-.app-drawer__brand span {
-  display: block;
-  margin-top: 2px;
-  color: var(--label-2);
-  font-size: 0.72rem;
-  font-weight: 500;
-  line-height: 1.3;
-}
-
-.app-drawer__close {
-  width: 36px;
-  height: 36px;
+.app-drawer__x {
   display: grid;
   place-items: center;
-  border: 0.5px solid var(--separator);
+  width: 32px;
+  height: 32px;
+  margin-top: 4px;
+  border: 0;
   border-radius: 50%;
-  background: var(--bg);
+  background: color-mix(in srgb, var(--label) 8%, transparent);
   color: var(--label);
-  cursor: pointer;
 }
 
-.app-drawer__nav {
+.app-drawer__x:active {
+  opacity: 0.65;
+  transform: scale(0.94);
+}
+
+.app-drawer__grid {
   display: grid;
-  gap: 4px;
-  padding: 8px 12px 20px;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
 }
 
-.app-drawer__nav a {
+.app-drawer__tile {
   display: flex;
   align-items: center;
-  gap: 12px;
-  min-height: 48px;
-  padding: 0 12px;
-  border-radius: 14px;
+  gap: 11px;
+  min-height: 60px;
+  padding: 11px 12px;
+  border-radius: 18px;
+  background: var(--surface, #fff);
+  border: 0.5px solid var(--separator, #e4e4ea);
+  box-shadow: 0 1px 2px rgba(16, 16, 24, 0.04);
   color: var(--label);
-  font-weight: 650;
-  font-size: 0.95rem;
 }
 
-.app-drawer__nav a:active {
-  background: var(--bg);
-  transform: scale(0.98);
+.app-drawer__tile:active {
+  transform: scale(0.96);
+  background: var(--surface-2, #f7f7fa);
 }
 
-@keyframes appDrawerFade {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+.app-drawer__glyph {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  flex: 0 0 auto;
+  border-radius: 11px;
+  background: var(--brand, #e8173f);
+  color: #fff;
+  box-shadow: 0 6px 14px color-mix(in srgb, var(--brand) 28%, transparent);
 }
 
-@keyframes appDrawerSlide {
-  from {
-    transform: translateX(100%);
-  }
-  to {
-    transform: translateX(0);
-  }
+.app-drawer__tile strong {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
 }
+

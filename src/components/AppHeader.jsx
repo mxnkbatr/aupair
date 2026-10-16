@@ -63,7 +63,12 @@ export default function AppHeader({ title, showBrand = false }) {
 
         <div className="app-header__right">
           <NotificationMenu variant="header" />
-          <Link to="/me" className="app-header__avatar" aria-label="Би">
+          <Link
+            to="/me"
+            state={user ? undefined : { auth: 'login' }}
+            className="app-header__avatar"
+            aria-label={user ? 'Би' : 'Нэвтрэх'}
+          >
             {user ? initials(user.name) : <UserCircle size={22} weight="fill" aria-hidden />}
           </Link>
         </div>

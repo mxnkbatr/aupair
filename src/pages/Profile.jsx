@@ -50,7 +50,17 @@ const PERKS = [
 
 function LoggedOut() {
   const location = useLocation()
-  const [auth, setAuth] = useState(() => location.state?.auth || null)
+  const navigate = useNavigate()
+  const [auth, setAuth] = useState(() => location.state?.auth || 'login')
+
+  // Profile / avatar дарсан үед login|register modal нээнэ
+  useEffect(() => {
+    const next = location.state?.auth
+    if (next === 'login' || next === 'register') {
+      setAuth(next)
+      navigate(location.pathname, { replace: true, state: {} })
+    }
+  }, [location.state, location.pathname, navigate])
 
   return (
     <>

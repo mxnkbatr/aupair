@@ -1,0 +1,150 @@
+.class-hub {
+  display: grid;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.class-hub--empty {
+  padding: 28px 16px;
+  text-align: center;
+  border-radius: 18px;
+  background: var(--surface);
+  border: 0.5px solid var(--separator);
+  color: var(--label-2);
+  font-size: 14px;
+}
+
+.class-hub__tabs {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding-bottom: 2px;
+}
+
+.class-hub__tabs button {
+  flex: 0 0 auto;
+  min-height: 34px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--surface-2);
+  color: var(--label-2);
+  font-size: 13px;
+  font-weight: 650;
+}
+
+.class-hub__tabs button.is-active {
+  background: var(--brand);
+  color: #fff;
+}
+
+.class-hub__schedule {
+  padding: 14px;
+  border-radius: 18px;
+  background: var(--surface);
+  border: 0.5px solid var(--separator);
+}
+
+.class-hub__schedule-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.class-hub__schedule h3 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-size: 15px;
+  color: var(--brand);
+}
+
+.class-hub__demo {
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--brand-tint);
+  color: var(--brand);
+  font-style: normal;
+  font-size: 11px;
+  font-weight: 750;
+}
+
+.class-hub__days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+  margin-top: 12px;
+}
+
+.class-hub__days span {
+  display: grid;
+  place-items: center;
+  min-height: 32px;
+  border-radius: 10px;
+  background: var(--bg);
+  color: var(--label-3);
+  font-size: 11px;
+  font-weight: 650;
+}
+
+.class-hub__days span.is-on {
+  background: var(--brand);
+  color: #fff;
+}
+
+.class-hub__when {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 750;
+  letter-spacing: -0.02em;
+  color: var(--label);
+}
+
+.class-hub__next {
+  margin: 6px 0 0;
+  color: var(--label-2);
+  font-size: 13px;
+}
+
+.class-hub__next em {
+  color: var(--brand);
+  font-style: normal;
+  font-weight: 700;
+}
+
+.class-hub__facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 10px 0 0;
+  padding: 0;
+  list-style: none;
+  color: var(--label-2);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.class-hub__facts li {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.class-hub__hint {
+  margin: 10px 0 0;
+  color: var(--label-3);
+  font-size: 12px;
+}
+
+.class-hub__chat-tip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  color: var(--label-2);
+  font-size: 13px;
+  font-weight: 550;
+}

@@ -245,7 +245,8 @@
 }
 
 .admin-notify input,
-.admin-notify textarea {
+.admin-notify textarea,
+.admin-notify select {
   width: 100%;
   border: 1px solid var(--line);
   border-radius: 12px;
@@ -434,6 +435,268 @@
 
 .admin-docs__btns button:disabled {
   opacity: 0.45;
+}
+
+.admin-item__from {
+  display: block;
+  margin-top: 0.15rem;
+  color: var(--muted);
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.admin-item__pill--course {
+  background: color-mix(in srgb, #0d9488 16%, #fff);
+  color: #0f766e;
+}
+
+.admin-item__pill--country {
+  background: color-mix(in srgb, var(--red, #e8173f) 14%, #fff);
+  color: var(--red, #e8173f);
+}
+
+.admin-user-flags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0.35rem 0;
+}
+
+.admin-user-flags em {
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  background: var(--paper, #f2f2f7);
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-style: normal;
+  font-weight: 700;
+}
+
+.admin-user-flags em.is-on {
+  background: color-mix(in srgb, var(--red, #e8173f) 12%, #fff);
+  color: var(--red, #e8173f);
+}
+
+.admin-enroll-meta {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 0.35rem;
+}
+
+.admin-enroll-meta__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.65rem;
+}
+
+.admin-enroll-meta__grid > div {
+  display: grid;
+  gap: 0.15rem;
+  padding: 0.7rem 0.8rem;
+  border-radius: 12px;
+  background: var(--paper, #f7f7fa);
+  border: 1px solid var(--line);
+}
+
+.admin-enroll-meta__grid small {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.admin-enroll-meta__grid strong {
+  font-size: 0.92rem;
+}
+
+.admin-enroll-meta__grid span {
+  font-size: 0.78rem;
+  color: var(--ink-2);
+  word-break: break-word;
+}
+
+.admin-enroll-meta__id {
+  color: var(--muted) !important;
+  font-size: 0.7rem !important;
+}
+
+.admin-enroll-meta__note {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--ink-2);
+}
+
+.admin-enroll-meta__actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+}
+
+.admin-enroll-meta__actions label {
+  display: grid;
+  gap: 0.25rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.admin-enroll-meta__actions select {
+  padding: 0.45rem 0.55rem;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--ink);
+  font-size: 0.85rem;
+}
+
+@media (max-width: 560px) {
+  .admin-enroll-meta__grid,
+  .admin-enroll-meta__actions {
+    grid-template-columns: 1fr;
+  }
+}
+
+.admin-class-sched__days {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.admin-class-sched__days button {
+  min-width: 42px;
+  padding: 0.35rem 0.5rem;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  background: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.admin-class-sched__days button.is-on {
+  background: var(--red, #e8173f);
+  border-color: transparent;
+  color: #fff;
+}
+
+.admin-progress {
+  display: grid;
+  gap: 0.65rem;
+  margin-top: 0.75rem;
+  padding: 0.85rem;
+  border-radius: 12px;
+  background: var(--paper, #f7f7fa);
+  border: 1px solid var(--line);
+}
+
+.admin-progress > strong {
+  font-size: 0.85rem;
+}
+
+.admin-progress__row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: end;
+}
+
+.admin-progress__row label {
+  display: grid;
+  gap: 0.2rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.admin-progress__row input {
+  width: 88px;
+  padding: 0.4rem 0.55rem;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+}
+
+.admin-progress__hw {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 0.35rem;
+}
+
+.admin-progress__hw li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+}
+
+.admin-progress__hw small {
+  color: var(--muted);
+}
+
+.admin-progress__hw select {
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  padding: 0.25rem 0.4rem;
+}
+
+.admin-progress__add {
+  display: flex;
+  gap: 0.45rem;
+}
+
+.admin-progress__add input {
+  flex: 1;
+  padding: 0.45rem 0.65rem;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+}
+
+.admin-progress__tip {
+  display: block;
+  margin-top: 0.5rem;
+  color: var(--muted);
+  font-size: 0.75rem;
+  line-height: 1.35;
+}
+
+.admin-hw-assign {
+  display: grid;
+  gap: 0.5rem;
+  margin-top: 0.85rem;
+  padding-top: 0.85rem;
+  border-top: 0.5px solid var(--separator, var(--line));
+}
+
+.admin-hw-assign > strong {
+  font-size: 0.9rem;
+}
+
+.admin-hw-assign > p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.75rem;
+}
+
+.admin-hw-assign label {
+  display: grid;
+  gap: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.admin-hw-assign input {
+  width: 100%;
+  padding: 0.5rem 0.7rem;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  font: inherit;
+  font-weight: 500;
+  color: var(--ink);
+  background: #fff;
 }
 
 @media (min-width: 900px) {

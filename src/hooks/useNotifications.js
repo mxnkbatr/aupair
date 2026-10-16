@@ -108,6 +108,17 @@ export default function useNotifications() {
       }
     }
 
+    for (const n of data?.notifications || []) {
+      list.push({
+        id: `admin-${n.id}`,
+        title: n.title || 'Мэдэгдэл',
+        text: n.body || '',
+        at: n.createdAt,
+        kind: 'admin',
+        to: n.url || '/news',
+      })
+    }
+
     for (const e of enrollments.slice(0, 4)) {
       const status = STATUS_LABELS.enrollments[e.status] || e.status
       list.push({
@@ -117,6 +128,23 @@ export default function useNotifications() {
         at: e.updatedAt || e.createdAt,
         kind: 'enroll',
         to: '/me',
+      })
+    }
+
+    for (const g of data?.classGroups || []) {
+      const sched = g.schedule
+      if (!sched?.time || !sched.weekdays?.length) continue
+      const days = (sched.weekdays || [])
+        .map((d) => ['Ням', 'Даваа', 'Мягмар', 'Лхагва', 'Пүрэв', 'Баасан', 'Бямба'][d])
+        .join(', ')
+      const isAuPair = g.kind === 'country'
+      list.push({
+        id: `class-${g.courseId}-${sched.time}`,
+        title: isAuPair ? `${g.courseTitle} · уулзалт` : `${g.courseTitle} · хичээл`,
+        text: `${days} · ${sched.time}${sched.room ? ` · ${sched.room}` : ''}`,
+        at: g.updatedAt,
+        kind: 'class',
+        to: isAuPair ? '/countries' : '/learn?tab=schedule',
       })
     }
 

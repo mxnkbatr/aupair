@@ -19,6 +19,8 @@ import {
 } from './native'
 import { initPushNotifications, navigateFromNative } from './push'
 
+document.documentElement.setAttribute('data-theme', 'light')
+document.documentElement.style.colorScheme = 'light only'
 if (Capacitor.isNativePlatform()) document.documentElement.classList.add('is-native')
 if ('scrollRestoration' in window.history) window.history.scrollRestoration = 'manual'
 // iOS WebKit only applies :active styles when a touch listener exists
@@ -36,12 +38,12 @@ if (!Capacitor.isNativePlatform()) {
 
 function syncStatusBar() {
   if (!Capacitor.isNativePlatform()) return
-  const dark = window.matchMedia('(prefers-color-scheme: dark)').matches
   import('@capacitor/status-bar')
     .then(({ StatusBar, Style }) => {
-      StatusBar.setStyle({ style: dark ? Style.Dark : Style.Light }).catch(() => {})
+      // App is light-only
+      StatusBar.setStyle({ style: Style.Light }).catch(() => {})
       if (Capacitor.getPlatform() === 'android') {
-        StatusBar.setBackgroundColor({ color: dark ? '#000000' : '#f2f2f7' }).catch(() => {})
+        StatusBar.setBackgroundColor({ color: '#f2f2f7' }).catch(() => {})
       }
     })
     .catch(() => {})
@@ -52,7 +54,6 @@ async function bootstrapNative() {
   try {
     const { StatusBar } = await import('@capacitor/status-bar')
     syncStatusBar()
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', syncStatusBar)
     try {
       await StatusBar.setOverlaysWebView({ overlay: true })
     } catch {

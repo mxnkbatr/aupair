@@ -130,6 +130,18 @@ export const api = {
       body: JSON.stringify({ status }),
       headers: { 'x-admin-key': key },
     }),
+  adminUpdateEnrollment: (key, id, payload) =>
+    request(`/admin/enrollments/${id}/assign`, {
+      method: 'PATCH',
+      body: JSON.stringify(payload),
+      headers: { 'x-admin-key': key },
+    }),
+  adminEnrollmentProgress: (key, id, payload) =>
+    request(`/admin/enrollments/${id}/progress`, {
+      method: 'PATCH',
+      body: JSON.stringify(payload),
+      headers: { 'x-admin-key': key },
+    }),
   adminSetProgram: (key, userId, payload) =>
     request(`/admin/users/${userId}/program`, {
       method: 'PATCH',
@@ -139,6 +151,42 @@ export const api = {
   adminReviewDoc: (key, userId, docKey, payload) =>
     request(`/admin/users/${userId}/program-docs/${docKey}`, {
       method: 'PATCH',
+      body: JSON.stringify(payload),
+      headers: { 'x-admin-key': key },
+    }),
+  markHomework: (enrollmentId, hwId, status) =>
+    request(`/me/enrollments/${enrollmentId}/homework/${hwId}`, {
+      method: 'PATCH',
+      body: JSON.stringify({ status }),
+    }),
+  getClass: (courseId) => request(`/me/classes/${courseId}`),
+  getClassMessages: (courseId) => request(`/me/classes/${courseId}/messages`),
+  postClassMessage: (courseId, text) =>
+    request(`/me/classes/${courseId}/messages`, {
+      method: 'POST',
+      body: JSON.stringify({ text }),
+    }),
+  adminSetClass: (key, courseId, payload) =>
+    request(`/admin/classes/${courseId}`, {
+      method: 'PUT',
+      body: JSON.stringify(payload),
+      headers: { 'x-admin-key': key },
+    }),
+  adminNotifyClass: (key, courseId, payload = {}) =>
+    request(`/admin/classes/${courseId}/notify`, {
+      method: 'POST',
+      body: JSON.stringify(payload),
+      headers: { 'x-admin-key': key },
+    }),
+  adminClassMessage: (key, courseId, payload) =>
+    request(`/admin/classes/${courseId}/messages`, {
+      method: 'POST',
+      body: JSON.stringify(payload),
+      headers: { 'x-admin-key': key },
+    }),
+  adminAssignHomework: (key, courseId, payload) =>
+    request(`/admin/classes/${courseId}/homework`, {
+      method: 'POST',
       body: JSON.stringify(payload),
       headers: { 'x-admin-key': key },
     }),

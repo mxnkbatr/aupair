@@ -100,11 +100,19 @@ export default defineConfig({
     postcss: { plugins: [hoverOnlyOnPointer()] },
   },
   server: {
+    host: true, // 0.0.0.0 — phone/LAN can open via http://<your-ip>:5173
+    port: 5173,
+    strictPort: true,
     proxy: {
       '/api': {
-        target: 'http://localhost:3001',
+        target: 'http://127.0.0.1:3001',
         changeOrigin: true,
       },
     },
+  },
+  preview: {
+    host: true,
+    port: 4173,
+    strictPort: true,
   },
 })

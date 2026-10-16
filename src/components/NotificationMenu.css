@@ -110,8 +110,3 @@
   border-color: var(--separator);
 }
 
-@media (prefers-color-scheme: dark) {
-  .app-notif__item.is-unread {
-    background: linear-gradient(90deg, var(--brand-tint), var(--surface) 80%);
-  }
-}

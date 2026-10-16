@@ -1,7 +1,7 @@
 export const navLinks = [
   { to: '/', label: 'Нүүр' },
-  { to: '/learn', label: 'Сурах' },
-  { to: '/countries', label: 'Улсууд' },
+  { to: '/learn', label: 'Сургалт' },
+  { to: '/countries', label: 'Au Pair' },
   { to: '/me', label: 'Би' },
 ]
 
@@ -33,30 +33,30 @@ export const org = {
     {
       id: 'iapa',
       name: 'IAPA',
-      label: 'International Au Pair Association гишүүн',
-      short: 'IAPA баталгаажсан',
+      label: 'Олон улсын Au Pair холбооны гишүүн',
+      short: 'IAPA гишүүн',
     },
   ],
   values: [
     {
       id: 'integrity',
-      title: 'Шударга байдал',
-      text: 'Байршуулалт бүрд ил тод, ёс зүйтэй ажиллана.',
+      title: 'Шударга',
+      text: 'Нөхцөл ил тод. Нууц төлбөргүй.',
     },
     {
       id: 'excellence',
-      title: 'Чанар',
-      text: 'Гэр бүл болон Au Pair-д хамгийн өндөр түвшний дэмжлэг.',
+      title: 'Дэмжлэг',
+      text: 'Гэр бүл, Au Pair-д бодитоор тусална.',
     },
     {
       id: 'community',
-      title: 'Нийгэмлэг',
-      text: 'Хөтөлбөрийн дараа ч үргэлжлэх дэмжлэгийн сүлжээ.',
+      title: 'Сүлжээ',
+      text: 'Хөтөлбөрийн дараа ч холбоотой байна.',
     },
     {
       id: 'growth',
-      title: 'Хөгжил',
-      text: 'Соёл солилцоогоор хувь хүний болон мэргэжлийн өсөлт.',
+      title: 'Өсөлт',
+      text: 'Хэл, соёл, туршлага нэг дор.',
     },
   ],
   steps: [
@@ -450,6 +450,85 @@ export const countries = [
 
 export const universities = countries
 
+/** Мэдээ мэдээлэл — элсэлт, зар, агентлагийн нийтлэл */
+export const newsItems = [
+  {
+    id: 'n1',
+    title: 'Герман элсэлт нээлттэй',
+    excerpt: 'A2 · 18–26 нас. Бүртгүүлээд зөвлөгөө авна.',
+    body: [
+      'Герман Au Pair хөтөлбөрийн элсэлт нээлттэй байна. A2 түвшин, 18–26 насны шаардлагатай.',
+      'Бүртгүүлсний дараа зөвлөх тантай холбогдож, бичиг баримт, гэр бүлийн тохироог хамт ярина.',
+    ],
+    date: '2026-03-12',
+    dateLabel: '3 сарын 12',
+    tag: 'Элсэлт',
+    image:
+      'https://images.unsplash.com/photo-1467269204594-9661b134dd2b?auto=format&fit=crop&w=900&q=80',
+    cta: { to: '/countries/germany', label: 'Герман Au Pair' },
+  },
+  {
+    id: 'n2',
+    title: 'A1, A2 анги эхэлнэ',
+    excerpt: 'Улаанбаатар · суудал хязгаартай.',
+    body: [
+      'Шинэ A1, A2 герман хэлний ангиуд эхэлнэ. Хичээл Улаанбаатарт, суудал хязгаартай.',
+      'Сургалт табаас ангиа сонгоод бүртгүүлнэ үү. Админ зөвшөөрсний дараа хуваарь, чат нээгдэнэ.',
+    ],
+    date: '2026-03-05',
+    dateLabel: '3 сарын 5',
+    tag: 'Сургалт',
+    image:
+      'https://images.unsplash.com/photo-1576924542622-772281b13aa8?auto=format&fit=crop&w=900&q=80',
+    cta: { to: '/learn', label: 'Сургалт харах' },
+  },
+  {
+    id: 'n3',
+    title: 'Австри гэр бүлүүд нээлттэй',
+    excerpt: 'Герман хэлтэй орчин. Шууд бүртгүүлнэ.',
+    body: [
+      'Австри дахь зочин гэр бүлүүд нээлттэй. Герман хэлтэй орчин, соёл солилцооны хөтөлбөр.',
+      'Au Pair табаас Австри сонгоод бүртгүүлнэ. Зөвшөөрөгдсөний дараа үйл явц, материал энд харагдана.',
+    ],
+    date: '2026-02-28',
+    dateLabel: '2 сарын 28',
+    tag: 'Au Pair',
+    image:
+      'https://images.unsplash.com/photo-1609856878074-cf31e21ccb6b?auto=format&fit=crop&w=900&q=80',
+    cta: { to: '/countries/austria', label: 'Австри Au Pair' },
+  },
+  {
+    id: 'n4',
+    title: 'IAPA гишүүн агентлаг',
+    excerpt: 'Олон улсын стандарт, бодит дэмжлэг.',
+    body: [
+      'Mongolian Au Pair нь IAPA (International Au Pair Association) гишүүн агентлаг.',
+      'Олон улсын стандарт, гэр бүлийн шалгалт, виз, хэлний бэлтгэл — бүх алхамд дэмжлэг үзүүлнэ.',
+    ],
+    date: '2026-02-18',
+    dateLabel: '2 сарын 18',
+    tag: 'Байгууллага',
+    image:
+      'https://images.unsplash.com/photo-1515488764276-beab7607c1e6?auto=format&fit=crop&w=900&q=80',
+    cta: { to: '/about', label: 'Бидний тухай' },
+  },
+  {
+    id: 'n5',
+    title: 'Үнэгүй чеклист',
+    excerpt: 'Паспорт, анкет, эрүүл мэнд — жагсаалт.',
+    body: [
+      'Au Pair бүртгэлийн үнэгүй чеклист: паспорт, анкет, эрүүл мэнд, лавлагаа гэх мэт.',
+      'Дэлгүүрээс татаж аваад алхам алхмаар бүрдүүлнэ.',
+    ],
+    date: '2026-02-10',
+    dateLabel: '2 сарын 10',
+    tag: 'Зөвлөгөө',
+    image:
+      'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=900&q=80',
+    cta: { to: '/shop/p3', label: 'Чеклист авах' },
+  },
+]
+
 export const videos = [
   {
     id: 'r1',
@@ -492,30 +571,36 @@ export const videos = [
 export const products = [
   {
     id: 'p1',
-    name: 'Герман хэлний анхан шатны ном',
+    name: 'A1 ном',
     price: 'Зөвлөгөө',
     tag: 'Хэл',
-    blurb: 'Au Pair бэлтгэл',
+    blurb: 'Анхан шат · Au Pair',
     description: 'Герман Au Pair-т зориулсан анхан шатны материал.',
     points: ['A1 үгс', 'Гэр бүлийн яриа', 'Практик'],
+    image:
+      'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=900&q=80',
   },
   {
     id: 'p2',
-    name: 'Герман хэлний A2 ном',
+    name: 'A2 ном',
     price: 'Зөвлөгөө',
     tag: 'Хэл',
     blurb: 'Goethe A2 бэлтгэл',
     description: 'Герман хэлний A2 түвшний сурах бичиг, дасгал.',
     points: ['A2 үгс', 'Дүрэм', 'Шалгалтын дасгал'],
+    image:
+      'https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=900&q=80',
   },
   {
     id: 'p3',
-    name: 'Бичиг баримтын чеклист',
+    name: 'Чеклист',
     price: 'Үнэгүй',
     tag: 'Виза',
-    blurb: 'Элсэлтийн жагсаалт',
+    blurb: 'Бичиг баримтын жагсаалт',
     description: 'Паспорт, анкет, эрүүл мэнд — Au Pair бүртгэлийн чеклист.',
     points: ['Виза', 'Гэр бүл', 'Хэлний үнэмлэх'],
+    image:
+      'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=900&q=80',
   },
 ]
 

@@ -1,76 +1,66 @@
-import { createPortal } from 'react-dom'
+import { Drawer } from 'vaul'
 import { Link } from 'react-router-dom'
 import {
-  Bell,
-  Globe,
-  Phone,
+  Info,
+  Newspaper,
   Question,
-  ShieldCheck,
-  SignIn,
+  Storefront,
   X,
 } from '@phosphor-icons/react'
-import { useAuth } from '../auth'
-import { org, social } from '../data'
+import { org } from '../data'
 import { haptic } from '../native'
 import './AppDrawer.css'
 
+const ITEMS = [
+  { to: '/news', icon: Newspaper, label: 'Мэдээ' },
+  { to: '/shop', icon: Storefront, label: 'Дэлгүүр' },
+  { to: '/about', icon: Info, label: 'Бидний тухай' },
+  { to: '/me/help', icon: Question, label: 'Холбоо барих' },
+]
+
 export default function AppDrawer({ open, onClose }) {
-  const { user } = useAuth()
-  if (!open) return null
+  function close() {
+    haptic('light')
+    onClose()
+  }
 
-  return createPortal(
-    <div className="app-drawer" role="dialog" aria-label="Цэс">
-      <button type="button" className="app-drawer__backdrop" aria-label="Хаах" onClick={onClose} />
-      <aside className="app-drawer__panel">
-        <div className="app-drawer__top">
-          <div className="app-drawer__brand">
-            <img src="/logo.png" alt="" width={36} height={36} />
+  return (
+    <Drawer.Root
+      open={Boolean(open)}
+      onOpenChange={(next) => {
+        if (!next) onClose?.()
+      }}
+      shouldScaleBackground={false}
+    >
+      <Drawer.Portal>
+        <Drawer.Overlay className="app-drawer__backdrop" />
+        <Drawer.Content className="app-drawer__panel" aria-describedby={undefined}>
+          <div className="app-drawer__grab" aria-hidden />
+
+          <header className="app-drawer__head">
             <div>
-              <strong>{org.name}</strong>
-              <span>{org.tagline}</span>
+              <p className="app-drawer__brand">{org.shortName || 'Au Pair'}</p>
+              <Drawer.Title asChild>
+                <h2>Бусад хэсгүүд</h2>
+              </Drawer.Title>
             </div>
-          </div>
-          <button
-            type="button"
-            className="app-drawer__close"
-            aria-label="Хаах"
-            onClick={() => {
-              haptic('light')
-              onClose()
-            }}
-          >
-            <X size={18} weight="bold" aria-hidden />
-          </button>
-        </div>
+            <button type="button" className="app-drawer__x" aria-label="Хаах" onClick={close}>
+              <X size={16} weight="bold" aria-hidden />
+            </button>
+          </header>
 
-        <nav className="app-drawer__nav">
-          <Link to="/me" onClick={onClose}>
-            <SignIn size={20} weight="duotone" aria-hidden />
-            {user ? 'Миний профайл' : 'Нэвтрэх / Бүртгэл'}
-          </Link>
-          <Link to="/me/help" onClick={onClose}>
-            <Question size={20} weight="duotone" aria-hidden />
-            Тусламж ба холбоо
-          </Link>
-          <Link to="/countries" onClick={onClose}>
-            <Globe size={20} weight="duotone" aria-hidden />
-            Au Pair улсууд
-          </Link>
-          <Link to="/privacy" onClick={onClose}>
-            <ShieldCheck size={20} weight="duotone" aria-hidden />
-            Нууцлалын бодлого
-          </Link>
-          <a href={`tel:${social.phoneTel}`} onClick={onClose}>
-            <Phone size={20} weight="duotone" aria-hidden />
-            {social.phone}
-          </a>
-          <a href={org.website} target="_blank" rel="noreferrer" onClick={onClose}>
-            <Bell size={20} weight="duotone" aria-hidden />
-            mongolianaupair.com
-          </a>
-        </nav>
-      </aside>
-    </div>,
-    document.body,
+          <nav className="app-drawer__grid" aria-label="Бусад хэсгүүд">
+            {ITEMS.map(({ to, icon: Icon, label }) => (
+              <Link key={to} to={to} className="app-drawer__tile" onClick={close}>
+                <span className="app-drawer__glyph">
+                  <Icon size={20} weight="fill" aria-hidden />
+                </span>
+                <strong>{label}</strong>
+              </Link>
+            ))}
+          </nav>
+        </Drawer.Content>
+      </Drawer.Portal>
+    </Drawer.Root>
   )
 }

@@ -17,7 +17,7 @@ import { Capacitor } from '@capacitor/core'
 import AppHeader from './components/AppHeader'
 import NavBar from './components/NavBar'
 import NotificationMenu from './components/NotificationMenu'
-import TabBar, { TAB_PATHS } from './components/TabBar'
+import TabBar, { TAB_PATHS, isDockRoute } from './components/TabBar'
 import Footer from './components/Footer'
 import OfflineBanner from './components/OfflineBanner'
 import Onboarding from './components/Onboarding'
@@ -37,6 +37,10 @@ import Program from './pages/Program'
 import Contact from './pages/Contact'
 import Privacy from './pages/Privacy'
 import Admin from './pages/Admin'
+import Shop from './pages/Shop'
+import About from './pages/About'
+import News from './pages/News'
+import NewsDetail from './pages/NewsDetail'
 import { AuthProvider, useAuth } from './auth'
 import './theme.css'
 
@@ -48,9 +52,9 @@ function getRouteMeta(pathname) {
     case '/':
       return { root: true, title: 'Нүүр' }
     case '/learn':
-      return { root: true, title: 'Сурах' }
+      return { root: true, title: 'Сургалт' }
     case '/countries':
-      return { root: true, title: 'Улсууд' }
+      return { root: true, title: 'Au Pair' }
     case '/me':
       return { root: true, title: 'Би' }
     case '/me/help':
@@ -59,30 +63,42 @@ function getRouteMeta(pathname) {
       return { title: 'Миний аялал', backLabel: 'Би', parent: '/me' }
     case '/privacy':
       return { title: 'Нууцлал', backLabel: 'Би', parent: '/me' }
+    case '/shop':
+      return { root: true, title: 'Дэлгүүр' }
+    case '/about':
+      return { title: 'Бидний тухай', backLabel: 'Нүүр', parent: '/' }
+    case '/news':
+      return { root: true, title: 'Мэдээ' }
     case '/admin':
       return { title: 'Админ', backLabel: 'Нүүр', parent: '/' }
     default:
   }
   if (pathname.startsWith('/learn/course/') || pathname.startsWith('/courses/')) {
-    return { title: 'Хөтөлбөр', backLabel: 'Сурах', parent: '/learn', transparent: true }
+    return { title: 'Хөтөлбөр', backLabel: 'Сургалт', parent: '/learn', transparent: true }
   }
-  if (pathname.startsWith('/learn/item/') || pathname.startsWith('/shop/')) {
-    return { title: 'Материал', backLabel: 'Сурах', parent: '/learn' }
+  if (pathname.startsWith('/news/')) {
+    return { title: 'Мэдээ', backLabel: 'Мэдээ', parent: '/news', transparent: true }
+  }
+  if (pathname.startsWith('/learn/item/')) {
+    return { title: 'Бараа', backLabel: 'Дэлгүүр', parent: '/shop', transparent: true }
+  }
+  if (pathname.startsWith('/shop/')) {
+    return { title: 'Бараа', backLabel: 'Дэлгүүр', parent: '/shop', transparent: true }
   }
   if (pathname.startsWith('/countries/') || pathname.startsWith('/universities/')) {
-    return { title: 'Улс', backLabel: 'Улсууд', parent: '/countries' }
+    return { title: 'Au Pair', backLabel: 'Au Pair', parent: '/countries' }
   }
   // Legacy tab roots while <Navigate> redirects
-  if (pathname === '/courses' || pathname === '/shop') return { root: true, title: 'Сурах' }
-  if (pathname === '/universities') return { root: true, title: 'Улсууд' }
-  if (pathname === '/profile' || pathname === '/stories' || pathname === '/videos') {
+  if (pathname === '/courses' || pathname === '/shop') return { root: true, title: 'Сургалт' }
+  if (pathname === '/universities') return { root: true, title: 'Au Pair' }
+  if (pathname === '/profile') {
     return { root: true, title: 'Би' }
   }
   if (pathname === '/contact') return { title: 'Тусламж', backLabel: 'Би', parent: '/me' }
   return { title: 'Олдсонгүй', backLabel: 'Нүүр', parent: '/' }
 }
 
-const REFRESH_PATHS = ['/', '/learn', '/countries']
+const REFRESH_PATHS = ['/', '/news', '/learn', '/countries', '/shop']
 
 /** Old URLs keep working: /courses/:id → /learn/course/:id etc. */
 function RedirectWithParams({ to }) {
@@ -99,7 +115,7 @@ const canViewTransition = () =>
   !window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
 /**
- * Slide forward/back like a native stack; tab switches fade and keep their scroll.
+ * Slide forward/back like a native stack; tab switches crossfade and keep scroll.
  * The rendered location lags the URL until the view transition has captured the old page.
  */
 function usePageTransition() {
@@ -119,7 +135,7 @@ function usePageTransition() {
       setShown({ location, dir: 'back', instant: true })
       return
     }
-    const tabSwitch = TAB_PATHS.includes(prev.pathname) && TAB_PATHS.includes(location.pathname)
+    const tabSwitch = isDockRoute(prev.pathname) && isDockRoute(location.pathname)
     const dir = tabSwitch ? 'fade' : navType === 'POP' ? 'back' : 'forward'
 
     if (!canViewTransition()) {
@@ -171,17 +187,20 @@ function AppRoutes({ location }) {
       <Route path="/me/program" element={<Program />} />
       <Route path="/me/help" element={<Contact />} />
       <Route path="/privacy" element={<Privacy />} />
+      <Route path="/shop" element={<Shop />} />
+      <Route path="/shop/:id" element={<ProductDetail />} />
+      <Route path="/about" element={<About />} />
+      <Route path="/news" element={<News />} />
+      <Route path="/news/:id" element={<NewsDetail />} />
       <Route path="/admin" element={<Admin />} />
+      <Route path="/stories" element={<Navigate to="/news" replace />} />
 
       {/* Legacy URLs */}
       <Route path="/courses" element={<Navigate to="/learn" replace />} />
       <Route path="/courses/:id" element={<RedirectWithParams to="/learn/course/:id" />} />
-      <Route path="/shop" element={<Navigate to="/learn?tab=materials" replace />} />
-      <Route path="/shop/:id" element={<RedirectWithParams to="/learn/item/:id" />} />
       <Route path="/universities" element={<Navigate to="/countries" replace />} />
       <Route path="/universities/:id" element={<RedirectWithParams to="/countries/:id" />} />
-      <Route path="/videos" element={<Navigate to="/" replace />} />
-      <Route path="/stories" element={<Navigate to="/" replace />} />
+      <Route path="/videos" element={<Navigate to="/news" replace />} />
       <Route path="/profile" element={<Navigate to="/me" replace />} />
       <Route path="/contact" element={<Navigate to="/me/help" replace />} />
 
@@ -213,7 +232,7 @@ function AppFrame() {
   const [underlay, setUnderlay] = useState(null)
 
   useSwipeBack({
-    enabled: SWIPE_BACK && !TAB_PATHS.includes(pathname),
+    enabled: SWIPE_BACK && !isDockRoute(pathname),
     canStart: () => Boolean(getBack()),
     pageRef,
     underRef,
@@ -252,7 +271,7 @@ function AppFrame() {
 
   const meta = getRouteMeta(pathname)
   const isHome = pathname === '/'
-  const isPush = !TAB_PATHS.includes(pathname)
+  const isPush = !isDockRoute(pathname)
   const flushNav = Boolean(meta.transparent)
   const barTitle = meta.title
 

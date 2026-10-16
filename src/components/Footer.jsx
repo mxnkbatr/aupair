@@ -23,9 +23,9 @@ export default function Footer() {
         <div>
           <h4>Цэс</h4>
           <div className="site-footer__links">
-            <Link to="/learn">Сурах</Link>
-            <Link to="/countries">Улсууд</Link>
-            <Link to="/learn?tab=materials">Материал</Link>
+            <Link to="/learn">Сургалт</Link>
+            <Link to="/countries">Au Pair</Link>
+            <Link to="/news">Мэдээ</Link>
             <Link to="/me/help">Холбоо барих</Link>
             <Link to="/privacy">Нууцлалын бодлого</Link>
             <a href={org.website} target="_blank" rel="noreferrer">

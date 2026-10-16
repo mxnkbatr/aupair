@@ -27,46 +27,25 @@
 .navbar__bg {
   position: absolute;
   inset: 0;
-  background: rgba(255, 255, 255, 0.94);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  background: var(--surface);
+  border-bottom: 0.5px solid transparent;
   pointer-events: none;
-  transition: box-shadow 0.24s ease, background 0.24s ease;
+  transition: box-shadow 0.24s ease, background 0.24s ease, border-color 0.24s ease;
 }
 
 .navbar--search .navbar__bg {
-  background: #fff;
-  border-radius: 0 0 22px 22px;
+  border-radius: 0 0 18px 18px;
   box-shadow: none;
-  border-bottom: 0.5px solid transparent;
 }
 
-.navbar--search.is-scrolled .navbar__bg {
-  background: #fff;
-  border-bottom-color: rgba(0, 0, 0, 0.06);
-  box-shadow: 0 8px 24px rgba(16, 16, 24, 0.08);
+.navbar--search.is-scrolled .navbar__bg,
+.navbar.is-scrolled:not(.navbar--transparent) .navbar__bg {
+  border-bottom-color: var(--separator);
+  box-shadow: var(--e1);
 }
 
 .navbar--search:not(.navbar--transparent) .navbar__bg {
   opacity: 1 !important;
-}
-
-@media (prefers-color-scheme: dark) {
-  .navbar__bg {
-    background: rgba(22, 22, 26, 0.94);
-  }
-
-  .navbar--search .navbar__bg {
-    background: #16161a;
-    box-shadow: none;
-    border-bottom-color: transparent;
-  }
-
-  .navbar--search.is-scrolled .navbar__bg {
-    background: #16161a;
-    border-bottom-color: rgba(255, 255, 255, 0.08);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
-  }
 }
 
 .navbar__shell {
@@ -104,16 +83,9 @@
   height: 40px;
   padding: 0 14px;
   border-radius: 999px;
-  background: var(--surface-2);
-  border: 1px solid rgba(0, 0, 0, 0.08);
+  background: var(--fill-tertiary, var(--surface-2));
+  border: 0.5px solid transparent;
   color: var(--label-2);
-}
-
-@media (prefers-color-scheme: dark) {
-  .navbar__search {
-    background: var(--surface-2);
-    border-color: rgba(255, 255, 255, 0.12);
-  }
 }
 
 .navbar__search svg {
@@ -178,6 +150,25 @@
 .navbar__avatar svg {
   width: 22px;
   height: 22px;
+}
+
+.navbar__menu {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--label);
+  cursor: pointer;
+}
+
+.navbar__menu:active {
+  transform: scale(0.95);
+  opacity: 0.7;
 }
 
 .navbar__row {

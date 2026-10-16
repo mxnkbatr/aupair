@@ -1,17 +1,27 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { motion, useReducedMotion } from 'motion/react'
-import { CaretRight, MagnifyingGlass, X } from '@phosphor-icons/react'
+import {
+  ArrowRight,
+  CaretRight,
+  CheckCircle,
+  MagnifyingGlass,
+  SealCheck,
+  X,
+} from '@phosphor-icons/react'
 import { countries } from '../data'
+import MyAuPairPanel from '../components/MyAuPairPanel'
 import Pressable from '../components/Pressable'
+import { useAuth } from '../auth'
+import useMyData from '../hooks/useMyData'
 import { haptic } from '../native'
 import './Universities.css'
 
 const FILTERS = [
   { id: 'all', label: 'Бүгд' },
-  { id: 'german', label: 'Герман хэлтэй' },
-  { id: 'french', label: 'Франц хэлтэй' },
-  { id: 'north', label: 'Англи хэлтэй' },
+  { id: 'german', label: 'Герман хэл' },
+  { id: 'french', label: 'Франц хэл' },
+  { id: 'north', label: 'Англи хэл' },
 ]
 
 const FLAGS = {
@@ -35,20 +45,24 @@ function matchesQuery(country, q) {
   return hay.includes(q)
 }
 
-function pillsFor(uni) {
-  const out = []
-  if (uni.duration) out.push(uni.duration.includes('12') ? '1 жил' : uni.duration)
-  if (uni.badge) out.push(uni.badge)
-  else if (uni.open) out.push('Нээлттэй')
-  return out.slice(0, 2)
-}
-
 export default function Universities() {
+  const { user } = useAuth()
+  const myData = useMyData()
   const [filter, setFilter] = useState('all')
   const [query, setQuery] = useState('')
   const [searching, setSearching] = useState(false)
   const inputRef = useRef(null)
   const reduce = useReducedMotion()
+
+  const countryAccepted = useMemo(
+    () =>
+      (myData?.enrollments || []).some(
+        (e) => e.kind === 'country' && e.status === 'accepted',
+      ),
+    [myData?.enrollments],
+  )
+  // Зөвхөн нэвтэрсэн + админ улс зөвшөөрсөн / хөтөлбөрт оруулсан үед
+  const isEnrolled = Boolean(user) && (Boolean(user.inProgram) || countryAccepted)
 
   useEffect(() => {
     function onToggle() {
@@ -91,14 +105,52 @@ export default function Universities() {
   )
   const showFeatured = featured && filter === 'all' && !q
   const rows = showFeatured ? list.filter((u) => u.id !== featured.id) : list
+  const openCount = countries.filter((c) => c.open !== false).length
+
+  // Элссэн: зөвхөн үйл явц + бүрдүүлэх материал (улсын жагсаалт нуугдана)
+  if (isEnrolled) {
+    return (
+      <div className="uni-page">
+        <div className="container">
+          <MyAuPairPanel user={user} standalone />
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="uni-page">
       <div className="container">
         <header className="uni-head">
-          <h1>Улсууд</h1>
-          <p>Au Pair хийх Европын 7 улс</p>
+          <p className="uni-head__kicker">Албан ёсны хөтөлбөр · IAPA</p>
+          <h1>Au Pair</h1>
+          <p>
+            Доорх улсаас сонгоод бүртгүүлнэ — гэр бүл, виза, хэлний бэлтгэлийг бид хамт хийнэ.
+          </p>
         </header>
+
+        <div className="uni-howto" aria-label="Яаж бүртгүүлэх вэ">
+          <div>
+            <i>1</i>
+            <span>Улс сонгох</span>
+          </div>
+          <div>
+            <i>2</i>
+            <span>Шаардлага харах</span>
+          </div>
+          <div>
+            <i>3</i>
+            <span>Бүртгүүлэх</span>
+          </div>
+        </div>
+
+        <div className="uni-banner">
+          <SealCheck weight="fill" size={22} aria-hidden />
+          <div>
+            <strong>{openCount} улсад элсэлт нээлттэй</strong>
+            <small>Улс руу ороод шаардлагаа үзээд шууд бүртгүүлнэ</small>
+          </div>
+        </div>
 
         {searching ? (
           <div className="uni-search">
@@ -127,20 +179,27 @@ export default function Universities() {
           </div>
         ) : null}
 
-        <div className="uni-chips" role="tablist" aria-label="Хэлний шүүлтүүр">
+        <div className="uni-seg" role="tablist" aria-label="Хэлний шүүлтүүр">
           {FILTERS.map((f) => (
             <button
               key={f.id}
               type="button"
               role="tab"
               aria-selected={filter === f.id}
-              className={filter === f.id ? 'uni-chip is-active' : 'uni-chip'}
+              className={filter === f.id ? 'is-active' : ''}
               onClick={() => {
                 haptic('selection')
                 setFilter(f.id)
               }}
             >
-              {f.label}
+              {filter === f.id ? (
+                <motion.i
+                  layoutId="uni-seg"
+                  className="uni-seg__pill"
+                  transition={{ type: 'spring', stiffness: 520, damping: 40 }}
+                />
+              ) : null}
+              <span>{f.label}</span>
             </button>
           ))}
         </div>
@@ -162,61 +221,75 @@ export default function Universities() {
               }}
             />
             <span className="uni-featured__shade" aria-hidden />
-            <em className="uni-featured__badge">Эрэлттэй</em>
+            <em className="uni-featured__badge">Бүртгэл нээлттэй</em>
             <span className="uni-featured__body">
               <strong>
-                {FLAGS[featured.id]} {featured.nameMn}
+                {FLAGS[featured.id]} {featured.nameMn} Au Pair
               </strong>
               <small>
-                {featured.city} · {featured.language}
+                {featured.hsk} · {featured.duration} · {featured.city}
               </small>
+              <span className="uni-featured__cta">
+                Сонгоод бүртгүүлэх <ArrowRight weight="bold" size={14} aria-hidden />
+              </span>
             </span>
           </Pressable>
         ) : null}
 
+        <h2 className="uni-section-title">Улс сонгох</h2>
+
         <ul className="uni-list">
-          {rows.map((uni) => (
-            <li key={uni.id}>
-              <Pressable
-                as={Link}
-                to={`/countries/${uni.id}`}
-                className="uni-row"
-                scale={0.97}
-                aria-label={`${uni.nameMn} — ${uni.city}`}
-              >
-                <motion.img
-                  className="uni-row__photo"
-                  layoutId={reduce ? undefined : `country-img-${uni.id}`}
-                  src={uni.image}
-                  alt=""
-                  loading="lazy"
-                  transition={{ type: 'spring', stiffness: 380, damping: 38 }}
-                  onError={(e) => {
-                    e.currentTarget.src = '/cover.jpg'
-                  }}
-                />
-                <div className="uni-row__body">
-                  <strong>
-                    {FLAGS[uni.id] || ''} {uni.nameMn}
-                  </strong>
-                  <span>
-                    {uni.city} · {uni.language}
-                  </span>
-                  <div className="uni-row__pills">
-                    {pillsFor(uni).map((p) => (
-                      <em key={p}>{p}</em>
-                    ))}
+          {rows.map((uni) => {
+            const open = uni.open !== false
+            const reqPreview = (uni.requirements || []).slice(0, 2)
+            return (
+              <li key={uni.id}>
+                <Pressable
+                  as={Link}
+                  to={`/countries/${uni.id}`}
+                  className="uni-row"
+                  scale={0.97}
+                  aria-label={`${uni.nameMn} Au Pair — бүртгүүлэх`}
+                >
+                  <motion.img
+                    className="uni-row__photo"
+                    layoutId={reduce ? undefined : `country-img-${uni.id}`}
+                    src={uni.image}
+                    alt=""
+                    loading="lazy"
+                    transition={{ type: 'spring', stiffness: 380, damping: 38 }}
+                    onError={(e) => {
+                      e.currentTarget.src = '/cover.jpg'
+                    }}
+                  />
+                  <div className="uni-row__body">
+                    <strong>
+                      {FLAGS[uni.id] || ''} {uni.nameMn}
+                    </strong>
+                    <span>
+                      {uni.language} · {uni.duration}
+                    </span>
+                    <div className="uni-row__pills">
+                      <em className={open ? 'is-open' : ''}>{open ? 'Бүртгэл нээлттэй' : 'Урьдчилсан'}</em>
+                      {uni.hsk ? <em>{uni.hsk}</em> : null}
+                    </div>
+                    {reqPreview.length > 0 ? (
+                      <small className="uni-row__reqs">
+                        <CheckCircle size={12} weight="fill" aria-hidden />
+                        {reqPreview.join(' · ')}
+                      </small>
+                    ) : null}
                   </div>
-                </div>
-                <CaretRight className="uni-row__chev" size={18} weight="bold" aria-hidden />
-              </Pressable>
-            </li>
-          ))}
+                  <CaretRight className="uni-row__chev" size={18} weight="bold" aria-hidden />
+                </Pressable>
+              </li>
+            )
+          })}
         </ul>
 
         {list.length === 0 ? (
           <div className="uni-empty">
-            <p>🌍 Улс олдсонгүй</p>
+            <p>Улс олдсонгүй</p>
             <button
               type="button"
               className="btn btn-primary"

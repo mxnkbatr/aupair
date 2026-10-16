@@ -17,14 +17,14 @@ export default function ProductDetail() {
 
   if (!product) {
     return (
-      <div className="container fade-up" style={{ padding: '2rem 0' }}>
-        <h1>Олдсонгүй</h1>
-        <p style={{ color: 'var(--muted)', marginTop: '0.5rem' }}>
-          Бүтээгдэхүүн олдсонгүй
-        </p>
-        <Link to="/learn?tab=materials" className="btn btn-primary" style={{ marginTop: '1rem' }}>
-          Материал руу
-        </Link>
+      <div className="pd">
+        <div className="container pd-miss">
+          <h1>Олдсонгүй</h1>
+          <p>Бараа олдсонгүй</p>
+          <Link to="/shop" className="btn btn-primary">
+            Дэлгүүр рүү
+          </Link>
+        </div>
       </div>
     )
   }
@@ -49,40 +49,47 @@ export default function ProductDetail() {
   }
 
   return (
-    <div className="pd fade-up">
-      <div className="container">
-        <section className="pd-hero">
-          <div className="pd-hero__visual" aria-hidden>
-            <span>{product.tag}</span>
-            <strong>{product.tag || 'AP'}</strong>
-          </div>
-          <div className="pd-hero__meta">
-            <span className="pd-hero__tag">{product.tag}</span>
-            <h1>{product.name}</h1>
-            <p>{product.blurb}</p>
-          </div>
-        </section>
+    <div className="pd">
+      <div className="pd-cover">
+        <img
+          src={product.image || '/cover.jpg'}
+          alt=""
+          onError={(e) => {
+            e.currentTarget.src = '/cover.jpg'
+          }}
+        />
+        <span className="pd-cover__tag">{product.tag}</span>
+      </div>
+
+      <div className="container pd-main">
+        <header className="pd-meta">
+          <h1>{product.name}</h1>
+          <p>{product.blurb}</p>
+          <strong className="pd-meta__price">{product.price}</strong>
+        </header>
 
         <section className="pd-block">
           <h2>Танилцуулга</h2>
           <p>{product.description}</p>
         </section>
 
-        <section className="pd-block">
-          <h2>Онцлог</h2>
-          <ul className="pd-list">
-            {(product.points || []).map((point, i) => (
-              <li key={point}>
-                <span>{i + 1}</span>
-                {point}
-              </li>
-            ))}
-          </ul>
-        </section>
+        {(product.points || []).length > 0 ? (
+          <section className="pd-block">
+            <h2>Онцлог</h2>
+            <ul className="pd-list">
+              {(product.points || []).map((point, i) => (
+                <li key={point}>
+                  <span>{i + 1}</span>
+                  {point}
+                </li>
+              ))}
+            </ul>
+          </section>
+        ) : null}
 
         <section className="pd-note">
-          <strong>Захиалга</strong>
-          <p>Захиалга бүртгэгдэж, бид утсаар холбогдоно.</p>
+          <strong>Худалдан авах</strong>
+          <p>Захиалга бүртгэгдэж, бид утсаар холбогдож баталгаажуулна.</p>
         </section>
       </div>
 
@@ -92,11 +99,11 @@ export default function ProductDetail() {
           <strong>{product.price}</strong>
         </div>
         <button type="button" className="btn btn-primary pd-bar__cta" onClick={() => setOpen(true)}>
-          Захиалах
+          Худалдан авах
         </button>
       </div>
 
-      <Sheet open={open} onClose={() => setOpen(false)} title="Захиалах">
+      <Sheet open={open} onClose={() => setOpen(false)} title="Худалдан авах">
         <form className="pd-form" onSubmit={order}>
           <div className="pd-form__item">
             <span>{product.name}</span>
@@ -121,12 +128,10 @@ export default function ProductDetail() {
             />
           </label>
           {status && (
-            <div className={`alert ${status.ok ? 'alert-ok' : 'alert-err'}`}>
-              {status.text}
-            </div>
+            <div className={`alert ${status.ok ? 'alert-ok' : 'alert-err'}`}>{status.text}</div>
           )}
           <button type="submit" className="btn btn-primary btn-block" disabled={loading}>
-            {loading ? 'Илгээж байна...' : 'Захиалга илгээх'}
+            {loading ? 'Илгээж байна...' : 'Худалдан авах'}
           </button>
           <a
             className="btn btn-ghost btn-block"

@@ -236,12 +236,12 @@ export function dismissTopOverlay() {
 
   const onb = document.querySelector('.onb')
   if (onb) {
-    const back = onb.querySelector('.onb__back')
+    const back = onb.querySelector('.onb__icon-btn[aria-label="Буцах"]')
     if (back) {
       back.click()
       return true
     }
-    const skip = onb.querySelector('.onb__skip')
+    const skip = onb.querySelector('button.onb__skip')
     if (skip) {
       skip.click()
       return true

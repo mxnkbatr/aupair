@@ -452,8 +452,8 @@ p {
 /* Page transitions: opacity + `left` only, so fixed bottom bars inside pages stay anchored. */
 .page {
   position: relative;
-  animation-duration: 0.34s;
-  animation-timing-function: var(--ease-out);
+  animation-duration: 0.38s;
+  animation-timing-function: cubic-bezier(0.32, 0.72, 0, 1);
   animation-fill-mode: backwards;
 }
 
@@ -467,13 +467,13 @@ p {
 
 .page--fade {
   animation-name: pageFade;
-  animation-duration: 0.22s;
+  animation-duration: 0.28s;
 }
 
 @keyframes pageForward {
   from {
     opacity: 0;
-    left: 36px;
+    left: 28px;
   }
   to {
     opacity: 1;
@@ -484,7 +484,7 @@ p {
 @keyframes pageBack {
   from {
     opacity: 0;
-    left: -36px;
+    left: -28px;
   }
   to {
     opacity: 1;
@@ -523,7 +523,7 @@ p {
 ::view-transition-old(root),
 ::view-transition-new(root) {
   mix-blend-mode: normal;
-  animation-duration: 0.46s;
+  animation-duration: 0.42s;
   animation-timing-function: cubic-bezier(0.32, 0.72, 0, 1);
   animation-fill-mode: both;
 }
@@ -534,31 +534,37 @@ html[data-nav='forward']::view-transition-old(root) {
 
 html[data-nav='forward']::view-transition-new(root) {
   animation-name: vtPushNew;
-  box-shadow: -10px 0 30px rgba(17, 17, 20, 0.14);
+  box-shadow: -8px 0 24px rgba(17, 17, 20, 0.12);
 }
 
 html[data-nav='back']::view-transition-old(root) {
   z-index: 1;
   animation-name: vtPopOld;
-  box-shadow: -10px 0 30px rgba(17, 17, 20, 0.14);
+  box-shadow: -8px 0 24px rgba(17, 17, 20, 0.12);
 }
 
 html[data-nav='back']::view-transition-new(root) {
   animation-name: vtPopNew;
 }
 
+html[data-nav='fade']::view-transition-old(root),
+html[data-nav='fade']::view-transition-new(root) {
+  animation-duration: 0.28s;
+  animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
 html[data-nav='fade']::view-transition-old(root) {
-  animation: vtFadeOut 0.18s ease both;
+  animation-name: vtFadeOut;
 }
 
 html[data-nav='fade']::view-transition-new(root) {
-  animation: vtFadeIn 0.22s ease both;
+  animation-name: vtFadeIn;
 }
 
 @keyframes vtPushOld {
   to {
-    transform: translateX(-30%);
-    filter: brightness(0.9);
+    transform: translateX(-22%);
+    filter: brightness(0.92);
   }
 }
 
@@ -576,8 +582,8 @@ html[data-nav='fade']::view-transition-new(root) {
 
 @keyframes vtPopNew {
   from {
-    transform: translateX(-30%);
-    filter: brightness(0.9);
+    transform: translateX(-22%);
+    filter: brightness(0.92);
   }
 }
 
