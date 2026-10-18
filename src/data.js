@@ -1,30 +1,118 @@
 export const navLinks = [
   { to: '/', label: 'Нүүр' },
-  { to: '/learn', label: 'Сурах' },
-  { to: '/countries', label: 'Улсууд' },
+  { to: '/learn', label: 'Сургалт' },
+  { to: '/countries', label: 'Au Pair' },
   { to: '/me', label: 'Би' },
 ]
+
+/**
+ * Official agency profile — sourced from mongolianaupair.com
+ * Use `org` for branding copy; `social` keeps phone/email/links for existing call sites.
+ */
+export const org = {
+  name: 'Mongolian Au Pair',
+  legalName: 'Mongolian Au Pair Agency',
+  shortName: 'Au Pair',
+  tagline: 'Европ руу хаалга · 2005 оноос хойш соёлын солилцоо',
+  taglineEn: 'Gateway to Europe | Cultural Exchange Since 2005',
+  about:
+    'Монгол залууст Европын орнуудад амьдрангаа хэл сурч, дэлхийн соёлтой танилцах шилдэг боломжийг олгодог албан ёсны Au Pair агентлаг. Сүүлийн 20 жилийн турш 3,000 гаруй залуусыг хөгжлийн замд нь хөтөлсөн.',
+  aboutShort:
+    '2005 оноос хойш Монгол залууст Европын Au Pair хөтөлбөр, хэлний бэлтгэл, визний зөвлөгөөг нэг дороос үзүүлдэг.',
+  story:
+    'Герман улсын Au Pair хөтөлбөрт хамрагдсан үүсгэн байгуулагчийн туршлагаас эхэлсэн. Бидний түүх зүгээр нэг бизнес биш — боломжийн тухай түүх юм.',
+  founderQuote: 'Туршлага бол ирээдүйг харах хамгийн тод дуран юм.',
+  founderTitle: 'Үүсгэн байгуулагч',
+  website: 'https://mongolianaupair.com/',
+  since: '2005',
+  years: '20+',
+  placed: '3,000+',
+  partnerCountries: '55',
+  reliability: 'IAPA',
+  certifications: [
+    {
+      id: 'iapa',
+      name: 'IAPA',
+      label: 'Олон улсын Au Pair холбооны гишүүн',
+      short: 'IAPA гишүүн',
+    },
+  ],
+  values: [
+    {
+      id: 'integrity',
+      title: 'Шударга',
+      text: 'Нөхцөл ил тод. Нууц төлбөргүй.',
+    },
+    {
+      id: 'excellence',
+      title: 'Дэмжлэг',
+      text: 'Гэр бүл, Au Pair-д бодитоор тусална.',
+    },
+    {
+      id: 'community',
+      title: 'Сүлжээ',
+      text: 'Хөтөлбөрийн дараа ч холбоотой байна.',
+    },
+    {
+      id: 'growth',
+      title: 'Өсөлт',
+      text: 'Хэл, соёл, туршлага нэг дор.',
+    },
+  ],
+  steps: [
+    {
+      id: 'train',
+      title: 'Сургалтад суух',
+      text: 'Германыг сонгосон бол A1 түвшний сургалт, Гёте шалгалт.',
+    },
+    {
+      id: 'exam',
+      title: 'Шалгалт өгөх',
+      text: 'Хэлний анхан шатны түвшин тогтоох шалгалт өгнө.',
+    },
+    {
+      id: 'family',
+      title: 'Айлаа сонгох',
+      text: 'Хүсэл сонирхолд нийцсэн баталгаат зочин айл олж өгнө.',
+    },
+    {
+      id: 'visa',
+      title: 'Виз мэдүүлэх',
+      text: 'Бичиг баримт, аяллын бэлтгэлд мэргэжлийн зөвлөгөө.',
+    },
+  ],
+  highlights: [
+    { id: 'network', title: 'Олон улсын сүлжээ', text: 'Европын баталгаат гэр бүлүүдтэй холбоно.' },
+    { id: 'support', title: 'Бодит дэмжлэг', text: 'Манай хамт олон 24/7 туслахад бэлэн.' },
+    { id: 'price', title: 'Ил тод үнэ', text: 'Нууц төлбөргүй. Ил тод нөхцөл.' },
+    { id: 'safety', title: 'Аюулгүй байдал', text: 'Гэр бүл бүрийг нарийн шалгана.' },
+  ],
+  programCountries: ['Герман', 'Австри', 'Франц', 'Швейцарь', 'Бельги', 'Нидерланд', 'Дани'],
+}
 
 export const social = {
   facebook: 'https://www.facebook.com/MongolianAuPair',
   messenger: 'https://m.me/MongolianAuPair',
   instagram: 'https://www.instagram.com/mongolian.aupair',
-  website: 'https://mongolianaupair.com/',
-  email: 'office@mongolianaupair.com',
-  emailAlt: 'info@mongolianaupair.com',
+  website: org.website,
+  email: 'info@mongolianaupair.com',
+  emailAlt: 'office@mongolianaupair.com',
   phone: '+976 7711-6906',
   phoneAlt: '+976 7711-6906',
   phoneTel: '+97677116906',
   phoneAltTel: '+97677116906',
   address:
     'Улаанбаатар хот, Сүхбаатар дүүрэг, 11-р хороо, 7-р хороолол, Нью Резиденс хотхон, 726-р байр, 1 тоот',
+  addressShort: 'Улаанбаатар, Монгол',
   city: 'Улаанбаатар',
   map: 'https://maps.google.com/maps?q=New+Residence+Sukhbaatar+Ulaanbaatar',
-  followers: 'Албан ёсны',
-  recommend: '1969 оны конвенц',
+  followers: 'Албан ёсны агентлаг',
+  recommend: 'IAPA гишүүн · 1969 оны конвенц',
   hours: 'Нээлттэй',
-  since: '2005',
-  placed: '3,000+',
+  since: org.since,
+  placed: org.placed,
+  years: org.years,
+  partnerCountries: org.partnerCountries,
 }
 
 export const GERMAN_LEVEL_LABELS = {
@@ -70,7 +158,7 @@ export const feed = {
     to: '/learn',
     image:
       'https://images.unsplash.com/photo-1467269204594-9661b134dd2b?auto=format&fit=crop&w=1400&q=80',
-    source: 'Mongolian AuPair',
+    source: 'Mongolian Au Pair Agency',
   },
 }
 
@@ -362,6 +450,85 @@ export const countries = [
 
 export const universities = countries
 
+/** Мэдээ мэдээлэл — элсэлт, зар, агентлагийн нийтлэл */
+export const newsItems = [
+  {
+    id: 'n1',
+    title: 'Герман элсэлт нээлттэй',
+    excerpt: 'A2 · 18–26 нас. Бүртгүүлээд зөвлөгөө авна.',
+    body: [
+      'Герман Au Pair хөтөлбөрийн элсэлт нээлттэй байна. A2 түвшин, 18–26 насны шаардлагатай.',
+      'Бүртгүүлсний дараа зөвлөх тантай холбогдож, бичиг баримт, гэр бүлийн тохироог хамт ярина.',
+    ],
+    date: '2026-03-12',
+    dateLabel: '3 сарын 12',
+    tag: 'Элсэлт',
+    image:
+      'https://images.unsplash.com/photo-1467269204594-9661b134dd2b?auto=format&fit=crop&w=900&q=80',
+    cta: { to: '/countries/germany', label: 'Герман Au Pair' },
+  },
+  {
+    id: 'n2',
+    title: 'A1, A2 анги эхэлнэ',
+    excerpt: 'Улаанбаатар · суудал хязгаартай.',
+    body: [
+      'Шинэ A1, A2 герман хэлний ангиуд эхэлнэ. Хичээл Улаанбаатарт, суудал хязгаартай.',
+      'Сургалт табаас ангиа сонгоод бүртгүүлнэ үү. Админ зөвшөөрсний дараа хуваарь, чат нээгдэнэ.',
+    ],
+    date: '2026-03-05',
+    dateLabel: '3 сарын 5',
+    tag: 'Сургалт',
+    image:
+      'https://images.unsplash.com/photo-1576924542622-772281b13aa8?auto=format&fit=crop&w=900&q=80',
+    cta: { to: '/learn', label: 'Сургалт харах' },
+  },
+  {
+    id: 'n3',
+    title: 'Австри гэр бүлүүд нээлттэй',
+    excerpt: 'Герман хэлтэй орчин. Шууд бүртгүүлнэ.',
+    body: [
+      'Австри дахь зочин гэр бүлүүд нээлттэй. Герман хэлтэй орчин, соёл солилцооны хөтөлбөр.',
+      'Au Pair табаас Австри сонгоод бүртгүүлнэ. Зөвшөөрөгдсөний дараа үйл явц, материал энд харагдана.',
+    ],
+    date: '2026-02-28',
+    dateLabel: '2 сарын 28',
+    tag: 'Au Pair',
+    image:
+      'https://images.unsplash.com/photo-1609856878074-cf31e21ccb6b?auto=format&fit=crop&w=900&q=80',
+    cta: { to: '/countries/austria', label: 'Австри Au Pair' },
+  },
+  {
+    id: 'n4',
+    title: 'IAPA гишүүн агентлаг',
+    excerpt: 'Олон улсын стандарт, бодит дэмжлэг.',
+    body: [
+      'Mongolian Au Pair нь IAPA (International Au Pair Association) гишүүн агентлаг.',
+      'Олон улсын стандарт, гэр бүлийн шалгалт, виз, хэлний бэлтгэл — бүх алхамд дэмжлэг үзүүлнэ.',
+    ],
+    date: '2026-02-18',
+    dateLabel: '2 сарын 18',
+    tag: 'Байгууллага',
+    image:
+      'https://images.unsplash.com/photo-1515488764276-beab7607c1e6?auto=format&fit=crop&w=900&q=80',
+    cta: { to: '/about', label: 'Бидний тухай' },
+  },
+  {
+    id: 'n5',
+    title: 'Үнэгүй чеклист',
+    excerpt: 'Паспорт, анкет, эрүүл мэнд — жагсаалт.',
+    body: [
+      'Au Pair бүртгэлийн үнэгүй чеклист: паспорт, анкет, эрүүл мэнд, лавлагаа гэх мэт.',
+      'Дэлгүүрээс татаж аваад алхам алхмаар бүрдүүлнэ.',
+    ],
+    date: '2026-02-10',
+    dateLabel: '2 сарын 10',
+    tag: 'Зөвлөгөө',
+    image:
+      'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=900&q=80',
+    cta: { to: '/shop/p3', label: 'Чеклист авах' },
+  },
+]
+
 export const videos = [
   {
     id: 'r1',
@@ -404,30 +571,36 @@ export const videos = [
 export const products = [
   {
     id: 'p1',
-    name: 'Герман хэлний анхан шатны ном',
+    name: 'A1 ном',
     price: 'Зөвлөгөө',
     tag: 'Хэл',
-    blurb: 'Au Pair бэлтгэл',
+    blurb: 'Анхан шат · Au Pair',
     description: 'Герман Au Pair-т зориулсан анхан шатны материал.',
     points: ['A1 үгс', 'Гэр бүлийн яриа', 'Практик'],
+    image:
+      'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=900&q=80',
   },
   {
     id: 'p2',
-    name: 'Герман хэлний A2 ном',
+    name: 'A2 ном',
     price: 'Зөвлөгөө',
     tag: 'Хэл',
     blurb: 'Goethe A2 бэлтгэл',
     description: 'Герман хэлний A2 түвшний сурах бичиг, дасгал.',
     points: ['A2 үгс', 'Дүрэм', 'Шалгалтын дасгал'],
+    image:
+      'https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=900&q=80',
   },
   {
     id: 'p3',
-    name: 'Бичиг баримтын чеклист',
+    name: 'Чеклист',
     price: 'Үнэгүй',
     tag: 'Виза',
-    blurb: 'Элсэлтийн жагсаалт',
+    blurb: 'Бичиг баримтын жагсаалт',
     description: 'Паспорт, анкет, эрүүл мэнд — Au Pair бүртгэлийн чеклист.',
     points: ['Виза', 'Гэр бүл', 'Хэлний үнэмлэх'],
+    image:
+      'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=900&q=80',
   },
 ]
 

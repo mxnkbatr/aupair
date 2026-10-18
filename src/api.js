@@ -2,9 +2,15 @@ import { Capacitor } from '@capacitor/core'
 import { social } from './data'
 
 const ENV_API = import.meta.env.VITE_API_URL?.replace(/\/$/, '')
+/** Bundled Capacitor shell cannot use relative `/api` — hit the deployed origin. */
+const NATIVE_API_ORIGIN = 'https://aupair-app.vercel.app'
 
-/** Web: `/api` (Vite proxy / Express). Native: set `VITE_API_URL` to your deployed server origin. */
-const API_BASE = ENV_API ? `${ENV_API}/api` : '/api'
+/**
+ * Web: `/api` (Vite proxy / Express).
+ * Native: `VITE_API_URL` or production Vercel origin.
+ */
+const API_ORIGIN = ENV_API || (Capacitor.isNativePlatform() ? NATIVE_API_ORIGIN : '')
+const API_BASE = API_ORIGIN ? `${API_ORIGIN}/api` : '/api'
 const TIMEOUT_MS = 15000
 
 const TOKEN_STORAGE = 'aupair-token'
@@ -101,11 +107,87 @@ export const api = {
   me: () => request('/me'),
   updateMe: (payload) => request('/me', { method: 'PATCH', body: JSON.stringify(payload) }),
   deleteMe: () => request('/me', { method: 'DELETE' }),
+  submitProgramDoc: (key, payload) =>
+    request(`/me/program-docs/${key}`, {
+      method: 'PATCH',
+      body: JSON.stringify(payload),
+    }),
+  registerPushToken: (payload) =>
+    request('/me/push-token', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }),
   adminData: (key) => request('/admin/data', { headers: { 'x-admin-key': key } }),
+  adminNotify: (key, payload) =>
+    request('/admin/notify', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+      headers: { 'x-admin-key': key },
+    }),
   adminSetStatus: (key, collection, id, status) =>
     request(`/admin/${collection}/${id}`, {
       method: 'PATCH',
       body: JSON.stringify({ status }),
+      headers: { 'x-admin-key': key },
+    }),
+  adminUpdateEnrollment: (key, id, payload) =>
+    request(`/admin/enrollments/${id}/assign`, {
+      method: 'PATCH',
+      body: JSON.stringify(payload),
+      headers: { 'x-admin-key': key },
+    }),
+  adminEnrollmentProgress: (key, id, payload) =>
+    request(`/admin/enrollments/${id}/progress`, {
+      method: 'PATCH',
+      body: JSON.stringify(payload),
+      headers: { 'x-admin-key': key },
+    }),
+  adminSetProgram: (key, userId, payload) =>
+    request(`/admin/users/${userId}/program`, {
+      method: 'PATCH',
+      body: JSON.stringify(payload),
+      headers: { 'x-admin-key': key },
+    }),
+  adminReviewDoc: (key, userId, docKey, payload) =>
+    request(`/admin/users/${userId}/program-docs/${docKey}`, {
+      method: 'PATCH',
+      body: JSON.stringify(payload),
+      headers: { 'x-admin-key': key },
+    }),
+  markHomework: (enrollmentId, hwId, status) =>
+    request(`/me/enrollments/${enrollmentId}/homework/${hwId}`, {
+      method: 'PATCH',
+      body: JSON.stringify({ status }),
+    }),
+  getClass: (courseId) => request(`/me/classes/${courseId}`),
+  getClassMessages: (courseId) => request(`/me/classes/${courseId}/messages`),
+  postClassMessage: (courseId, text) =>
+    request(`/me/classes/${courseId}/messages`, {
+      method: 'POST',
+      body: JSON.stringify({ text }),
+    }),
+  adminSetClass: (key, courseId, payload) =>
+    request(`/admin/classes/${courseId}`, {
+      method: 'PUT',
+      body: JSON.stringify(payload),
+      headers: { 'x-admin-key': key },
+    }),
+  adminNotifyClass: (key, courseId, payload = {}) =>
+    request(`/admin/classes/${courseId}/notify`, {
+      method: 'POST',
+      body: JSON.stringify(payload),
+      headers: { 'x-admin-key': key },
+    }),
+  adminClassMessage: (key, courseId, payload) =>
+    request(`/admin/classes/${courseId}/messages`, {
+      method: 'POST',
+      body: JSON.stringify(payload),
+      headers: { 'x-admin-key': key },
+    }),
+  adminAssignHomework: (key, courseId, payload) =>
+    request(`/admin/classes/${courseId}/homework`, {
+      method: 'POST',
+      body: JSON.stringify(payload),
       headers: { 'x-admin-key': key },
     }),
 }

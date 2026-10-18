@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { social } from '../data'
+import { org, social } from '../data'
 import './Footer.css'
 
 export default function Footer() {
@@ -10,24 +10,27 @@ export default function Footer() {
           <div className="site-footer__brand">
             <img src="/logo.png" alt="Mongolian Au Pair" />
             <div>
-              <strong>Mongolian Au Pair</strong>
-              <p>Европ руу соёл солилцоо · 2005 оноос</p>
+              <strong>{org.legalName}</strong>
+              <p>{org.tagline}</p>
             </div>
           </div>
           <p className="site-footer__lead">
-            1969 оны Олон Улсын Конвенцийн дагуу хэрэгжих албан ёсны Au Pair хөтөлбөр.
-            {social.address}
+            {org.aboutShort} IAPA (International Au Pair Association) гишүүн · {social.recommend}.
           </p>
+          <p className="site-footer__lead">{social.address}</p>
         </div>
 
         <div>
           <h4>Цэс</h4>
           <div className="site-footer__links">
-            <Link to="/learn">Сурах</Link>
-            <Link to="/countries">Улсууд</Link>
-            <Link to="/learn?tab=materials">Материал</Link>
+            <Link to="/learn">Сургалт</Link>
+            <Link to="/countries">Au Pair</Link>
+            <Link to="/news">Мэдээ</Link>
             <Link to="/me/help">Холбоо барих</Link>
             <Link to="/privacy">Нууцлалын бодлого</Link>
+            <a href={org.website} target="_blank" rel="noreferrer">
+              mongolianaupair.com
+            </a>
           </div>
         </div>
 
@@ -42,12 +45,16 @@ export default function Footer() {
             </a>
             <a href={`tel:${social.phoneTel}`}>{social.phone}</a>
             <a href={`mailto:${social.email}`}>{social.email}</a>
-            <span>{social.address}</span>
+            <span>
+              {org.years} жил · {org.placed} оролцогч · {org.partnerCountries} улс
+            </span>
           </div>
         </div>
       </div>
       <div className="container site-footer__bottom">
-        <span>© {new Date().getFullYear()} Mongolian Au Pair</span>
+        <span>
+          © {new Date().getFullYear()} {org.name}. Бүх эрх хуулиар хамгаалагдсан.
+        </span>
         <Link to="/privacy">Privacy Policy</Link>
       </div>
     </footer>

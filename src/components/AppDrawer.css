@@ -1,0 +1,128 @@
+/* Floating iOS 26 sheet — app brand colors, not docked to edges */
+
+.app-drawer__backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 220;
+  background: rgba(16, 16, 24, 0.28);
+}
+
+.app-drawer__panel {
+  position: fixed;
+  left: 12px;
+  right: 12px;
+  bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+  z-index: 221;
+  display: flex;
+  flex-direction: column;
+  width: auto;
+  max-width: 400px;
+  margin-inline: auto;
+  padding: 0 14px 16px;
+  border-radius: 28px;
+  background: color-mix(in srgb, var(--surface, #fff) 82%, transparent);
+  border: 0.5px solid color-mix(in srgb, var(--separator, #e4e4ea) 80%, transparent);
+  box-shadow:
+    0 0 0 0.5px rgba(255, 255, 255, 0.4) inset,
+    0 16px 48px rgba(16, 16, 24, 0.18),
+    0 4px 12px rgba(232, 23, 63, 0.06);
+  backdrop-filter: blur(36px) saturate(180%);
+  -webkit-backdrop-filter: blur(36px) saturate(180%);
+  outline: none;
+  color: var(--label, #0b0b0f);
+}
+
+.app-drawer__grab {
+  width: 36px;
+  height: 4px;
+  margin: 10px auto 4px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--label) 18%, transparent);
+}
+
+.app-drawer__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 4px 2px 14px;
+}
+
+.app-drawer__brand {
+  margin: 0;
+  color: var(--brand, #e8173f);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.app-drawer__head h2 {
+  margin: 3px 0 0;
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1.15;
+  color: var(--label, #0b0b0f);
+}
+
+.app-drawer__x {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  margin-top: 4px;
+  border: 0;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--label) 8%, transparent);
+  color: var(--label);
+}
+
+.app-drawer__x:active {
+  opacity: 0.65;
+  transform: scale(0.94);
+}
+
+.app-drawer__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.app-drawer__tile {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  min-height: 60px;
+  padding: 11px 12px;
+  border-radius: 18px;
+  background: var(--surface, #fff);
+  border: 0.5px solid var(--separator, #e4e4ea);
+  box-shadow: 0 1px 2px rgba(16, 16, 24, 0.04);
+  color: var(--label);
+}
+
+.app-drawer__tile:active {
+  transform: scale(0.96);
+  background: var(--surface-2, #f7f7fa);
+}
+
+.app-drawer__glyph {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  flex: 0 0 auto;
+  border-radius: 11px;
+  background: var(--brand, #e8173f);
+  color: #fff;
+  box-shadow: 0 6px 14px color-mix(in srgb, var(--brand) 28%, transparent);
+}
+
+.app-drawer__tile strong {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+

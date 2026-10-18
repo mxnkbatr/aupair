@@ -1,0 +1,294 @@
+.my-ap {
+  margin-bottom: 16px;
+}
+
+.my-ap--page {
+  margin-bottom: 0;
+  padding-bottom: 24px;
+}
+
+.my-ap__hero {
+  padding: 4px 0 14px;
+}
+
+.my-ap__kicker {
+  margin: 0;
+  color: var(--brand);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.my-ap__hero h1 {
+  margin: 4px 0 0;
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+}
+
+.my-ap__hero p {
+  margin: 4px 0 0;
+  color: var(--label-2);
+  font-size: 15px;
+}
+
+.my-ap__title {
+  margin: 0 0 8px 4px;
+  color: var(--label-2);
+  font-size: 13px;
+  font-weight: 650;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.my-ap__card {
+  display: grid;
+  gap: 12px;
+  padding: 14px;
+  border-radius: 18px;
+  background: var(--surface);
+  border: 0.5px solid var(--separator);
+}
+
+.my-ap__card--sched {
+  gap: 6px;
+}
+
+.my-ap__card--sched h3 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-size: 14px;
+  color: var(--brand);
+}
+
+.my-ap__card--sched p {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.my-ap__card--sched small {
+  color: var(--label-3);
+  font-size: 12px;
+}
+
+.my-ap__card--note strong {
+  display: block;
+  font-size: 13px;
+  color: var(--label-2);
+}
+
+.my-ap__card--note p {
+  margin: 4px 0 0;
+  font-size: 15px;
+  line-height: 1.4;
+}
+
+.my-ap__mock-hint {
+  margin: 4px 0 0;
+  color: var(--label-3);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.my-ap > .my-ap__card + .my-ap__card {
+  margin-top: 10px;
+}
+
+.my-ap__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.my-ap__head strong {
+  display: block;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--label);
+}
+
+.my-ap__head span {
+  display: block;
+  margin-top: 2px;
+  color: var(--label-2);
+  font-size: 13px;
+}
+
+.my-ap__head em {
+  flex: 0 0 auto;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--brand-tint);
+  color: var(--brand);
+  font-style: normal;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.my-ap__head span b {
+  color: var(--label);
+  font-weight: 700;
+}
+
+.my-ap__progress {
+  height: 6px;
+  margin: 4px 0 14px;
+  border-radius: 999px;
+  background: var(--bg);
+  overflow: hidden;
+}
+
+.my-ap__progress i {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--brand);
+}
+
+.my-ap__steps {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 0;
+}
+
+.my-ap__steps li {
+  display: grid;
+  grid-template-columns: 32px 1fr;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 10px 0;
+  position: relative;
+}
+
+.my-ap__steps li + li {
+  border-top: 0.5px solid var(--separator);
+}
+
+.my-ap__steps i {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--bg);
+  color: var(--label-3);
+  font-size: 13px;
+  font-weight: 800;
+  font-style: normal;
+  flex-shrink: 0;
+}
+
+.my-ap__steps li.is-done i {
+  background: var(--brand);
+  color: #fff;
+}
+
+.my-ap__steps li.is-now i {
+  background: var(--brand-tint);
+  color: var(--brand);
+  box-shadow: 0 0 0 2px var(--brand);
+}
+
+.my-ap__steps strong {
+  display: block;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--label);
+}
+
+.my-ap__steps span {
+  display: block;
+  margin-top: 2px;
+  color: var(--label-3);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.my-ap__steps li.is-now strong {
+  color: var(--brand);
+}
+
+.my-ap__steps li.is-now span {
+  color: var(--label-2);
+}
+
+.my-ap__sub {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--label-2);
+}
+
+.my-ap__done {
+  margin: 0;
+  color: var(--success);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.my-ap__docs {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 6px;
+}
+
+.my-ap__docs li {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 8px 4px;
+  color: var(--label-3);
+}
+
+.my-ap__docs .is-ok {
+  color: var(--success);
+}
+
+.my-ap__docs .is-bad {
+  color: var(--brand);
+}
+
+.my-ap__docs .is-wait {
+  color: var(--warning);
+}
+
+.my-ap__docs strong {
+  display: block;
+  color: var(--label);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.my-ap__docs small {
+  display: block;
+  margin-top: 1px;
+  color: var(--label-3);
+  font-size: 12px;
+}
+
+.my-ap__cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 44px;
+  border-radius: 12px;
+  background: var(--brand);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+}

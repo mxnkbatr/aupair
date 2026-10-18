@@ -1,0 +1,112 @@
+/* Mobile / NavBar / Home bell — brand-aligned */
+.notif-bell-wrap {
+  position: relative;
+  flex: 0 0 auto;
+}
+
+.notif-bell {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--brand);
+  cursor: pointer;
+  transition: opacity 0.12s ease;
+}
+
+.notif-bell:active {
+  opacity: 0.35;
+}
+
+.notif-bell.is-on {
+  color: var(--brand);
+}
+
+.notif-bell__badge,
+.app-header__badge {
+  position: absolute;
+  top: 6px;
+  right: 5px;
+  min-width: 17px;
+  height: 17px;
+  padding: 0 4px;
+  border-radius: 999px;
+  background: var(--brand);
+  color: #fff;
+  font-family: var(--font-ui);
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 17px;
+  text-align: center;
+  border: 1.5px solid var(--bg);
+  box-sizing: content-box;
+}
+
+.notif-bell.is-on .notif-bell__badge {
+  background: var(--sun);
+  color: #1a1200;
+  border-color: var(--brand);
+}
+
+.app-notif__close-sheet {
+  display: none;
+  width: calc(100% - 2rem);
+  margin: 0.65rem 1rem 0.85rem;
+  min-height: 44px;
+  border: 0;
+  border-radius: 14px;
+  background: var(--surface-2);
+  color: var(--label);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.app-notif-sheet .app-notif__close-sheet {
+  display: block;
+}
+
+.app-notif__avatar--program {
+  background: var(--brand);
+}
+
+.app-notif__avatar--docs {
+  background: var(--warning);
+  color: #1a1200;
+}
+
+.app-notif__avatar--enroll {
+  background: var(--success);
+}
+
+.app-notif__avatar--tip {
+  background: var(--accent);
+  color: #003d3b;
+}
+
+/* Token-aligned overrides for panel (shared with AppHeader.css) */
+.app-notif__item {
+  background: var(--surface);
+}
+
+.app-notif__item.is-unread {
+  background: linear-gradient(90deg, var(--brand-tint), var(--surface) 72%);
+}
+
+.app-notif__pulse {
+  background: var(--brand);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand) 22%, transparent);
+}
+
+.app-notif-sheet__panel {
+  background: var(--surface);
+}
+
+.app-header__notif-desktop {
+  background: var(--surface);
+  border-color: var(--separator);
+}
+

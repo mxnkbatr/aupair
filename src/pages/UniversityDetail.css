@@ -70,6 +70,58 @@
   backdrop-filter: blur(8px);
 }
 
+.ud-hero__badge.is-open {
+  background: #fff;
+  color: var(--brand);
+  border-color: transparent;
+}
+
+.ud-callout {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-top: 1rem;
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: var(--brand-tint);
+  color: var(--brand);
+}
+
+.ud-callout strong {
+  display: block;
+  color: var(--label);
+  font-size: 0.9375rem;
+}
+
+.ud-callout span {
+  color: var(--label-2);
+  font-size: 0.8125rem;
+  line-height: 1.35;
+}
+
+.ud-block__head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--brand);
+  margin-bottom: 0.35rem;
+}
+
+.ud-block__head h2 {
+  margin: 0;
+}
+
+.ud-block__hint {
+  margin: 0 0 0.75rem !important;
+}
+
+.ud-sheet-lead {
+  margin: 0 0 12px;
+  color: var(--label-2);
+  font-size: 0.875rem;
+  line-height: 1.4;
+}
+
 .ud-hero__city {
   position: absolute;
   left: 0.95rem;
@@ -203,25 +255,27 @@
 }
 
 .ud-reqs li {
-  position: relative;
-  padding: 0.7rem 0.8rem 0.7rem 2.1rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 0.75rem 0.85rem;
   border-radius: 12px;
   background: var(--paper);
-  font-size: 0.88rem;
+  font-size: 0.9rem;
   font-weight: 650;
   line-height: 1.35;
+  color: var(--label);
 }
 
-.ud-reqs li::before {
-  content: '';
-  position: absolute;
-  left: 0.85rem;
-  top: 50%;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--red);
-  transform: translateY(-50%);
+.ud-reqs li svg {
+  flex: 0 0 auto;
+  margin-top: 2px;
+  color: var(--success);
+}
+
+.ud-block--reqs {
+  border: 1.5px solid color-mix(in srgb, var(--brand) 22%, var(--line));
+  background: color-mix(in srgb, var(--brand-tint) 35%, #fff);
 }
 
 .ud-help {

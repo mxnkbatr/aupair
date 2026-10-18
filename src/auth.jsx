@@ -1,5 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { api, getToken, setToken } from './api'
+import { syncPushToken } from './push'
 
 const USER_STORAGE = 'aupair-user'
 const AuthContext = createContext(null)
@@ -31,6 +32,8 @@ export function AuthProvider({ children }) {
       cacheUser(res.user)
       setUser(res.user)
     }
+    // Push may have registered before login — re-sync token to API.
+    if (res.token) void syncPushToken()
     return res
   }, [])
 

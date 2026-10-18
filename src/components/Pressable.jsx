@@ -15,7 +15,7 @@ function getMotion(as) {
  */
 export default function Pressable({
   as = 'button',
-  scale = 0.96,
+  scale = 0.95,
   haptics = 'light',
   onClick,
   children,
@@ -29,7 +29,7 @@ export default function Pressable({
     <Tag
       data-pressable=""
       whileTap={reduce ? undefined : { scale }}
-      transition={{ type: 'spring', stiffness: 520, damping: 30 }}
+      transition={{ type: 'spring', stiffness: 580, damping: 26, mass: 0.65 }}
       onClick={(e) => {
         if (haptics) haptic(haptics)
         onClick?.(e)

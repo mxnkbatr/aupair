@@ -166,8 +166,12 @@ export function installImageFade() {
   }).observe(document.body, { childList: true, subtree: true })
 }
 
-/** Reload when a newer web build has been deployed (native loads it from server.url). */
+/**
+ * Web / remote shell: reload if a newer HTML bundle is on the server.
+ * Bundled native apps ship UI in the binary — skip (store update required).
+ */
 export async function reloadIfUpdated() {
+  if (isNative) return false
   const current = document.querySelector('script[type="module"][src*="/assets/index-"]')?.getAttribute('src')
   if (!current) return false
   try {
@@ -194,5 +198,109 @@ export function interceptExternalLinks() {
     if (new URL(href).origin === window.location.origin) return
     e.preventDefault()
     openExternal(href)
+  })
+}
+
+/**
+ * Dismiss the top-most overlay (sheet, auth, drawer, story, notifications).
+ * Used by Android hardware back. Returns true if something closed.
+ */
+export function dismissTopOverlay() {
+  const storyClose = document.querySelector('.story-viewer__close')
+  if (storyClose) {
+    storyClose.click()
+    return true
+  }
+
+  if (document.querySelector('.auth')) {
+    window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }))
+    return true
+  }
+
+  if (document.querySelector('[data-vaul-drawer]')) {
+    window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }))
+    return true
+  }
+
+  const notifBackdrop = document.querySelector('.app-notif-sheet__backdrop')
+  if (notifBackdrop) {
+    notifBackdrop.click()
+    return true
+  }
+
+  const drawerClose = document.querySelector('.app-drawer__close, .app-drawer__backdrop')
+  if (drawerClose) {
+    drawerClose.click()
+    return true
+  }
+
+  const onb = document.querySelector('.onb')
+  if (onb) {
+    const back = onb.querySelector('.onb__icon-btn[aria-label="Буцах"]')
+    if (back) {
+      back.click()
+      return true
+    }
+    const skip = onb.querySelector('button.onb__skip')
+    if (skip) {
+      skip.click()
+      return true
+    }
+  }
+
+  return false
+}
+
+/** Keep focused inputs visible above the soft keyboard. */
+export function installKeyboardAssist() {
+  if (!isNative) return
+  import('@capacitor/keyboard')
+    .then(({ Keyboard }) => {
+      Keyboard.addListener('keyboardWillShow', () => {
+        const el = document.activeElement
+        if (!(el instanceof HTMLElement)) return
+        if (!el.matches('input, textarea, select, [contenteditable="true"]')) return
+        requestAnimationFrame(() => {
+          el.scrollIntoView({ block: 'center', behavior: 'smooth' })
+        })
+      })
+    })
+    .catch(() => {})
+}
+
+/**
+ * Strip browser-like WebView habits so the shell feels like a native app:
+ * no pinch/double-tap zoom, no link callouts, no image drag, no context menu.
+ */
+export function installNativeShell() {
+  if (!isNative) return
+
+  const block = (e) => e.preventDefault()
+  document.addEventListener('gesturestart', block, { passive: false })
+  document.addEventListener('gesturechange', block, { passive: false })
+  document.addEventListener('gestureend', block, { passive: false })
+
+  let lastTouchEnd = 0
+  document.addEventListener(
+    'touchend',
+    (e) => {
+      const interactive = e.target.closest?.(
+        'input, textarea, select, button, a, [role="button"], [data-pressable], label',
+      )
+      const now = Date.now()
+      // Block double-tap zoom on non-interactive surfaces only.
+      if (!interactive && now - lastTouchEnd <= 280) e.preventDefault()
+      lastTouchEnd = now
+    },
+    { passive: false },
+  )
+
+  document.addEventListener('contextmenu', (e) => {
+    if (e.target.closest?.('input, textarea, [contenteditable="true"]')) return
+    e.preventDefault()
+  })
+
+  document.addEventListener('dragstart', (e) => {
+    if (e.target.closest?.('img, a')) e.preventDefault()
   })
 }

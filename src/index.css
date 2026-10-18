@@ -30,6 +30,7 @@ body {
   position: relative;
   z-index: 1;
   min-height: 100dvh;
+  isolation: isolate;
 }
 
 a {
@@ -117,7 +118,7 @@ p {
 
 .site__main {
   flex: 1 1 auto;
-  padding-bottom: calc(var(--bottom-h) + env(safe-area-inset-bottom, 0px));
+  padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px));
   -webkit-overflow-scrolling: touch;
 }
 
@@ -245,7 +246,7 @@ p {
 }
 
 .btn:active:not(:disabled) {
-  transform: scale(0.97);
+  transform: scale(0.95);
 }
 
 .btn:disabled {
@@ -254,15 +255,19 @@ p {
 }
 
 .btn-primary {
-  background: var(--red-grad);
+  background: linear-gradient(160deg, color-mix(in srgb, var(--brand) 88%, #fff), var(--brand-press));
   color: #fff;
-  box-shadow: 0 6px 18px rgba(204, 32, 56, 0.18);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.22) inset,
+    0 8px 20px color-mix(in srgb, var(--brand) 28%, transparent);
 }
 
 .btn-primary:hover:not(:disabled) {
-  background: var(--red-grad-hover);
+  background: linear-gradient(160deg, var(--brand), var(--brand-press));
   transform: translateY(-1px);
-  box-shadow: var(--shadow-lift);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.2) inset,
+    0 12px 26px color-mix(in srgb, var(--brand) 34%, transparent);
 }
 
 .btn-ghost {
@@ -447,8 +452,8 @@ p {
 /* Page transitions: opacity + `left` only, so fixed bottom bars inside pages stay anchored. */
 .page {
   position: relative;
-  animation-duration: 0.34s;
-  animation-timing-function: var(--ease-out);
+  animation-duration: 0.38s;
+  animation-timing-function: cubic-bezier(0.32, 0.72, 0, 1);
   animation-fill-mode: backwards;
 }
 
@@ -462,13 +467,13 @@ p {
 
 .page--fade {
   animation-name: pageFade;
-  animation-duration: 0.22s;
+  animation-duration: 0.28s;
 }
 
 @keyframes pageForward {
   from {
     opacity: 0;
-    left: 36px;
+    left: 28px;
   }
   to {
     opacity: 1;
@@ -479,7 +484,7 @@ p {
 @keyframes pageBack {
   from {
     opacity: 0;
-    left: -36px;
+    left: -28px;
   }
   to {
     opacity: 1;
@@ -518,7 +523,7 @@ p {
 ::view-transition-old(root),
 ::view-transition-new(root) {
   mix-blend-mode: normal;
-  animation-duration: 0.46s;
+  animation-duration: 0.42s;
   animation-timing-function: cubic-bezier(0.32, 0.72, 0, 1);
   animation-fill-mode: both;
 }
@@ -529,31 +534,37 @@ html[data-nav='forward']::view-transition-old(root) {
 
 html[data-nav='forward']::view-transition-new(root) {
   animation-name: vtPushNew;
-  box-shadow: -10px 0 30px rgba(17, 17, 20, 0.14);
+  box-shadow: -8px 0 24px rgba(17, 17, 20, 0.12);
 }
 
 html[data-nav='back']::view-transition-old(root) {
   z-index: 1;
   animation-name: vtPopOld;
-  box-shadow: -10px 0 30px rgba(17, 17, 20, 0.14);
+  box-shadow: -8px 0 24px rgba(17, 17, 20, 0.12);
 }
 
 html[data-nav='back']::view-transition-new(root) {
   animation-name: vtPopNew;
 }
 
+html[data-nav='fade']::view-transition-old(root),
+html[data-nav='fade']::view-transition-new(root) {
+  animation-duration: 0.28s;
+  animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
 html[data-nav='fade']::view-transition-old(root) {
-  animation: vtFadeOut 0.18s ease both;
+  animation-name: vtFadeOut;
 }
 
 html[data-nav='fade']::view-transition-new(root) {
-  animation: vtFadeIn 0.22s ease both;
+  animation-name: vtFadeIn;
 }
 
 @keyframes vtPushOld {
   to {
-    transform: translateX(-30%);
-    filter: brightness(0.9);
+    transform: translateX(-22%);
+    filter: brightness(0.92);
   }
 }
 
@@ -571,8 +582,8 @@ html[data-nav='fade']::view-transition-new(root) {
 
 @keyframes vtPopNew {
   from {
-    transform: translateX(-30%);
-    filter: brightness(0.9);
+    transform: translateX(-22%);
+    filter: brightness(0.92);
   }
 }
 
@@ -634,27 +645,59 @@ img {
 }
 
 html.is-native {
-  background: var(--bg-app, #fff);
+  background: var(--bg);
+  scroll-behavior: auto;
+  overscroll-behavior: none;
+  touch-action: pan-y;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  cursor: default;
 }
 
 html.is-native body {
   -webkit-user-select: none;
   user-select: none;
-  overscroll-behavior-x: none;
-  overscroll-behavior-y: auto;
+  -webkit-touch-callout: none;
+  overscroll-behavior: none;
+  touch-action: pan-y;
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
+  background-attachment: scroll;
+  cursor: default;
 }
 
 html.is-native,
 html.is-native * {
   scrollbar-width: none;
+  cursor: inherit;
 }
 
 html.is-native *::-webkit-scrollbar {
   display: none;
   width: 0;
   height: 0;
+}
+
+html.is-native img,
+html.is-native a {
+  -webkit-touch-callout: none;
+  -webkit-user-drag: none;
+  user-drag: none;
+}
+
+html.is-native a,
+html.is-native button,
+html.is-native [role='button'],
+html.is-native [data-pressable] {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  cursor: default;
+}
+
+/* Pressable owns press feedback — avoid double web-like fade on every link */
+html.is-native :where(a[class], button, [role='button']):active {
+  transform: none;
+  opacity: 1;
 }
 
 @media (hover: none) {
@@ -677,7 +720,7 @@ html.is-native textarea {
 
 @media (hover: none) {
   :where(a[class], button, [role='button']):active {
-    transform: scale(0.97);
+    transform: scale(0.95);
     opacity: 0.88;
     transition-duration: 0.08s;
   }

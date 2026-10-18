@@ -7,10 +7,8 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  background: rgba(255, 255, 255, 0.92);
+  background: var(--surface, #fff);
   border-bottom: 1px solid var(--line);
-  backdrop-filter: blur(16px) saturate(1.15);
-  -webkit-backdrop-filter: blur(16px) saturate(1.15);
 }
 
 .app-header__inner {
@@ -135,6 +133,20 @@
   align-items: center;
   gap: 0.4rem;
   flex: 0 0 auto;
+}
+
+.app-header__avatar {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--red-soft, var(--brand-tint));
+  color: var(--red, var(--brand));
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
 }
 
 .app-header__icon {
@@ -264,11 +276,11 @@
   width: 100%;
   padding: 0.95rem 1.05rem;
   border: 0;
-  border-bottom: 1px solid var(--line);
-  background: #fff;
+  border-bottom: 1px solid var(--separator);
+  background: var(--surface);
   text-align: left;
   cursor: pointer;
-  color: var(--ink);
+  color: var(--label);
   transition: background 0.15s ease;
 }
 
@@ -376,9 +388,9 @@
   z-index: 1;
   width: min(100%, 440px);
   max-height: min(78dvh, 560px);
-  background: #fff;
+  background: var(--surface);
   border-radius: 22px 22px 0 0;
-  box-shadow: 0 -12px 40px rgba(17, 17, 20, 0.16);
+  box-shadow: var(--e3);
   overflow: hidden;
   animation: notifSheetIn 0.28s var(--ease-out) both;
   padding-bottom: env(safe-area-inset-bottom, 0px);
@@ -653,10 +665,10 @@
   }
 }
 
-/* Mobile uses NavBar; this header is the desktop nav. */
+/* Mobile: website-style top nav hidden — NavBar is the native app bar. */
 @media (max-width: 899px) {
   .app-header {
-    display: none;
+    display: none !important;
   }
 
   .app-header__brand strong {

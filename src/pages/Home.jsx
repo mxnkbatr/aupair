@@ -1,31 +1,23 @@
 import { Link } from 'react-router-dom'
-import { motion } from 'motion/react'
-import { MessengerLogo, Phone, UserCircle } from '@phosphor-icons/react'
+import { motion, useReducedMotion } from 'motion/react'
+import { MessengerLogo, Phone } from '@phosphor-icons/react'
 import { useAuth } from '../auth'
-import { countries, social } from '../data'
-import JourneyTimeline, { JOURNEY_STEPS, journeyIndex } from '../components/JourneyTimeline'
+import { countries, newsItems, org, social } from '../data'
+import JourneyTimeline, {
+  JOURNEY_STEPS,
+  journeyIndex,
+  programStageIndex,
+} from '../components/JourneyTimeline'
 import Pressable from '../components/Pressable'
+import SoftImage from '../components/SoftImage'
 import { SkeletonRow } from '../components/Skeleton'
+import { PROGRAM_STAGES } from '../data/program'
 import useCourses from '../hooks/useCourses'
 import useMyData from '../hooks/useMyData'
 import './Home.css'
 
-function firstName(name) {
-  const part = String(name || '')
-    .trim()
-    .split(/\s+/)[0] || ''
-  return part ? part.charAt(0).toUpperCase() + part.slice(1).toLowerCase() : ''
-}
-
-function initials(name) {
-  return String(name || '')
-    .trim()
-    .split(/\s+/)
-    .slice(0, 2)
-    .map((p) => p[0])
-    .join('')
-    .toUpperCase()
-}
+const spring = { type: 'spring', stiffness: 420, damping: 34 }
+const reveal = { type: 'spring', stiffness: 360, damping: 32 }
 
 function flagFor(id) {
   const map = {
@@ -40,39 +32,46 @@ function flagFor(id) {
   return map[id] || '🇪🇺'
 }
 
+function Reveal({ children, delay = 0, className = '', reduce }) {
+  if (reduce) return <div className={className}>{children}</div>
+  return (
+    <motion.div
+      className={className}
+      initial={{ opacity: 0, y: 14 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ ...reveal, delay }}
+    >
+      {children}
+    </motion.div>
+  )
+}
+
 export default function Home() {
   const { user } = useAuth()
   const data = useMyData()
   const { courses, loading } = useCourses()
+  const reduce = useReducedMotion()
 
   const enrollments = data?.enrollments || []
-  const step = journeyIndex(user, enrollments)
-  const name = firstName(user?.name)
+  const inProgram = Boolean(user?.inProgram)
+  const step = inProgram ? programStageIndex(user) : journeyIndex(user, enrollments)
+  const stepLabel = inProgram
+    ? PROGRAM_STAGES[step]?.label || JOURNEY_STEPS[step]?.label
+    : JOURNEY_STEPS[step]?.label
+  const stepHint = inProgram
+    ? PROGRAM_STAGES[step]?.hint || ''
+    : JOURNEY_STEPS[step]?.hint || ''
   const journeyCta = !user
     ? { to: '/me', state: { auth: 'register' }, label: 'Бүртгэл үүсгэх' }
-    : enrollments.length === 0
-      ? { to: '/learn', label: 'Анги сонгох' }
-      : { to: '/me', label: 'Явцаа харах' }
+    : inProgram
+      ? { to: '/me/program', label: 'Аяллаа харах' }
+      : enrollments.length === 0
+        ? { to: '/learn', label: 'Анги сонгох' }
+        : { to: '/me', label: 'Явцаа харах' }
 
   return (
     <div className="home">
-      <header className="home-top container">
-        <div>
-          <p className="home-top__date">
-            {new Date().toLocaleDateString('mn-MN', {
-              weekday: 'long',
-              month: 'long',
-              day: 'numeric',
-            })}
-          </p>
-          <h1>Сайн уу{name ? `, ${name}` : ''} 👋</h1>
-        </div>
-        <Link to="/me" className="home-avatar" aria-label="Би">
-          {user ? initials(user.name) : <UserCircle size={28} weight="fill" aria-hidden />}
-        </Link>
-      </header>
-
-      <section className="container home-section">
+      <Reveal className="container home-section home-section--first" delay={0} reduce={reduce}>
         {!user ? (
           <Pressable as={Link} to="/me" state={{ auth: 'register' }} className="journey-card journey-card--intro">
             <span className="journey-card__kicker">Au Pair гэж юу вэ?</span>
@@ -80,20 +79,30 @@ export default function Home() {
             <small>Гэр бүлд амьдарч, хэл сурч, Европт туршлага хуримтлуулна.</small>
             <span className="journey-card__cta">Бүртгэл үүсгэх</span>
           </Pressable>
+        ) : inProgram ? (
+          <Pressable as={Link} to="/me/program" className="journey-card">
+            <div className="journey-card__head">
+              <span className="journey-card__kicker">Миний Au Pair аялал</span>
+              <strong>{stepLabel}</strong>
+              <small>{stepHint}</small>
+            </div>
+            <JourneyTimeline user={user} mode="program" compact />
+            <span className="journey-card__cta">{journeyCta.label}</span>
+          </Pressable>
         ) : (
           <Pressable as={Link} to={journeyCta.to} className="journey-card">
             <div className="journey-card__head">
               <span className="journey-card__kicker">Миний Au Pair аялал</span>
-              <strong>{JOURNEY_STEPS[step].label}</strong>
-              <small>{JOURNEY_STEPS[step].hint}</small>
+              <strong>{stepLabel}</strong>
+              <small>{stepHint}</small>
             </div>
             <JourneyTimeline user={user} enrollments={enrollments} compact />
             <span className="journey-card__cta">{journeyCta.label}</span>
           </Pressable>
         )}
-      </section>
+      </Reveal>
 
-      <section className="home-section">
+      <Reveal className="home-section" delay={0.06} reduce={reduce}>
         <div className="container block-head">
           <h2>Элсэлт нээлттэй</h2>
           <Link to="/learn" className="link-more">
@@ -104,7 +113,7 @@ export default function Home() {
           <SkeletonRow count={2} w={260} h={180} />
         ) : (
           <div className="home-rail">
-            {courses.slice(0, 4).map((course) => {
+            {courses.slice(0, 4).map((course, i) => {
               const seats = course.seatsLeft
               const level = String(course.level || 'A1').replace(/^DE\s*/i, '')
               return (
@@ -113,23 +122,19 @@ export default function Home() {
                   as={Link}
                   to={`/learn/course/${course.id}`}
                   className="home-course"
+                  style={reduce ? undefined : { animationDelay: `${0.08 + i * 0.05}s` }}
                 >
                   <motion.div
                     className="home-course__media"
                     layoutId={`course-img-${course.id}`}
-                    transition={{ type: 'spring', stiffness: 380, damping: 38 }}
+                    transition={spring}
                   >
-                    <img
-                      src={course.image || '/cover.jpg'}
-                      alt=""
-                      loading="lazy"
-                      onError={(e) => {
-                        e.currentTarget.src = '/cover.jpg'
-                      }}
-                    />
+                    <SoftImage src={course.image || '/cover.jpg'} alt="" />
                     <span className="home-course__level">{level}</span>
                   </motion.div>
-                  <motion.h3 layoutId={`course-title-${course.id}`}>{course.title}</motion.h3>
+                  <motion.h3 layoutId={`course-title-${course.id}`} transition={spring}>
+                    {course.title}
+                  </motion.h3>
                   <p>
                     {course.duration} · {course.mode}
                   </p>
@@ -143,28 +148,31 @@ export default function Home() {
             })}
           </div>
         )}
-      </section>
+      </Reveal>
 
-      <section className="home-section">
+      <Reveal className="home-section" delay={0.12} reduce={reduce}>
         <div className="container block-head">
-          <h2>Улсууд</h2>
+          <h2>Au Pair</h2>
           <Link to="/countries" className="link-more">
             Бүгд
           </Link>
         </div>
         <div className="home-rail">
-          {countries.slice(0, 6).map((c) => (
-            <Pressable key={c.id} as={Link} to={`/countries/${c.id}`} className="home-country">
-              <motion.img
+          {countries.slice(0, 6).map((c, i) => (
+            <Pressable
+              key={c.id}
+              as={Link}
+              to={`/countries/${c.id}`}
+              className="home-country"
+              style={reduce ? undefined : { animationDelay: `${0.14 + i * 0.04}s` }}
+            >
+              <motion.div
+                className="home-country__media"
                 layoutId={`country-img-${c.id}`}
-                src={c.image}
-                alt=""
-                loading="lazy"
-                transition={{ type: 'spring', stiffness: 380, damping: 38 }}
-                onError={(e) => {
-                  e.currentTarget.src = '/cover.jpg'
-                }}
-              />
+                transition={spring}
+              >
+                <SoftImage src={c.image} alt="" />
+              </motion.div>
               <span className="home-country__shade" aria-hidden />
               <span className="home-country__text">
                 <strong>
@@ -175,12 +183,43 @@ export default function Home() {
             </Pressable>
           ))}
         </div>
-      </section>
+      </Reveal>
 
-      <section className="container home-section home-section--end">
+      <Reveal className="home-section" delay={0.16} reduce={reduce}>
+        <div className="container block-head">
+          <h2>Мэдээ</h2>
+          <Link to="/news" className="link-more">
+            Бүгд
+          </Link>
+        </div>
+        <div className="container home-news">
+          {newsItems.slice(0, 4).map((item) => (
+            <Pressable key={item.id} as={Link} to={item.href} className="home-news__card">
+              <img
+                src={item.image}
+                alt=""
+                loading="lazy"
+                onError={(e) => {
+                  e.currentTarget.src = '/cover.jpg'
+                }}
+              />
+              <span className="home-news__body">
+                <em>{item.tag}</em>
+                <strong>{item.title}</strong>
+                <small>{item.dateLabel}</small>
+              </span>
+            </Pressable>
+          ))}
+        </div>
+      </Reveal>
+
+      <Reveal className="container home-section home-section--end" delay={0.2} reduce={reduce}>
         <div className="advice-card">
           <h2>Зөвлөгөө авах</h2>
-          <p>Аль улс, аль анги тохирохыг хамт сонгоё. Үнэгүй.</p>
+          <p>
+            {org.legalName} · {org.since} оноос · IAPA гишүүн. Аль улс, аль анги тохирохыг хамт
+            сонгоё — үнэгүй.
+          </p>
           <div className="advice-card__actions">
             <a className="btn btn-primary" href={social.messenger} target="_blank" rel="noreferrer">
               <MessengerLogo weight="fill" size={18} aria-hidden /> Messenger
@@ -190,7 +229,7 @@ export default function Home() {
             </a>
           </div>
         </div>
-      </section>
+      </Reveal>
     </div>
   )
 }

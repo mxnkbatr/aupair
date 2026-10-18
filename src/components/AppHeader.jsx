@@ -1,12 +1,27 @@
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom'
+import { UserCircle } from '@phosphor-icons/react'
 import { navLinks } from '../data'
+import { useAuth } from '../auth'
+import NotificationMenu from './NotificationMenu'
 import './AppHeader.css'
 
 const TAB_ROOTS = ['/', '/learn', '/countries', '/me']
 
+function initials(name) {
+  return String(name || '')
+    .trim()
+    .split(/\s+/)
+    .slice(0, 2)
+    .map((p) => p[0])
+    .join('')
+    .toUpperCase()
+}
+
+/** Desktop website nav — hidden on mobile (see AppHeader.css). */
 export default function AppHeader({ title, showBrand = false }) {
   const navigate = useNavigate()
   const { pathname } = useLocation()
+  const { user } = useAuth()
   const isTabRoot = TAB_ROOTS.includes(pathname)
   const canBack = !isTabRoot && !showBrand
 
@@ -46,7 +61,17 @@ export default function AppHeader({ title, showBrand = false }) {
           ))}
         </nav>
 
-        <div className="app-header__right" />
+        <div className="app-header__right">
+          <NotificationMenu variant="header" />
+          <Link
+            to="/me"
+            state={user ? undefined : { auth: 'login' }}
+            className="app-header__avatar"
+            aria-label={user ? 'Би' : 'Нэвтрэх'}
+          >
+            {user ? initials(user.name) : <UserCircle size={22} weight="fill" aria-hidden />}
+          </Link>
+        </div>
       </div>
     </header>
   )

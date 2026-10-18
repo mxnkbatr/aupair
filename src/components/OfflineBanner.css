@@ -1,6 +1,6 @@
 .offline-banner {
   position: sticky;
-  top: calc(var(--nav-h) + env(safe-area-inset-top, 0px));
+  top: var(--navbar-h, calc(var(--nav-h) + env(safe-area-inset-top, 0px)));
   z-index: 39;
   padding: 0.5rem 1rem;
   background: var(--ink);

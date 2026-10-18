@@ -15,8 +15,10 @@ if (fs.existsSync(DIST)) {
   })
 }
 
-app.listen(PORT, () => {
-  console.log(`Au Pair API → http://localhost:${PORT}`)
+const HOST = process.env.HOST || '0.0.0.0'
+
+app.listen(PORT, HOST, () => {
+  console.log(`Au Pair API → http://localhost:${PORT} (LAN: http://<ip>:${PORT})`)
   if (fs.existsSync(DIST)) {
     console.log(`Au Pair Web → http://localhost:${PORT}`)
   }

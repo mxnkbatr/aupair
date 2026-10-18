@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { motion } from 'motion/react'
+import { CheckCircle, WarningCircle } from '@phosphor-icons/react'
 import { countries } from '../data'
 import EnrollForm from '../components/EnrollForm'
 import Sheet from '../components/Sheet'
@@ -16,17 +17,16 @@ export default function UniversityDetail() {
     return (
       <div className="container fade-up" style={{ padding: '2rem 0' }}>
         <h1>Олдсонгүй</h1>
-        <p style={{ color: 'var(--muted)', marginTop: '0.5rem' }}>
-          Au Pair улс олдсонгүй
-        </p>
+        <p style={{ color: 'var(--muted)', marginTop: '0.5rem' }}>Au Pair улс олдсонгүй</p>
         <Link to="/countries" className="btn btn-primary" style={{ marginTop: '1rem' }}>
-          Улсууд руу
+          Au Pair руу
         </Link>
       </div>
     )
   }
 
   const isOpen = uni.open !== false
+  const reqs = uni.requirements || []
 
   const course = {
     id: uni.id,
@@ -51,7 +51,9 @@ export default function UniversityDetail() {
             <div className="ud-hero__shade" aria-hidden />
             <div className="ud-hero__media-top">
               <span className="ud-hero__mark">{uni.short}</span>
-              {uni.badge ? <span className="ud-hero__badge">{uni.badge}</span> : null}
+              <span className={`ud-hero__badge${isOpen ? ' is-open' : ''}`}>
+                {isOpen ? 'Бүртгэл нээлттэй' : 'Урьдчилсан бүртгэл'}
+              </span>
             </div>
             <p className="ud-hero__city">{uni.city}</p>
             <ShareButton
@@ -63,23 +65,25 @@ export default function UniversityDetail() {
 
           <div className="ud-hero__copy">
             <h1>{uni.nameMn} Au Pair</h1>
-            <p className="ud-hero__en">{uni.name} · {uni.language}</p>
+            <p className="ud-hero__en">
+              {uni.name} · {uni.language}
+            </p>
             <p className="ud-hero__lead">{uni.description}</p>
+          </div>
+        </section>
+
+        <section className="ud-callout">
+          <CheckCircle weight="fill" size={22} aria-hidden />
+          <div>
+            <strong>Энэ улсад Au Pair-д бүртгүүлэх боломжтой</strong>
+            <span>Шаардлагаа шалгаад доорх товчоор бүртгүүлнэ үү.</span>
           </div>
         </section>
 
         <section className="ud-facts" aria-label="Үндсэн мэдээлэл">
           <div>
-            <small>Хот</small>
-            <strong>{uni.city}</strong>
-          </div>
-          <div>
             <small>Хэл</small>
             <strong>{uni.language}</strong>
-          </div>
-          <div>
-            <small>Элсэлт</small>
-            <strong>{uni.intake}</strong>
           </div>
           <div>
             <small>Түвшин</small>
@@ -93,6 +97,30 @@ export default function UniversityDetail() {
             <small>Нөхцөл</small>
             <strong>{uni.tuition}</strong>
           </div>
+          <div>
+            <small>Элсэлт</small>
+            <strong>{uni.intake}</strong>
+          </div>
+          <div>
+            <small>Хот</small>
+            <strong>{uni.city}</strong>
+          </div>
+        </section>
+
+        <section className="ud-block ud-block--reqs">
+          <div className="ud-block__head">
+            <WarningCircle weight="fill" size={20} aria-hidden />
+            <h2>Шаардлага</h2>
+          </div>
+          <p className="ud-block__hint">Бүртгүүлэхийн өмнө доорхыг хангасан эсэхээ шалгаарай.</p>
+          <ul className="ud-reqs">
+            {reqs.map((item) => (
+              <li key={item}>
+                <CheckCircle weight="fill" size={18} aria-hidden />
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
         </section>
 
         <section className="ud-block">
@@ -112,39 +140,28 @@ export default function UniversityDetail() {
           </ul>
         </section>
 
-        <section className="ud-block">
-          <h2>Шаардлага</h2>
-          <ul className="ud-reqs">
-            {(uni.requirements || []).map((item) => (
-              <li key={item}>{item}</li>
-            ))}
-          </ul>
-        </section>
-
         <section className="ud-help">
           <strong>Mongolian Au Pair зуучлал</strong>
           <p>
             Гэр бүлтэй тохирох, виза, хэлний бэлтгэл, бичиг баримтын явцад бид тантай хамт ажиллана.
-            1969 оны Олон Улсын Конвенцийн дагуу албан ёсны хөтөлбөр.
           </p>
         </section>
       </div>
 
       <div className="ud-bar">
         <div className="ud-bar__meta">
-          <small>Элсэлт</small>
-          <strong>{isOpen ? 'Нээлттэй' : 'Урьдчилсан бүртгэл'}</strong>
+          <small>Au Pair бүртгэл</small>
+          <strong>{isOpen ? 'Нээлттэй' : 'Урьдчилсан'}</strong>
         </div>
-        <button
-          type="button"
-          className="btn btn-primary ud-bar__cta"
-          onClick={() => setOpen(true)}
-        >
-          {isOpen ? 'Элсэх' : 'Бүртгүүлэх'}
+        <button type="button" className="btn btn-primary ud-bar__cta" onClick={() => setOpen(true)}>
+          {isOpen ? 'Бүртгүүлэх' : 'Урьдчилсан бүртгэл'}
         </button>
       </div>
 
-      <Sheet open={open} onClose={() => setOpen(false)} title={`${uni.nameMn} руу элсэх`}>
+      <Sheet open={open} onClose={() => setOpen(false)} title={`${uni.nameMn} Au Pair бүртгэл`}>
+        <p className="ud-sheet-lead">
+          {uni.nameMn} улсын Au Pair хөтөлбөрт бүртгүүлнэ. Бид тантай холбогдож дараагийн алхмыг хэлнэ.
+        </p>
         <EnrollForm course={course} />
       </Sheet>
     </div>
