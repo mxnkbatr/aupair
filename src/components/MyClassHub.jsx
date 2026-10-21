@@ -4,6 +4,7 @@ import { api } from '../api'
 import { resolveClassSchedule } from '../data/classProgressMock'
 import ClassChat from './ClassChat'
 import MyClassPanel from './MyClassPanel'
+import TeacherDm from './TeacherDm'
 import './MyClassHub.css'
 
 const DAY = ['Ням', 'Даваа', 'Мягмар', 'Лхагва', 'Пүрэв', 'Баасан', 'Бямба']
@@ -84,6 +85,7 @@ export default function MyClassHub({
       <div className="class-hub">
         {coursePicker}
         <ClassChat courseId={activeId} courseTitle={active?.courseTitle} />
+        <TeacherDm courseId={activeId} />
       </div>
     )
   }

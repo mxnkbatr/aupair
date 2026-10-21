@@ -12,7 +12,9 @@ import {
   PLACEMENT_QUESTIONS,
   levelFromPlacementScore,
   placementCopy,
+  placementPercent,
 } from '../features/german/placementQuestions'
+import { api } from '../api'
 import Pressable from './Pressable'
 import { haptic } from '../native'
 import './PlacementTest.css'
@@ -24,11 +26,14 @@ function useQuiz(courses) {
   const [index, setIndex] = useState(0)
   const [picked, setPicked] = useState(null)
   const [score, setScore] = useState(0)
+  const [assign, setAssign] = useState(null)
+  const [assignErr, setAssignErr] = useState('')
 
   const q = PLACEMENT_QUESTIONS[index]
-  const level = levelFromPlacementScore(score)
+  const percent = placementPercent(score, TOTAL)
+  const level = levelFromPlacementScore(score, TOTAL)
   const copy = placementCopy(level)
-  const recommendLevel = level === 'B1' ? 'A2' : level
+  const recommendLevel = level
   const matched = (courses || []).filter((c) => {
     const lv = String(c.level || '').replace(/^DE\s*/i, '').toUpperCase()
     return lv === recommendLevel || lv.startsWith(recommendLevel)
@@ -39,6 +44,8 @@ function useQuiz(courses) {
     setIndex(0)
     setPicked(null)
     setScore(0)
+    setAssign(null)
+    setAssignErr('')
   }, [])
 
   const start = useCallback(() => {
@@ -47,6 +54,8 @@ function useQuiz(courses) {
     setIndex(0)
     setPicked(null)
     setScore(0)
+    setAssign(null)
+    setAssignErr('')
   }, [])
 
   function choose(option) {
@@ -57,10 +66,22 @@ function useQuiz(courses) {
     if (ok) setScore((s) => s + 1)
   }
 
+  async function finish(finalScore) {
+    const pct = placementPercent(finalScore, TOTAL)
+    setPhase('result')
+    try {
+      const res = await api.placementAssign({ percent: pct })
+      setAssign(res)
+      haptic('success')
+    } catch (err) {
+      setAssignErr(err.message || 'Ангид элсүүлэхэд алдаа гарлаа')
+    }
+  }
+
   function next() {
     haptic('selection')
     if (index + 1 >= TOTAL) {
-      setPhase('result')
+      void finish(score)
       return
     }
     setIndex((i) => i + 1)
@@ -72,10 +93,13 @@ function useQuiz(courses) {
     index,
     picked,
     score,
+    percent,
     q,
     level,
     copy,
     matched,
+    assign,
+    assignErr,
     reset,
     start,
     choose,
@@ -84,7 +108,22 @@ function useQuiz(courses) {
 }
 
 function QuizBody({ quiz, onClose, reduce }) {
-  const { phase, index, picked, score, q, copy, matched, start, choose, next, reset } = quiz
+  const {
+    phase,
+    index,
+    picked,
+    score,
+    percent,
+    q,
+    copy,
+    matched,
+    assign,
+    assignErr,
+    start,
+    choose,
+    next,
+    reset,
+  } = quiz
 
   const slide = reduce
     ? {}
@@ -102,13 +141,13 @@ function QuizBody({ quiz, onClose, reduce }) {
           <Exam weight="fill" size={36} />
         </span>
         <h2>Түвшин тогтоох тест</h2>
-        <p>6 богино асуултаар герман хэлний түвшингээ тооцоолж, тохирох сургалт санал болгоно.</p>
+        <p>6 асуулт · 75%+ бол A2, бага бол A1 ангид автоматаар элсэнэ.</p>
         <ul className="pt__meta">
           <li>
             <Timer size={16} weight="bold" aria-hidden /> ~3 минут
           </li>
           <li>
-            <CheckCircle size={16} weight="bold" aria-hidden /> A1 · A2 · B1
+            <CheckCircle size={16} weight="bold" aria-hidden /> A1 · A2
           </li>
         </ul>
         <button type="button" className="pt__primary" onClick={start}>
@@ -124,42 +163,38 @@ function QuizBody({ quiz, onClose, reduce }) {
   }
 
   if (phase === 'result') {
+    const courseId = assign?.course?.id || matched[0]?.id
     return (
       <motion.div key="result" className="pt__body pt__result" {...slide}>
         <div className="pt__score-ring" aria-hidden>
-          <strong>
+          <strong>{percent}%</strong>
+          <span>
             {score}/{TOTAL}
-          </strong>
-          <span>зөв</span>
+          </span>
         </div>
         <h2>{copy.title}</h2>
         <p>{copy.text}</p>
+        {assign?.ok ? (
+          <p className="pt__assigned">
+            {assign.already
+              ? 'Та аль хэдийн ангид бүртгэлтэй байна.'
+              : `${assign.level} ангид элслээ · бүлгийн чат нээгдлээ.`}
+          </p>
+        ) : null}
+        {assignErr ? <p className="pt__empty">{assignErr}</p> : null}
 
-        <h3 className="pt__rec-label">Санал болгох сургалт</h3>
-        {matched.length === 0 ? (
-          <p className="pt__empty">Одоогоор тохирох анги байхгүй байна.</p>
+        <h3 className="pt__rec-label">Миний анги</h3>
+        {courseId ? (
+          <Pressable as={Link} to="/learn?tab=schedule" className="pt__rec" onClick={onClose}>
+            <span className="pt__rec-lv">{assign?.level || level}</span>
+            <span>
+              <strong>{assign?.course?.title || matched[0]?.title || 'Сургалт'}</strong>
+              <small>Хуваарь · чат</small>
+            </span>
+            <ArrowRight weight="bold" size={16} aria-hidden />
+          </Pressable>
         ) : (
-          <ul className="pt__recs">
-            {matched.map((c) => (
-              <li key={c.id}>
-                <Pressable
-                  as={Link}
-                  to={`/learn/course/${c.id}`}
-                  className="pt__rec"
-                  onClick={onClose}
-                >
-                  <span className="pt__rec-lv">{String(c.level || '').replace(/^DE\s*/i, '')}</span>
-                  <span>
-                    <strong>{c.title}</strong>
-                    <small>
-                      {c.duration} · {c.mode}
-                    </small>
-                  </span>
-                  <ArrowRight weight="bold" size={16} aria-hidden />
-                </Pressable>
-              </li>
-            ))}
-          </ul>
+          <p className="pt__empty">Одоогоор тохирох анги байхгүй байна.</p>
         )}
 
         <button type="button" className="pt__primary" onClick={reset}>

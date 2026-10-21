@@ -7,11 +7,13 @@
 import { PROGRAM_STAGES as DEFAULT_STAGES } from './program'
 
 /** true = Австри mock харуулна (админ/API бэлэн болохоос өмнө). */
-export const AUPAIR_PROGRESS_USE_MOCK = true
+export const AUPAIR_PROGRESS_USE_MOCK = false
 
 const DOC_LABELS = [
+  { key: 'passport', label: 'Паспортын хуулбар' },
+  { key: 'cv', label: 'CV / намтар' },
   { key: 'photos', label: 'Profile зураг' },
-  { key: 'application', label: 'Au pair application PDF' },
+  { key: 'application', label: 'Au pair application' },
   { key: 'letter', label: 'Host family letter' },
   { key: 'collage', label: 'Photo collage' },
   { key: 'video', label: 'Au pair video' },
@@ -21,25 +23,28 @@ const DOC_LABELS = [
   { key: 'character', label: 'Character reference' },
   { key: 'background', label: 'Ял шийтгэлгүй тодорхойлолт' },
   { key: 'license', label: 'Жолооны үнэмлэх' },
-  { key: 'passport', label: 'Паспортын хуулбар' },
-  { key: 'german', label: 'Герман хэлний сертификат' },
+  { key: 'german', label: 'Хэлний сертификат' },
+  { key: 'visa', label: 'Визний мэдүүлэг' },
+  { key: 'insurance', label: 'Даатгал' },
+  { key: 'ticket', label: 'Тийз / нислэг' },
 ]
 
 function stagesForCountry(countryId) {
   const dest =
     countryId === 'austria'
-      ? 'Австрид'
+      ? 'Австри'
       : countryId === 'germany'
-        ? 'Германд'
-        : countryId === 'france'
-          ? 'Францад'
-          : 'Европт'
+        ? 'Герман'
+        : countryId === 'usa'
+          ? 'Америк'
+          : countryId === 'france'
+            ? 'Франц'
+            : 'Баталгаажсан'
 
-  const shorts = ['Ангилал', 'Профайл', 'Айл', 'Виз', dest.replace(/д$/, '') || dest]
-  return DEFAULT_STAGES.map((s, i) =>
+  return DEFAULT_STAGES.map((s) =>
     s.id === 5
-      ? { ...s, label: dest, short: shorts[i], hint: `Бүртгэл · курс · гэрээний дүрэм · ${dest}` }
-      : { ...s, short: shorts[i] },
+      ? { ...s, label: 'Баталгаажсан', hint: `Тийз · явах бэлтгэл · ${dest}` }
+      : s,
   )
 }
 
@@ -100,6 +105,7 @@ function fromUser(user, countryId, countryTitle) {
     key: d.key,
     label: d.label || DOC_LABELS.find((x) => x.key === d.key)?.label || d.key,
     status: d.status || 'empty',
+    stage: d.stage,
     link: d.link,
     note: d.note,
     adminNote: d.adminNote,
@@ -116,6 +122,7 @@ function fromUser(user, countryId, countryTitle) {
     stage,
     category: user.programCategory || 'standard',
     note: user.programNote || '',
+    visaAppointment: user.visaAppointment || null,
     scheduleLabel: '',
     stages,
     docs: filled,

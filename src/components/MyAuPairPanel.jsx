@@ -90,8 +90,14 @@ export default function MyAuPairPanel({ user, standalone = false }) {
   if (!progress) return null
 
   const stage = progress.stages[(progress.stage || 1) - 1] || progress.stages[0]
-  const todo = progress.docs.filter((d) => d.status !== 'approved')
-  const done = progress.docs.filter((d) => d.status === 'approved')
+  const stageNumForDocs = progress.stage || 1
+  const stageDocs = progress.docs.filter((d) => {
+    const docStage = Number(d.stage)
+    if (!Number.isFinite(docStage) || docStage < 1) return true
+    return docStage <= stageNumForDocs
+  })
+  const todo = stageDocs.filter((d) => d.status !== 'approved')
+  const done = stageDocs.filter((d) => d.status === 'approved')
   const summary = progress.summary || {
     approved: done.length,
     total: progress.docs.length,
@@ -132,6 +138,23 @@ export default function MyAuPairPanel({ user, standalone = false }) {
         <article className="my-ap__card my-ap__card--note">
           <strong>Тэмдэглэл</strong>
           <p>{progress.note}</p>
+        </article>
+      ) : null}
+
+      {user?.visaAppointment?.when || progress.visaAppointment?.when ? (
+        <article className="my-ap__card my-ap__card--visa">
+          <h3>
+            <CalendarBlank weight="fill" size={18} aria-hidden /> Визний тов
+          </h3>
+          <p>
+            {(user?.visaAppointment || progress.visaAppointment).when}
+            {(user?.visaAppointment || progress.visaAppointment).place
+              ? ` · ${(user?.visaAppointment || progress.visaAppointment).place}`
+              : ''}
+          </p>
+          {(user?.visaAppointment || progress.visaAppointment).note ? (
+            <small>{(user?.visaAppointment || progress.visaAppointment).note}</small>
+          ) : null}
         </article>
       ) : null}
 

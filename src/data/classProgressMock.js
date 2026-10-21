@@ -4,7 +4,7 @@
  * Mock унтраах: CLASS_PROGRESS_USE_MOCK = false
  */
 
-export const CLASS_PROGRESS_USE_MOCK = true
+export const CLASS_PROGRESS_USE_MOCK = false
 
 const DAY = ['Ням', 'Даваа', 'Мягмар', 'Лхагва', 'Пүрэв', 'Баасан', 'Бямба']
 

@@ -662,6 +662,84 @@
   line-height: 1.35;
 }
 
+.admin-progress__att {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.admin-progress__att-label {
+  margin: 0;
+  font-size: 0.78rem;
+  font-weight: 650;
+  color: var(--muted);
+}
+
+.admin-progress__att-btns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.admin-progress__att-btns button {
+  padding: 0.4rem 0.65rem;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  background: #fff;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.admin-progress__att-btns button.is-on {
+  border-color: var(--brand, #e8173f);
+  background: color-mix(in srgb, var(--brand, #e8173f) 12%, #fff);
+  color: var(--brand, #e8173f);
+}
+
+.admin-progress__att input,
+.admin-progress__dm textarea,
+.admin-program__visa input {
+  width: 100%;
+  padding: 0.45rem 0.65rem;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  font-size: 0.85rem;
+  box-sizing: border-box;
+}
+
+.admin-progress__check {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.82rem;
+  font-weight: 550;
+}
+
+.admin-progress__dm {
+  display: grid;
+  gap: 0.4rem;
+  padding-top: 0.5rem;
+  border-top: 0.5px solid var(--line);
+}
+
+.admin-progress__dm strong {
+  font-size: 0.82rem;
+}
+
+.admin-program__visa {
+  display: grid;
+  gap: 0.4rem;
+  margin: 0.5rem 0;
+  padding: 0.75rem;
+  border-radius: 10px;
+  background: #fff;
+  border: 1px solid var(--line);
+}
+
+.admin-program__visa strong {
+  font-size: 0.82rem;
+}
+
 .admin-hw-assign {
   display: grid;
   gap: 0.5rem;

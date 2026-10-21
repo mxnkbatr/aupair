@@ -190,4 +190,27 @@ export const api = {
       body: JSON.stringify(payload),
       headers: { 'x-admin-key': key },
     }),
+  placementAssign: (payload) =>
+    request('/me/placement-assign', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }),
+  getDm: () => request('/me/dm'),
+  postDm: (payload) =>
+    request('/me/dm', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }),
+  adminDm: (key, userId, payload) =>
+    request(`/admin/dm/${userId}`, {
+      method: 'POST',
+      body: JSON.stringify(payload),
+      headers: { 'x-admin-key': key },
+    }),
+  adminVisaAppointment: (key, userId, payload) =>
+    request(`/admin/users/${userId}/visa-appointment`, {
+      method: 'POST',
+      body: JSON.stringify(payload),
+      headers: { 'x-admin-key': key },
+    }),
 }

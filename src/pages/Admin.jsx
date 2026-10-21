@@ -8,6 +8,7 @@ import {
   countries,
 } from '../data'
 import {
+  ATTENDANCE_STATUS_LABELS,
   DOC_STATUS_LABELS,
   PROGRAM_CATEGORY_LABELS,
   PROGRAM_STAGES,
@@ -433,7 +434,12 @@ function ClassSchedulePanel({ item, adminKey, onError }) {
 function CourseProgressPanel({ item, adminKey, onUpdated, onError }) {
   const [busy, setBusy] = useState(false)
   const [attendance, setAttendance] = useState(item.attendanceCount ?? 0)
+  const [attStatus, setAttStatus] = useState('present')
+  const [attNote, setAttNote] = useState('')
+  const [messageStudent, setMessageStudent] = useState(true)
+  const [dmText, setDmText] = useState('')
   const [title, setTitle] = useState('')
+  const [ok, setOk] = useState('')
   const homework = item.homework || []
 
   useEffect(() => {
@@ -442,9 +448,29 @@ function CourseProgressPanel({ item, adminKey, onUpdated, onError }) {
 
   async function save(payload) {
     setBusy(true)
+    setOk('')
     try {
       const res = await api.adminEnrollmentProgress(adminKey, item.id, payload)
       onUpdated?.(res.item)
+      if (payload.attendanceStatus) setOk(`Ирц хадгаллаа · ${ATTENDANCE_STATUS_LABELS[payload.attendanceStatus]}`)
+    } catch (err) {
+      onError?.(err.message)
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  async function sendDm() {
+    if (!item.userId || !dmText.trim()) return
+    setBusy(true)
+    setOk('')
+    try {
+      await api.adminDm(adminKey, item.userId, {
+        text: dmText.trim(),
+        courseId: item.courseId,
+      })
+      setDmText('')
+      setOk('Мессеж илгээлээ')
     } catch (err) {
       onError?.(err.message)
     } finally {
@@ -454,7 +480,53 @@ function CourseProgressPanel({ item, adminKey, onUpdated, onError }) {
 
   return (
     <div className="admin-progress">
-      <strong>Сургалтын явц</strong>
+      <strong>Сургалтын явц · {item.courseTitle}</strong>
+      <div className="admin-progress__att">
+        <p className="admin-progress__att-label">Ирц бүртгэх</p>
+        <div className="admin-progress__att-btns" role="group" aria-label="Ирцийн төлөв">
+          {Object.entries(ATTENDANCE_STATUS_LABELS).map(([value, label]) => (
+            <button
+              key={value}
+              type="button"
+              className={attStatus === value ? 'is-on' : ''}
+              disabled={busy}
+              onClick={() => setAttStatus(value)}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+        <input
+          placeholder="Тэмдэглэл (сонголттой)"
+          disabled={busy}
+          value={attNote}
+          onChange={(e) => setAttNote(e.target.value)}
+        />
+        <label className="admin-progress__check">
+          <input
+            type="checkbox"
+            checked={messageStudent}
+            disabled={busy}
+            onChange={(e) => setMessageStudent(e.target.checked)}
+          />
+          Сурагчид мессеж илгээх
+        </label>
+        <button
+          type="button"
+          className="btn btn-primary"
+          disabled={busy}
+          onClick={() =>
+            save({
+              attendanceStatus: attStatus,
+              note: attNote,
+              messageStudent,
+            })
+          }
+        >
+          Ирц хадгалах
+        </button>
+        <small>Нийт ирц: {item.attendanceCount ?? 0}</small>
+      </div>
       <div className="admin-progress__row">
         <label>
           Ирц (удаа)
@@ -473,17 +545,30 @@ function CourseProgressPanel({ item, adminKey, onUpdated, onError }) {
           disabled={busy}
           onClick={() => save({ attendanceCount: attendance })}
         >
-          Хадгалах
-        </button>
-        <button
-          type="button"
-          className="btn btn-ghost"
-          disabled={busy}
-          onClick={() => save({ attendanceCount: (item.attendanceCount ?? 0) + 1 })}
-        >
-          +1 ирц
+          Тоо хадгалах
         </button>
       </div>
+      {item.userId ? (
+        <div className="admin-progress__dm">
+          <strong>Шууд мессеж</strong>
+          <textarea
+            rows={2}
+            disabled={busy}
+            placeholder="Сурагчид бичих…"
+            value={dmText}
+            onChange={(e) => setDmText(e.target.value)}
+          />
+          <button
+            type="button"
+            className="btn btn-ghost"
+            disabled={busy || !dmText.trim()}
+            onClick={sendDm}
+          >
+            Илгээх
+          </button>
+        </div>
+      ) : null}
+      {ok ? <small className="admin-notify__ok">{ok}</small> : null}
 
       {homework.length === 0 ? (
         <button
@@ -639,12 +724,27 @@ function ProgramPanel({ item, adminKey, onUpdated, onError, defaultOpen = false 
   const [category, setCategory] = useState(item.programCategory || 'standard')
   const [stage, setStage] = useState(item.programStage || 1)
   const [note, setNote] = useState(item.programNote || '')
+  const [visaWhen, setVisaWhen] = useState(item.visaAppointment?.when || '')
+  const [visaPlace, setVisaPlace] = useState(item.visaAppointment?.place || '')
+  const [visaNote, setVisaNote] = useState(item.visaAppointment?.note || '')
+  const [visaOk, setVisaOk] = useState('')
 
   useEffect(() => {
     setCategory(item.programCategory || 'standard')
     setStage(item.programStage || 1)
     setNote(item.programNote || '')
-  }, [item.id, item.programCategory, item.programStage, item.programNote])
+    setVisaWhen(item.visaAppointment?.when || '')
+    setVisaPlace(item.visaAppointment?.place || '')
+    setVisaNote(item.visaAppointment?.note || '')
+  }, [
+    item.id,
+    item.programCategory,
+    item.programStage,
+    item.programNote,
+    item.visaAppointment?.when,
+    item.visaAppointment?.place,
+    item.visaAppointment?.note,
+  ])
 
   async function setProgram(payload) {
     setBusy(true)
@@ -663,6 +763,24 @@ function ProgramPanel({ item, adminKey, onUpdated, onError, defaultOpen = false 
     try {
       const res = await api.adminReviewDoc(adminKey, item.id, docKey, payload)
       onUpdated(res.user)
+    } catch (err) {
+      onError(err.message)
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  async function saveVisa() {
+    setBusy(true)
+    setVisaOk('')
+    try {
+      const res = await api.adminVisaAppointment(adminKey, item.id, {
+        when: visaWhen,
+        place: visaPlace,
+        note: visaNote,
+      })
+      onUpdated(res.user)
+      setVisaOk('Визний тов илгээлээ · хэрэглэгчид мэдэгдэл ирнэ')
     } catch (err) {
       onError(err.message)
     } finally {
@@ -781,6 +899,43 @@ function ProgramPanel({ item, adminKey, onUpdated, onError, defaultOpen = false 
           Тэмдэглэл хадгалах
         </button>
       </label>
+
+      <div className="admin-program__visa">
+        <strong>Визний тов / мэдэгдэл</strong>
+        <input
+          disabled={busy}
+          placeholder="Огноо · цаг (жишээ: 2026-05-12 10:00)"
+          value={visaWhen}
+          onChange={(e) => setVisaWhen(e.target.value)}
+        />
+        <input
+          disabled={busy}
+          placeholder="Газар (ЭСЯ / виз төв)"
+          value={visaPlace}
+          onChange={(e) => setVisaPlace(e.target.value)}
+        />
+        <input
+          disabled={busy}
+          placeholder="Нэмэлт тэмдэглэл"
+          value={visaNote}
+          onChange={(e) => setVisaNote(e.target.value)}
+        />
+        <button
+          type="button"
+          className="btn btn-primary"
+          disabled={busy || !visaWhen.trim()}
+          onClick={saveVisa}
+        >
+          Тов илгээх
+        </button>
+        {visaOk ? <small className="admin-notify__ok">{visaOk}</small> : null}
+        {item.visaAppointment?.when ? (
+          <small>
+            Одоогийн: {item.visaAppointment.when}
+            {item.visaAppointment.place ? ` · ${item.visaAppointment.place}` : ''}
+          </small>
+        ) : null}
+      </div>
 
       <p className="admin-program__summary">
         Баримт: {summary.approved || 0}/{summary.total || 13} зөвшөөрсөн · {summary.submitted || 0}{' '}

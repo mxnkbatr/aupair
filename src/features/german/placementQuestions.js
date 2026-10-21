@@ -56,30 +56,30 @@ export const PLACEMENT_QUESTIONS = [
 ]
 
 /**
+ * Placement дүрэм: 75%+ → A2, бага → A1
  * @param {number} correctCount
- * @returns {'A1' | 'A2' | 'B1'}
+ * @param {number} [total=6]
+ * @returns {'A1' | 'A2'}
  */
-export function levelFromPlacementScore(correctCount) {
-  if (correctCount <= 2) return 'A1'
-  if (correctCount <= 4) return 'A2'
-  return 'B1'
+export function levelFromPlacementScore(correctCount, total = 6) {
+  const percent = total > 0 ? (Number(correctCount) / total) * 100 : 0
+  return percent >= 75 ? 'A2' : 'A1'
+}
+
+export function placementPercent(correctCount, total = 6) {
+  if (!total) return 0
+  return Math.round((Number(correctCount) / total) * 100)
 }
 
 export function placementCopy(level) {
-  if (level === 'A1') {
-    return {
-      title: 'Танд A1 тохироно',
-      text: 'Суурь үг, өдөр тутмын яриагаар эхэлцгээе. Анхан шатны анги санал болгож байна.',
-    }
-  }
   if (level === 'A2') {
     return {
       title: 'Танд A2 тохироно',
-      text: 'Суурь нь байна. Au Pair-т шаардлагатай A2 түвшинд бэхжүүлэх анги санал болгож байна.',
+      text: 'Оношлогоо 75%+. A2 ангид автоматаар элсэж, бүлгийн чат нээгдэнэ.',
     }
   }
   return {
-    title: 'Та B1 орчим байна',
-    text: 'Сайн түвшин! Одоогоор A2 гүнзгийрүүлэх ангиас эхлээд, дараагийн B1-д бэлдэнэ.',
+    title: 'Танд A1 тохироно',
+    text: 'Суурь түвшин. A1 ангид автоматаар элсэж, бүлгийн чат нээгдэнэ.',
   }
 }

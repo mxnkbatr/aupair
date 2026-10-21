@@ -1,0 +1,134 @@
+.tdm {
+  margin-top: 0.85rem;
+  border-radius: 16px;
+  border: 0.5px solid var(--separator);
+  background: var(--surface);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 220px;
+  max-height: 360px;
+}
+
+.tdm__head {
+  display: flex;
+  gap: 0.65rem;
+  align-items: flex-start;
+  padding: 0.75rem 0.9rem;
+  border-bottom: 0.5px solid var(--separator);
+}
+
+.tdm__head > svg {
+  color: var(--brand);
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.tdm__head strong {
+  display: block;
+  font-size: 0.92rem;
+}
+
+.tdm__head small {
+  color: var(--label-2);
+  font-size: 0.78rem;
+}
+
+.tdm__list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0.75rem 0.85rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.tdm__hint {
+  margin: 0;
+  color: var(--label-2);
+  font-size: 0.88rem;
+  text-align: center;
+  padding: 1rem 0.5rem;
+}
+
+.tdm__bubble {
+  max-width: 85%;
+  padding: 0.55rem 0.7rem;
+  border-radius: 14px;
+  font-size: 0.9rem;
+  line-height: 1.35;
+}
+
+.tdm__bubble.is-mine {
+  align-self: flex-end;
+  background: var(--brand);
+  color: #fff;
+  border-bottom-right-radius: 4px;
+}
+
+.tdm__bubble.is-theirs {
+  align-self: flex-start;
+  background: var(--bg);
+  border-bottom-left-radius: 4px;
+}
+
+.tdm__bubble em {
+  display: block;
+  font-style: normal;
+  font-size: 0.72rem;
+  font-weight: 650;
+  opacity: 0.75;
+  margin-bottom: 0.15rem;
+}
+
+.tdm__bubble p {
+  margin: 0;
+}
+
+.tdm__bubble time {
+  display: block;
+  margin-top: 0.2rem;
+  font-size: 0.68rem;
+  opacity: 0.7;
+  text-align: right;
+}
+
+.tdm__err {
+  margin: 0;
+  padding: 0.35rem 0.85rem;
+  color: #c62828;
+  font-size: 0.82rem;
+}
+
+.tdm__composer {
+  display: flex;
+  gap: 0.4rem;
+  padding: 0.55rem 0.65rem 0.65rem;
+  border-top: 0.5px solid var(--separator);
+}
+
+.tdm__composer input {
+  flex: 1;
+  border: 0.5px solid var(--separator);
+  border-radius: 12px;
+  padding: 0.55rem 0.75rem;
+  font-size: 0.9rem;
+  background: var(--bg);
+  color: var(--label);
+}
+
+.tdm__composer button {
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 12px;
+  background: var(--brand);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+.tdm__composer button:disabled {
+  opacity: 0.45;
+}

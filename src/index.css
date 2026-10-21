@@ -9,6 +9,7 @@
 
 html {
   scroll-behavior: smooth;
+  background: var(--bg);
 }
 
 body {
@@ -31,6 +32,7 @@ body {
   z-index: 1;
   min-height: 100dvh;
   isolation: isolate;
+  background: var(--bg);
 }
 
 a {
@@ -114,12 +116,14 @@ p {
   display: flex;
   flex-direction: column;
   position: relative;
+  background: var(--bg);
 }
 
 .site__main {
   flex: 1 1 auto;
   padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px));
   -webkit-overflow-scrolling: touch;
+  background: var(--bg);
 }
 
 .site--push .site__main {
@@ -152,7 +156,7 @@ p {
   }
 
   .site {
-    background: #fff;
+    background: var(--bg);
   }
 
   .site__main {
@@ -449,9 +453,10 @@ p {
   }
 }
 
-/* Page transitions: opacity + `left` only, so fixed bottom bars inside pages stay anchored. */
+/* Page transitions: slide only — never fade through transparent (white flash). */
 .page {
   position: relative;
+  background: var(--bg);
   animation-duration: 0.38s;
   animation-timing-function: cubic-bezier(0.32, 0.72, 0, 1);
   animation-fill-mode: backwards;
@@ -467,34 +472,34 @@ p {
 
 .page--fade {
   animation-name: pageFade;
-  animation-duration: 0.28s;
+  animation-duration: 0.22s;
+}
+
+.page--none {
+  animation: none;
 }
 
 @keyframes pageForward {
   from {
-    opacity: 0;
     left: 28px;
   }
   to {
-    opacity: 1;
     left: 0;
   }
 }
 
 @keyframes pageBack {
   from {
-    opacity: 0;
     left: -28px;
   }
   to {
-    opacity: 1;
     left: 0;
   }
 }
 
 @keyframes pageFade {
   from {
-    opacity: 0;
+    opacity: 0.92;
   }
   to {
     opacity: 1;
@@ -514,6 +519,15 @@ p {
   view-transition-name: tabbar;
 }
 
+/* Solid backdrop — prevents white flash when snapshots crossfade. */
+::view-transition {
+  background-color: var(--bg);
+}
+
+::view-transition-group(root) {
+  background-color: var(--bg);
+}
+
 ::view-transition-group(app-header),
 ::view-transition-group(navbar),
 ::view-transition-group(tabbar) {
@@ -526,6 +540,16 @@ p {
   animation-duration: 0.42s;
   animation-timing-function: cubic-bezier(0.32, 0.72, 0, 1);
   animation-fill-mode: both;
+  /* Avoid browser default fade stacking with ours (double-fade → white). */
+  animation-delay: 0s;
+}
+
+html[data-nav='forward']::view-transition-old(root),
+html[data-nav='forward']::view-transition-new(root),
+html[data-nav='back']::view-transition-old(root),
+html[data-nav='back']::view-transition-new(root) {
+  /* Slide only — kill UA default opacity fade that flashes white. */
+  opacity: 1;
 }
 
 html[data-nav='forward']::view-transition-old(root) {
@@ -547,18 +571,21 @@ html[data-nav='back']::view-transition-new(root) {
   animation-name: vtPopNew;
 }
 
+/* Tab switch: keep old opaque underneath; only new fades in (no hole to white). */
 html[data-nav='fade']::view-transition-old(root),
 html[data-nav='fade']::view-transition-new(root) {
-  animation-duration: 0.28s;
+  animation-duration: 0.22s;
   animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 html[data-nav='fade']::view-transition-old(root) {
-  animation-name: vtFadeOut;
+  animation-name: vtFadeStay;
+  z-index: 1;
 }
 
 html[data-nav='fade']::view-transition-new(root) {
   animation-name: vtFadeIn;
+  z-index: 2;
 }
 
 @keyframes vtPushOld {
@@ -587,15 +614,18 @@ html[data-nav='fade']::view-transition-new(root) {
   }
 }
 
-@keyframes vtFadeOut {
+@keyframes vtFadeStay {
   to {
-    opacity: 0;
+    opacity: 1;
   }
 }
 
 @keyframes vtFadeIn {
   from {
-    opacity: 0;
+    opacity: 0.01;
+  }
+  to {
+    opacity: 1;
   }
 }
 
@@ -606,7 +636,7 @@ html[data-nav='fade']::view-transition-new(root) {
   z-index: 1;
   overflow: hidden;
   pointer-events: none;
-  background: var(--bg-app, #fff);
+  background: var(--bg);
   transform: translate3d(-30%, 0, 0);
   filter: brightness(0.92);
 }
@@ -614,7 +644,7 @@ html[data-nav='fade']::view-transition-new(root) {
 html[data-swipe] .site__main > .page {
   z-index: 2;
   min-height: 100dvh;
-  background: var(--bg-app, #fff);
+  background: var(--bg);
   box-shadow: -12px 0 32px rgba(17, 17, 20, 0.16);
   will-change: transform;
 }

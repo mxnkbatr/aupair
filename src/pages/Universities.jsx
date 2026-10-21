@@ -10,6 +10,7 @@ import {
   X,
 } from '@phosphor-icons/react'
 import { countries } from '../data'
+import CountryMatch from '../components/CountryMatch'
 import MyAuPairPanel from '../components/MyAuPairPanel'
 import Pressable from '../components/Pressable'
 import { useAuth } from '../auth'
@@ -26,6 +27,7 @@ const FILTERS = [
 
 const FLAGS = {
   germany: '🇩🇪',
+  usa: '🇺🇸',
   france: '🇫🇷',
   austria: '🇦🇹',
   switzerland: '🇨🇭',
@@ -125,22 +127,24 @@ export default function Universities() {
           <p className="uni-head__kicker">Албан ёсны хөтөлбөр · IAPA</p>
           <h1>Au Pair</h1>
           <p>
-            Доорх улсаас сонгоод бүртгүүлнэ — гэр бүл, виза, хэлний бэлтгэлийг бид хамт хийнэ.
+            Асуултад хариулаад тохирох улсаа олоорой — эсвэл доороос шууд сонгоно.
           </p>
         </header>
+
+        <CountryMatch />
 
         <div className="uni-howto" aria-label="Яаж бүртгүүлэх вэ">
           <div>
             <i>1</i>
-            <span>Улс сонгох</span>
+            <span>Улс тохируулах</span>
           </div>
           <div>
             <i>2</i>
-            <span>Шаардлага харах</span>
+            <span>Хүсэлт илгээх</span>
           </div>
           <div>
             <i>3</i>
-            <span>Бүртгүүлэх</span>
+            <span>Материал аппаар</span>
           </div>
         </div>
 

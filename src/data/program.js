@@ -1,4 +1,4 @@
-/** Client-side labels mirroring server/program.js (for UI without waiting on API). */
+/** Client-side labels mirroring server/program.js */
 
 export const PROGRAM_CATEGORY_LABELS = {
   vip: 'VIP (2 талын тийз)',
@@ -7,11 +7,11 @@ export const PROGRAM_CATEGORY_LABELS = {
 }
 
 export const PROGRAM_STAGES = [
-  { id: 1, label: 'Ангилал', hint: 'Баримт · эрүүл мэнд · хэлний түвшин' },
-  { id: 2, label: 'Профайл бэлтгэл', hint: 'Collage · видео · orientation · checklist' },
-  { id: 3, label: 'Зочин айл', hint: 'Санал · ярилцлага · гэрээ' },
-  { id: 4, label: 'Виз', hint: 'A1/A2 · ЭСЯ · виз мэдүүлэг' },
-  { id: 5, label: 'Германд', hint: 'Бүртгэл · курс · гэрээний дүрэм' },
+  { id: 1, label: 'Бичиг баримт', hint: 'Паспорт · CV · зураг', short: 'Баримт' },
+  { id: 2, label: 'Тохироо', hint: 'Профайл · гэр бүл хайх', short: 'Тохироо' },
+  { id: 3, label: 'Ярилцлага', hint: 'Ярилцлага · гэрээ', short: 'Ярилцлага' },
+  { id: 4, label: 'Виз', hint: 'Виз · даатгал · тов', short: 'Виз' },
+  { id: 5, label: 'Баталгаажсан', hint: 'Тийз · явах бэлтгэл', short: 'Батлагдсан' },
 ]
 
 export const DOC_STATUS_LABELS = {
@@ -19,4 +19,11 @@ export const DOC_STATUS_LABELS = {
   submitted: 'Шалгуулж байна',
   approved: 'Зөвшөөрсөн',
   rejected: 'Засах хэрэгтэй',
+}
+
+export const ATTENDANCE_STATUS_LABELS = {
+  present: 'Ирсэн',
+  late: 'Хоцорсон',
+  absent: 'Тасалсан',
+  leave: 'Чөлөө',
 }

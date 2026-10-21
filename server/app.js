@@ -9,9 +9,13 @@ import {
   PROGRAM_CATEGORY_LABELS,
   PROGRAM_STAGES,
   DOC_STATUSES,
+  ATTENDANCE_STATUSES,
+  ATTENDANCE_STATUS_LABELS,
   emptyChecklist,
   mergeChecklist,
   checklistSummary,
+  nextStageAfterChecklist,
+  courseLevelFromPlacementPercent,
 } from './program.js'
 import { sendPushToTokens } from './fcm.js'
 import {
@@ -150,6 +154,7 @@ function publicUser(user, { includeChecklist = false } = {}) {
     programStage: inProgram ? Math.min(5, Math.max(1, Number(user.programStage) || 1)) : null,
     programNote: inProgram ? String(user.programNote || '') : '',
     programSummary: inProgram ? checklistSummary(checklist) : null,
+    visaAppointment: inProgram && user.visaAppointment ? user.visaAppointment : null,
   }
   if (includeChecklist && inProgram) base.programChecklist = checklist
   return base
@@ -163,6 +168,7 @@ function adminUser(user) {
     programEnrolledAt: user.programEnrolledAt || null,
     programNote: String(user.programNote || ''),
     pushTokenCount: tokens.length,
+    visaAppointment: user.visaAppointment || null,
   }
 }
 
@@ -766,12 +772,36 @@ app.patch('/api/admin/users/:id/program-docs/:key', requireAdmin, async (req, re
   }
   checklist[idx] = next
 
-  const updated = await store.update('users', user.id, {
+  const prevStage = Math.min(5, Math.max(1, Number(user.programStage) || 1))
+  const advanced = nextStageAfterChecklist(checklist, prevStage)
+  const patch = {
     programChecklist: checklist,
     updatedAt: new Date().toISOString(),
-  })
+  }
+  if (advanced > prevStage) {
+    patch.programStage = advanced
+    const stageMeta = PROGRAM_STAGES.find((s) => s.id === advanced)
+    await store.insert('notifications', {
+      id: id(),
+      userId: user.id,
+      title: 'Шинэ шат нээгдлээ',
+      body: stageMeta
+        ? `${advanced}-р шат · ${stageMeta.label} — ${stageMeta.hint}`
+        : `${advanced}-р шат нээгдлээ`,
+      kind: 'program_stage',
+      createdAt: new Date().toISOString(),
+      read: false,
+    }).catch(() => {})
+  }
+
+  const updated = await store.update('users', user.id, patch)
   if (!updated) return res.status(404).json({ error: 'Хэрэглэгч олдсонгүй' })
-  res.json({ ok: true, user: adminUser(updated), item: checklist[idx] })
+  res.json({
+    ok: true,
+    user: adminUser(updated),
+    item: checklist[idx],
+    stageAdvanced: advanced > prevStage ? advanced : null,
+  })
 })
 
 app.patch('/api/admin/:collection/:id', requireAdmin, async (req, res) => {
@@ -890,6 +920,57 @@ app.patch('/api/admin/enrollments/:id/progress', requireAdmin, async (req, res) 
       return res.status(400).json({ error: 'Ирцийн тоо буруу' })
     }
     patch.attendanceCount = n
+  }
+
+  // Ирц: present | late | absent | leave → log + optional message
+  if (body.attendanceStatus !== undefined) {
+    const status = clean(body.attendanceStatus, 20)
+    if (!ATTENDANCE_STATUSES.includes(status)) {
+      return res.status(400).json({ error: 'Ирцийн төлөв буруу (Ирсэн/Хоцорсон/Тасалсан/Чөлөө)' })
+    }
+    const sessionDate = clean(body.sessionDate, 20) || new Date().toISOString().slice(0, 10)
+    const note = clean(body.note, 300)
+    const log = {
+      id: id(),
+      enrollmentId: prev.id,
+      userId: prev.userId || null,
+      courseId: prev.courseId,
+      status,
+      sessionDate,
+      note,
+      createdAt: new Date().toISOString(),
+    }
+    await store.insert('attendanceLogs', log)
+    const count = typeof prev.attendanceCount === 'number' ? prev.attendanceCount : 0
+    if (status === 'present' || status === 'late') patch.attendanceCount = count + 1
+
+    if (prev.userId) {
+      const label = ATTENDANCE_STATUS_LABELS[status] || status
+      await store.insert('notifications', {
+        id: id(),
+        userId: prev.userId,
+        title: 'Ирц бүртгэгдлээ',
+        body: `${prev.courseTitle || 'Анги'} · ${sessionDate} · ${label}`,
+        kind: 'attendance',
+        createdAt: new Date().toISOString(),
+        read: false,
+      }).catch(() => {})
+
+      if (body.messageStudent) {
+        const text =
+          clean(body.messageText, 1000) ||
+          `Сайн байна уу. Өнөөдрийн ирц: ${label}${note ? ` (${note})` : ''}.`
+        await store.insert('directMessages', {
+          id: id(),
+          fromRole: 'teacher',
+          fromUserId: 'teacher',
+          toUserId: prev.userId,
+          courseId: prev.courseId,
+          text,
+          createdAt: new Date().toISOString(),
+        }).catch(() => {})
+      }
+    }
   }
 
   if (body.homework !== undefined) {
@@ -1090,6 +1171,177 @@ app.post('/api/admin/classes/:courseId/messages', requireAdmin, async (req, res)
   }
   await store.insert('classMessages', msg)
   res.status(201).json({ ok: true, message: msg })
+})
+
+/** Admin: DM сурагч руу */
+app.post('/api/admin/dm/:userId', requireAdmin, async (req, res) => {
+  const toUserId = clean(req.params.userId, 60)
+  const user = await store.one('users', { id: toUserId })
+  if (!user) return res.status(404).json({ error: 'Сурагч олдсонгүй' })
+  const text = clean(req.body?.text, 1000)
+  if (!text) return res.status(400).json({ error: 'Зурвас хоосон байна' })
+  const courseId = clean(req.body?.courseId, 60)
+  const msg = {
+    id: id(),
+    fromRole: 'teacher',
+    fromUserId: 'teacher',
+    toUserId,
+    courseId: courseId || null,
+    text,
+    createdAt: new Date().toISOString(),
+  }
+  await store.insert('directMessages', msg)
+  await store.insert('notifications', {
+    id: id(),
+    userId: toUserId,
+    title: 'Багшаас зурвас',
+    body: text.slice(0, 120),
+    kind: 'dm',
+    createdAt: new Date().toISOString(),
+    read: false,
+  }).catch(() => {})
+  res.status(201).json({ ok: true, message: msg })
+})
+
+/** Сурагч: өөрийн DM жагсаалт */
+app.get('/api/me/dm', requireUser, async (req, res) => {
+  const all = await store.all('directMessages')
+  const mine = (all || [])
+    .filter((m) => m.toUserId === req.user.id || m.fromUserId === req.user.id)
+    .sort((a, b) => String(a.createdAt).localeCompare(String(b.createdAt)))
+  res.json({ messages: mine })
+})
+
+/** Сурагч: багш руу DM */
+app.post('/api/me/dm', requireUser, async (req, res) => {
+  const text = clean(req.body?.text, 1000)
+  if (!text) return res.status(400).json({ error: 'Зурвас хоосон байна' })
+  const courseId = clean(req.body?.courseId, 60)
+  const msg = {
+    id: id(),
+    fromRole: 'student',
+    fromUserId: req.user.id,
+    toUserId: 'teacher',
+    courseId: courseId || null,
+    text,
+    createdAt: new Date().toISOString(),
+  }
+  await store.insert('directMessages', msg)
+  res.status(201).json({ ok: true, message: msg })
+})
+
+/** Placement оноо → A1/A2 автомат элсэлт (75+ = A2) */
+app.post('/api/me/placement-assign', requireUser, async (req, res) => {
+  const percent = Number(req.body?.percent)
+  if (!Number.isFinite(percent) || percent < 0 || percent > 100) {
+    return res.status(400).json({ error: 'Оноо 0–100 байна' })
+  }
+  const level = courseLevelFromPlacementPercent(percent)
+  const course = courses.find(
+    (c) =>
+      c.kind === 'course' &&
+      String(c.level || c.hsk || '')
+        .replace(/^DE\s*/i, '')
+        .toUpperCase()
+        .startsWith(level),
+  )
+  if (!course) return res.status(404).json({ error: `${level} анги олдсонгүй` })
+
+  const existing = (await store.all('enrollments', { userId: req.user.id })).find(
+    (e) => e.kind === 'course' && ['pending', 'accepted', 'contacted'].includes(e.status),
+  )
+  if (existing) {
+    return res.json({
+      ok: true,
+      already: true,
+      level,
+      enrollment: existing,
+      course: { id: course.id, title: course.title, level },
+    })
+  }
+
+  const enrollment = {
+    id: id(),
+    userId: req.user.id,
+    kind: 'course',
+    courseId: course.id,
+    courseTitle: course.title,
+    name: req.user.name,
+    phone: req.user.phone,
+    email: req.user.email || '',
+    age: req.user.age,
+    germanLevel: level.toLowerCase(),
+    note: `Placement ${Math.round(percent)}% → ${level}`,
+    status: 'accepted',
+    attendanceCount: 0,
+    homework: defaultHomework(course.id),
+    placementPercent: Math.round(percent),
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  }
+  await store.insert('enrollments', enrollment)
+
+  // Бүлгийн чат руу нэвтрэх = accepted enrollment (автомат)
+  await store.insert('notifications', {
+    id: id(),
+    userId: req.user.id,
+    title: `${level} ангид орлоо`,
+    body: `${course.title} · бүлгийн чат болон хуваарь нээгдлээ`,
+    kind: 'class_assign',
+    createdAt: new Date().toISOString(),
+    read: false,
+  }).catch(() => {})
+
+  // Ангийн бүлэгт мэдэгдэл
+  await store.insert('classMessages', {
+    id: id(),
+    courseId: course.id,
+    userId: 'system',
+    userName: 'Систем',
+    role: 'system',
+    text: `${req.user.name} ${level} ангид нэгдлээ.`,
+    createdAt: new Date().toISOString(),
+  }).catch(() => {})
+
+  res.status(201).json({
+    ok: true,
+    level,
+    enrollment,
+    course: { id: course.id, title: course.title, level },
+  })
+})
+
+/** Визний тов / мэдэгдэл */
+app.post('/api/admin/users/:id/visa-appointment', requireAdmin, async (req, res) => {
+  const user = await store.one('users', { id: req.params.id })
+  if (!user) return res.status(404).json({ error: 'Хэрэглэгч олдсонгүй' })
+  const when = clean(req.body?.when, 80)
+  const place = clean(req.body?.place, 120)
+  const note = clean(req.body?.note, 300)
+  if (!when) return res.status(400).json({ error: 'Тов (огноо/цаг) оруулна уу' })
+
+  const visa = {
+    when,
+    place,
+    note,
+    updatedAt: new Date().toISOString(),
+  }
+  const updated = await store.update('users', user.id, {
+    visaAppointment: visa,
+    programStage: Math.max(Number(user.programStage) || 1, 4),
+    updatedAt: new Date().toISOString(),
+  })
+  await store.insert('notifications', {
+    id: id(),
+    userId: user.id,
+    title: 'Визний тов',
+    body: `${when}${place ? ` · ${place}` : ''}${note ? ` — ${note}` : ''}`,
+    kind: 'visa',
+    createdAt: new Date().toISOString(),
+    read: false,
+  }).catch(() => {})
+
+  res.json({ ok: true, user: adminUser(updated), visaAppointment: visa })
 })
 
 /** Cron-friendly: notify classes starting within the next `withinHours` (default 2). */

@@ -25,8 +25,19 @@ export default function Program() {
   const [error, setError] = useState('')
 
   const checklist = user?.programChecklist || []
-  const stage = PROGRAM_STAGES[programStageIndex(user)] || PROGRAM_STAGES[0]
+  const stageIdx = programStageIndex(user)
+  const stage = PROGRAM_STAGES[stageIdx] || PROGRAM_STAGES[0]
+  const stageNum = stageIdx + 1
   const summary = user?.programSummary || { total: 0, approved: 0, submitted: 0, rejected: 0 }
+  const visibleDocs = useMemo(
+    () =>
+      checklist.filter((item) => {
+        const s = Number(item.stage)
+        if (!Number.isFinite(s) || s < 1) return true
+        return s <= stageNum
+      }),
+    [checklist, stageNum],
+  )
 
   const progress = useMemo(() => {
     if (!summary.total) return 0
@@ -78,6 +89,17 @@ export default function Program() {
           <JourneyTimeline user={user} mode="program" />
         </section>
 
+        {user.visaAppointment?.when ? (
+          <section className="program-card program-note">
+            <strong>Визний тов</strong>
+            <p>
+              {user.visaAppointment.when}
+              {user.visaAppointment.place ? ` · ${user.visaAppointment.place}` : ''}
+            </p>
+            {user.visaAppointment.note ? <small>{user.visaAppointment.note}</small> : null}
+          </section>
+        ) : null}
+
         {user.programNote ? (
           <section className="program-card program-note">
             <strong>Админ тэмдэглэл</strong>
@@ -101,7 +123,7 @@ export default function Program() {
         </section>
 
         <ul className="program-docs">
-          {checklist.map((item) => (
+          {visibleDocs.map((item) => (
             <li key={item.key}>
               <button type="button" className="program-doc" onClick={() => openDoc(item)}>
                 <StatusIcon status={item.status} />

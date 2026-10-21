@@ -11,6 +11,8 @@ export const COLLECTIONS = [
   'classGroups',
   'classMessages',
   'notifications',
+  'attendanceLogs',
+  'directMessages',
 ]
 
 const MONGODB_URI = process.env.MONGODB_URI || ''
@@ -105,15 +107,24 @@ async function createMongoStore() {
     col('users').createIndex({ id: 1 }, { unique: true }),
     col('users').createIndex({ phoneKey: 1 }, { unique: true }),
     col('enrollments').createIndex({ courseId: 1 }),
-    ...['enrollments', 'contacts', 'orders', 'classGroups', 'classMessages', 'notifications'].flatMap(
-      (name) => [
-        col(name).createIndex({ id: 1 }, { unique: true }),
-        col(name).createIndex({ userId: 1 }),
-      ],
-    ),
+    ...[
+      'enrollments',
+      'contacts',
+      'orders',
+      'classGroups',
+      'classMessages',
+      'notifications',
+      'attendanceLogs',
+      'directMessages',
+    ].flatMap((name) => [
+      col(name).createIndex({ id: 1 }, { unique: true }),
+      col(name).createIndex({ userId: 1 }),
+    ]),
     col('classMessages').createIndex({ courseId: 1, createdAt: -1 }),
     col('classGroups').createIndex({ courseId: 1 }, { unique: true }),
     col('notifications').createIndex({ createdAt: -1 }),
+    col('attendanceLogs').createIndex({ enrollmentId: 1, createdAt: -1 }),
+    col('directMessages').createIndex({ toUserId: 1, createdAt: -1 }),
   ]).catch((err) => console.warn('Mongo index:', err.message))
 
   return {
