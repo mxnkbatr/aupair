@@ -156,7 +156,6 @@
     0 2px 4px rgba(16, 16, 24, 0.04),
     0 8px 20px rgba(16, 16, 24, 0.1),
     0 16px 40px rgba(16, 16, 24, 0.06);
-  animation: homeCardIn 0.45s var(--ease-out) both;
 }
 
 .home-course__media {
@@ -228,7 +227,6 @@
     0 2px 4px rgba(16, 16, 24, 0.05),
     0 10px 24px rgba(16, 16, 24, 0.12),
     0 18px 44px rgba(16, 16, 24, 0.08);
-  animation: homeCardIn 0.45s var(--ease-out) both;
 }
 
 .home-country__media,
@@ -271,15 +269,9 @@
   font-size: 0.8125rem;
 }
 
-@keyframes homeCardIn {
-  from {
-    opacity: 0;
-    transform: translateY(12px) scale(0.98);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
+.home-course,
+.home-country {
+  animation: none !important;
 }
 
 @media (prefers-reduced-motion: reduce) {

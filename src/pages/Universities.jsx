@@ -216,7 +216,6 @@ export default function Universities() {
             scale={0.97}
           >
             <motion.img
-              layoutId={reduce ? undefined : `country-img-${featured.id}`}
               src={featured.image}
               alt=""
               transition={{ type: 'spring', stiffness: 380, damping: 38 }}
@@ -257,7 +256,6 @@ export default function Universities() {
                 >
                   <motion.img
                     className="uni-row__photo"
-                    layoutId={reduce ? undefined : `country-img-${uni.id}`}
                     src={uni.image}
                     alt=""
                     loading="lazy"

@@ -77,7 +77,6 @@ export default function CourseDetail() {
     <div className="course-detail">
       <section className="cd-hero cd-hero--bleed">
         <motion.img
-          layoutId={`course-img-${course.id}`}
           src={hero}
           alt=""
           transition={{ type: 'spring', stiffness: 380, damping: 38 }}
@@ -92,7 +91,7 @@ export default function CourseDetail() {
             <span className="cd-hero__status">{level}</span>
             <span className="cd-hero__status is-open">● Элсэлт нээлттэй</span>
           </div>
-          <motion.h1 layoutId={`course-title-${course.id}`}>{course.title}</motion.h1>
+          <motion.h1>{course.title}</motion.h1>
           {course.subtitle ? <p>{course.subtitle}</p> : null}
         </div>
       </section>

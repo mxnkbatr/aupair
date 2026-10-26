@@ -34,7 +34,7 @@ Local-д нэмэлтээр: `DATA_DIR` (JSON файлын хавтас), `PORT`
 
 ## Capacitor (iOS, Android)
 
-- `appId`: `mn.aupair.app`, `appName`: Au Pair Mongolia
+- `appId`: `mn.achira.app` (Play Store Achira slot), `appName`: Mongolian Au Pair
 - Апп `server.url`-аар https://aupair-app.vercel.app-г ачаалдаг. Тиймээс вэб deploy хийгдэхэд апп шинэ build-гүйгээр шинэчлэгдэнэ.
 - Шинэ native build зөвхөн plugin, icon, splash, хувилбар өөрчлөгдөхөд хэрэгтэй.
 

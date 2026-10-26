@@ -26,6 +26,8 @@ android/build
 android/captures
 android/local.properties
 android/.idea
+android/key.properties
+android/keystore/
 *.apk
 *.aab
 *.keystore

@@ -40,7 +40,6 @@ export default function UniversityDetail() {
         <section className="ud-hero">
           <div className="ud-hero__media">
             <motion.img
-              layoutId={`country-img-${uni.id}`}
               src={uni.image}
               alt=""
               transition={{ type: 'spring', stiffness: 380, damping: 38 }}

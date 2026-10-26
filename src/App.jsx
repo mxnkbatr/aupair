@@ -11,7 +11,6 @@ import {
   useParams,
 } from 'react-router-dom'
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
-import { flushSync } from 'react-dom'
 import { LayoutGroup } from 'motion/react'
 import { Capacitor } from '@capacitor/core'
 import AppHeader from './components/AppHeader'
@@ -110,13 +109,9 @@ const SWIPE_BACK = Capacitor.isNativePlatform() || import.meta.env.DEV
 const scrollPositions = new Map()
 let skipNextTransition = false
 
-const canViewTransition = () =>
-  typeof document.startViewTransition === 'function' &&
-  !window.matchMedia('(prefers-reduced-motion: reduce)').matches
-
 /**
- * Slide forward/back like a native stack; tab switches crossfade and keep scroll.
- * The rendered location lags the URL until the view transition has captured the old page.
+ * Instant route swap — no View Transitions / opacity fades (they flash white).
+ * Still tracks dir for scroll restore (tab/back keep position, push scrolls top).
  */
 function usePageTransition() {
   const location = useLocation()
@@ -132,24 +127,12 @@ function usePageTransition() {
     }
     if (skipNextTransition) {
       skipNextTransition = false
-      setShown({ location, dir: 'back', instant: true })
+      setShown({ location, dir: 'back' })
       return
     }
     const tabSwitch = isDockRoute(prev.pathname) && isDockRoute(location.pathname)
     const dir = tabSwitch ? 'fade' : navType === 'POP' ? 'back' : 'forward'
-
-    if (!canViewTransition()) {
-      setShown({ location, dir })
-      return
-    }
-    const root = document.documentElement
-    root.dataset.nav = dir
-    const transition = document.startViewTransition(() => {
-      flushSync(() => setShown({ location, dir, viewTransition: true }))
-    })
-    transition.finished.finally(() => {
-      if (root.dataset.nav === dir) delete root.dataset.nav
-    })
+    setShown({ location, dir })
   }, [location, navType, shown])
 
   return shown
@@ -305,11 +288,7 @@ function AppFrame() {
       />
       <OfflineBanner />
       <main className="site__main">
-        <div
-          key={pathname}
-          ref={pageRef}
-          className={`page page--${shown.viewTransition || shown.instant ? 'none' : dir}`}
-        >
+        <div key={pathname} ref={pageRef} className="page page--none">
           <PullIndicator {...ptr} />
           <AppRoutes location={shown.location} />
         </div>

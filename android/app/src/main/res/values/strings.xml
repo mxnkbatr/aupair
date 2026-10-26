@@ -2,6 +2,6 @@
 <resources>
     <string name="app_name">Mongolian Au Pair</string>
     <string name="title_activity_main">Mongolian Au Pair</string>
-    <string name="package_name">mn.aupair.app</string>
-    <string name="custom_url_scheme">mn.aupair.app</string>
+    <string name="package_name">mn.achira.app</string>
+    <string name="custom_url_scheme">mn.achira.app</string>
 </resources>

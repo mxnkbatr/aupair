@@ -369,31 +369,12 @@ p {
   border-radius: var(--radius);
 }
 
-@media (min-width: 900px) {
-  .fade-up {
-    animation: fadeUp 0.55s var(--ease-out) both;
-  }
-
-  .fade-up-delay {
-    animation: fadeUp 0.6s var(--ease-out) 0.08s both;
-  }
-
-  .fade-up-2 {
-    animation: fadeUp 0.65s var(--ease-out) 0.14s both;
-  }
-
-  .fade-up-3 {
-    animation: fadeUp 0.7s var(--ease-out) 0.2s both;
-  }
-}
-
-@media (max-width: 899px) {
-  .fade-up,
-  .fade-up-delay,
-  .fade-up-2,
-  .fade-up-3 {
-    animation: none;
-  }
+/* No page-entry fade — causes white flash on navigation */
+.fade-up,
+.fade-up-delay,
+.fade-up-2,
+.fade-up-3 {
+  animation: none !important;
 }
 
 @keyframes fadeUp {
@@ -453,180 +434,23 @@ p {
   }
 }
 
-/* Page transitions: slide only — never fade through transparent (white flash). */
+/* Instant page swap — no opacity / View Transition (white flash). */
 .page {
   position: relative;
   background: var(--bg);
-  animation-duration: 0.38s;
-  animation-timing-function: cubic-bezier(0.32, 0.72, 0, 1);
-  animation-fill-mode: backwards;
 }
 
-.page--forward {
-  animation-name: pageForward;
-}
-
-.page--back {
-  animation-name: pageBack;
-}
-
+.page--none,
+.page--forward,
+.page--back,
 .page--fade {
-  animation-name: pageFade;
-  animation-duration: 0.22s;
-}
-
-.page--none {
   animation: none;
 }
 
-@keyframes pageForward {
-  from {
-    left: 28px;
-  }
-  to {
-    left: 0;
-  }
-}
-
-@keyframes pageBack {
-  from {
-    left: -28px;
-  }
-  to {
-    left: 0;
-  }
-}
-
-@keyframes pageFade {
-  from {
-    opacity: 0.92;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-/* iOS-style push via View Transitions (old page stays visible underneath). */
-.app-header {
-  view-transition-name: app-header;
-}
-
-.navbar {
-  view-transition-name: navbar;
-}
-
-.tabbar {
-  view-transition-name: tabbar;
-}
-
-/* Solid backdrop — prevents white flash when snapshots crossfade. */
-::view-transition {
-  background-color: var(--bg);
-}
-
-::view-transition-group(root) {
-  background-color: var(--bg);
-}
-
-::view-transition-group(app-header),
-::view-transition-group(navbar),
-::view-transition-group(tabbar) {
-  animation: none;
-}
-
+/* Kill any View Transition API leftovers */
 ::view-transition-old(root),
 ::view-transition-new(root) {
-  mix-blend-mode: normal;
-  animation-duration: 0.42s;
-  animation-timing-function: cubic-bezier(0.32, 0.72, 0, 1);
-  animation-fill-mode: both;
-  /* Avoid browser default fade stacking with ours (double-fade → white). */
-  animation-delay: 0s;
-}
-
-html[data-nav='forward']::view-transition-old(root),
-html[data-nav='forward']::view-transition-new(root),
-html[data-nav='back']::view-transition-old(root),
-html[data-nav='back']::view-transition-new(root) {
-  /* Slide only — kill UA default opacity fade that flashes white. */
-  opacity: 1;
-}
-
-html[data-nav='forward']::view-transition-old(root) {
-  animation-name: vtPushOld;
-}
-
-html[data-nav='forward']::view-transition-new(root) {
-  animation-name: vtPushNew;
-  box-shadow: -8px 0 24px rgba(17, 17, 20, 0.12);
-}
-
-html[data-nav='back']::view-transition-old(root) {
-  z-index: 1;
-  animation-name: vtPopOld;
-  box-shadow: -8px 0 24px rgba(17, 17, 20, 0.12);
-}
-
-html[data-nav='back']::view-transition-new(root) {
-  animation-name: vtPopNew;
-}
-
-/* Tab switch: keep old opaque underneath; only new fades in (no hole to white). */
-html[data-nav='fade']::view-transition-old(root),
-html[data-nav='fade']::view-transition-new(root) {
-  animation-duration: 0.22s;
-  animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-html[data-nav='fade']::view-transition-old(root) {
-  animation-name: vtFadeStay;
-  z-index: 1;
-}
-
-html[data-nav='fade']::view-transition-new(root) {
-  animation-name: vtFadeIn;
-  z-index: 2;
-}
-
-@keyframes vtPushOld {
-  to {
-    transform: translateX(-22%);
-    filter: brightness(0.92);
-  }
-}
-
-@keyframes vtPushNew {
-  from {
-    transform: translateX(100%);
-  }
-}
-
-@keyframes vtPopOld {
-  to {
-    transform: translateX(100%);
-  }
-}
-
-@keyframes vtPopNew {
-  from {
-    transform: translateX(-22%);
-    filter: brightness(0.92);
-  }
-}
-
-@keyframes vtFadeStay {
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes vtFadeIn {
-  from {
-    opacity: 0.01;
-  }
-  to {
-    opacity: 1;
-  }
+  animation: none !important;
 }
 
 /* Edge swipe back */

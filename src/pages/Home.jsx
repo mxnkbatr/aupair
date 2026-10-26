@@ -1,5 +1,4 @@
 import { Link } from 'react-router-dom'
-import { motion, useReducedMotion } from 'motion/react'
 import { MessengerLogo, Phone } from '@phosphor-icons/react'
 import { useAuth } from '../auth'
 import { countries, newsItems, org, social } from '../data'
@@ -16,9 +15,6 @@ import useCourses from '../hooks/useCourses'
 import useMyData from '../hooks/useMyData'
 import './Home.css'
 
-const spring = { type: 'spring', stiffness: 420, damping: 34 }
-const reveal = { type: 'spring', stiffness: 360, damping: 32 }
-
 function flagFor(id) {
   const map = {
     germany: '🇩🇪',
@@ -28,29 +24,15 @@ function flagFor(id) {
     belgium: '🇧🇪',
     netherlands: '🇳🇱',
     denmark: '🇩🇰',
+    usa: '🇺🇸',
   }
   return map[id] || '🇪🇺'
-}
-
-function Reveal({ children, delay = 0, className = '', reduce }) {
-  if (reduce) return <div className={className}>{children}</div>
-  return (
-    <motion.div
-      className={className}
-      initial={{ opacity: 0, y: 14 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ ...reveal, delay }}
-    >
-      {children}
-    </motion.div>
-  )
 }
 
 export default function Home() {
   const { user } = useAuth()
   const data = useMyData()
   const { courses, loading } = useCourses()
-  const reduce = useReducedMotion()
 
   const enrollments = data?.enrollments || []
   const inProgram = Boolean(user?.inProgram)
@@ -71,7 +53,7 @@ export default function Home() {
 
   return (
     <div className="home">
-      <Reveal className="container home-section home-section--first" delay={0} reduce={reduce}>
+      <div className="container home-section home-section--first">
         {!user ? (
           <Pressable as={Link} to="/me" state={{ auth: 'register' }} className="journey-card journey-card--intro">
             <span className="journey-card__kicker">Au Pair гэж юу вэ?</span>
@@ -100,9 +82,9 @@ export default function Home() {
             <span className="journey-card__cta">{journeyCta.label}</span>
           </Pressable>
         )}
-      </Reveal>
+      </div>
 
-      <Reveal className="home-section" delay={0.06} reduce={reduce}>
+      <div className="home-section">
         <div className="container block-head">
           <h2>Элсэлт нээлттэй</h2>
           <Link to="/learn" className="link-more">
@@ -113,7 +95,7 @@ export default function Home() {
           <SkeletonRow count={2} w={260} h={180} />
         ) : (
           <div className="home-rail">
-            {courses.slice(0, 4).map((course, i) => {
+            {courses.slice(0, 4).map((course) => {
               const seats = course.seatsLeft
               const level = String(course.level || 'A1').replace(/^DE\s*/i, '')
               return (
@@ -122,19 +104,12 @@ export default function Home() {
                   as={Link}
                   to={`/learn/course/${course.id}`}
                   className="home-course"
-                  style={reduce ? undefined : { animationDelay: `${0.08 + i * 0.05}s` }}
                 >
-                  <motion.div
-                    className="home-course__media"
-                    layoutId={`course-img-${course.id}`}
-                    transition={spring}
-                  >
+                  <div className="home-course__media">
                     <SoftImage src={course.image || '/cover.jpg'} alt="" />
                     <span className="home-course__level">{level}</span>
-                  </motion.div>
-                  <motion.h3 layoutId={`course-title-${course.id}`} transition={spring}>
-                    {course.title}
-                  </motion.h3>
+                  </div>
+                  <h3>{course.title}</h3>
                   <p>
                     {course.duration} · {course.mode}
                   </p>
@@ -148,9 +123,9 @@ export default function Home() {
             })}
           </div>
         )}
-      </Reveal>
+      </div>
 
-      <Reveal className="home-section" delay={0.12} reduce={reduce}>
+      <div className="home-section">
         <div className="container block-head">
           <h2>Au Pair</h2>
           <Link to="/countries" className="link-more">
@@ -158,21 +133,11 @@ export default function Home() {
           </Link>
         </div>
         <div className="home-rail">
-          {countries.slice(0, 6).map((c, i) => (
-            <Pressable
-              key={c.id}
-              as={Link}
-              to={`/countries/${c.id}`}
-              className="home-country"
-              style={reduce ? undefined : { animationDelay: `${0.14 + i * 0.04}s` }}
-            >
-              <motion.div
-                className="home-country__media"
-                layoutId={`country-img-${c.id}`}
-                transition={spring}
-              >
+          {countries.slice(0, 6).map((c) => (
+            <Pressable key={c.id} as={Link} to={`/countries/${c.id}`} className="home-country">
+              <div className="home-country__media">
                 <SoftImage src={c.image} alt="" />
-              </motion.div>
+              </div>
               <span className="home-country__shade" aria-hidden />
               <span className="home-country__text">
                 <strong>
@@ -183,9 +148,9 @@ export default function Home() {
             </Pressable>
           ))}
         </div>
-      </Reveal>
+      </div>
 
-      <Reveal className="home-section" delay={0.16} reduce={reduce}>
+      <div className="home-section">
         <div className="container block-head">
           <h2>Мэдээ</h2>
           <Link to="/news" className="link-more">
@@ -211,9 +176,9 @@ export default function Home() {
             </Pressable>
           ))}
         </div>
-      </Reveal>
+      </div>
 
-      <Reveal className="container home-section home-section--end" delay={0.2} reduce={reduce}>
+      <div className="container home-section home-section--end">
         <div className="advice-card">
           <h2>Зөвлөгөө авах</h2>
           <p>
@@ -229,7 +194,7 @@ export default function Home() {
             </a>
           </div>
         </div>
-      </Reveal>
+      </div>
     </div>
   )
 }
