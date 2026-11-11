@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
-import { api } from '../api'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { api, setAdminEmail } from '../api'
 import {
   GERMAN_LEVEL_LABELS,
   INTEREST_LABELS,
@@ -17,16 +17,22 @@ import PageHeader from '../components/PageHeader'
 import './Admin.css'
 
 const KEY_STORAGE = 'aupair-admin-key'
+const EMAIL_STORAGE = 'aupair-admin-email'
 
 const TABS = [
-  { id: 'program', label: 'Хөтөлбөр' },
-  { id: 'course-req', label: 'Сургалтын хүсэлт' },
-  { id: 'aupair-req', label: 'Au Pair хүсэлт' },
-  { id: 'notify', label: 'Мэдэгдэл' },
-  { id: 'contacts', label: 'Холбоо' },
-  { id: 'orders', label: 'Захиалга' },
-  { id: 'users', label: 'Хэрэглэгч' },
+  { id: 'program', label: 'Хөтөлбөр', short: 'Хөтөлбөр' },
+  { id: 'course-req', label: 'Сургалтын хүсэлт', short: 'Сургалт' },
+  { id: 'aupair-req', label: 'Au Pair хүсэлт', short: 'Au Pair' },
+  { id: 'notify', label: 'Мэдэгдэл', short: 'Мэдэгдэл' },
+  { id: 'contacts', label: 'Холбоо', short: 'Холбоо' },
+  { id: 'orders', label: 'Захиалга', short: 'Захиалга' },
+  { id: 'users', label: 'Хэрэглэгч', short: 'Хэрэглэгч' },
 ]
+
+function phoneHref(phone, scheme = 'tel') {
+  const digits = String(phone || '').replace(/[^\d+]/g, '')
+  return digits ? `${scheme}:${digits}` : null
+}
 
 const ENROLL_TABS = new Set(['course-req', 'aupair-req'])
 
@@ -93,7 +99,9 @@ function rowsFor(tab, items) {
       Нас: e.age,
       'Герман хэл': GERMAN_LEVEL_LABELS[e.germanLevel] || '',
       Тэмдэглэл: e.note,
+      'Дүн (₮)': e.amountMnt || e.payment?.amount || '',
       Төлөв: STATUS_LABELS.enrollments[e.status] || e.status,
+      'Төлбөр': e.payment?.status || '',
     }))
   }
   if (tab === 'contacts') {
@@ -135,21 +143,33 @@ function downloadCsv(tab, items) {
 }
 
 function Login({ onLogin, error, loading }) {
+  const [email, setEmail] = useState(() => sessionStorage.getItem(EMAIL_STORAGE) || '')
   const [key, setKey] = useState('')
   return (
     <form
       className="admin-login"
       onSubmit={(e) => {
         e.preventDefault()
-        onLogin(key)
+        onLogin(email.trim(), key)
       }}
     >
       <label className="field">
-        <span>Админ нууц үг</span>
+        <span>Имэйл</span>
+        <input
+          type="email"
+          required
+          autoFocus
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          autoComplete="username"
+          placeholder="gariddoljinsuren@gmail.com"
+        />
+      </label>
+      <label className="field">
+        <span>Нууц үг</span>
         <input
           type="password"
           required
-          autoFocus
           value={key}
           onChange={(e) => setKey(e.target.value)}
           autoComplete="current-password"
@@ -980,6 +1000,79 @@ function ProgramPanel({ item, adminKey, onUpdated, onError, defaultOpen = false 
   )
 }
 
+function EnrollmentPaymentPanel({ item, adminKey, onUpdated, onError }) {
+  const [busy, setBusy] = useState(false)
+  const [ok, setOk] = useState('')
+  if (item.kind !== 'course') return null
+
+  const amount = item.amountMnt || item.payment?.amount
+  const statusLabel = STATUS_LABELS.enrollments[item.status] || item.status
+  const payStatus = item.payment?.status || (item.status === 'pending_payment' ? 'pending' : null)
+  const done = item.status === 'accepted' || item.status === 'cancelled'
+
+  async function run(action) {
+    setBusy(true)
+    setOk('')
+    try {
+      if (action === 'cancel') {
+        const res = await api.adminSetStatus(adminKey, 'enrollments', item.id, 'cancelled')
+        onUpdated?.(res.item)
+        setOk('Цуцаллаа')
+        return
+      }
+      const res = await api.adminEnrollmentPayment(adminKey, item.id, { action })
+      onUpdated?.(res.item)
+      setOk(res.message || 'OK')
+    } catch (err) {
+      onError?.(err.message)
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  return (
+    <div className="admin-pay">
+      <strong>QPay төлбөр / суудал</strong>
+      <p className="admin-pay__meta">
+        {amount ? `Дүн: ₮${Number(amount).toLocaleString('en-US')}` : 'Дүн: —'}
+        {` · ${statusLabel}`}
+        {payStatus ? ` · төлбөр: ${payStatus}` : ''}
+        {item.payment?.invoiceId ? ` · invoice: ${item.payment.invoiceId.slice(0, 12)}…` : ''}
+      </p>
+      <div className="admin-pay__actions">
+        <button type="button" className="btn btn-ghost" disabled={busy || done} onClick={() => run('check')}>
+          QPay шалгах
+        </button>
+        <button
+          type="button"
+          className="btn btn-ghost"
+          disabled={busy || done}
+          onClick={() => run('markPaid')}
+        >
+          Төлбөр баталгаажуулах
+        </button>
+        <button
+          type="button"
+          className="btn btn-primary"
+          disabled={busy || item.status === 'accepted'}
+          onClick={() => run('accept')}
+        >
+          Суудал батлах
+        </button>
+        <button
+          type="button"
+          className="btn btn-ghost"
+          disabled={busy || item.status === 'cancelled'}
+          onClick={() => run('cancel')}
+        >
+          Цуцлах
+        </button>
+      </div>
+      {ok ? <small className="admin-notify__ok">{ok}</small> : null}
+    </div>
+  )
+}
+
 function EnrollmentKindPanel({ item, adminKey, onUpdated, onError }) {
   const [busy, setBusy] = useState(false)
   const isCourse = item.kind === 'course'
@@ -1109,6 +1202,12 @@ function ItemDetails({
           onUpdated={onEnrollmentUpdated}
           onError={onError}
         />
+        <EnrollmentPaymentPanel
+          item={item}
+          adminKey={adminKey}
+          onUpdated={onEnrollmentUpdated}
+          onError={onError}
+        />
         {item.status === 'accepted' ? (
           <ClassSchedulePanel item={item} adminKey={adminKey} onError={onError} />
         ) : null}
@@ -1155,18 +1254,27 @@ export default function Admin() {
   const [query, setQuery] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [openId, setOpenId] = useState(null)
+  const autoOpenedTab = useRef(null)
 
-  const load = useCallback(async (adminKey) => {
+  const load = useCallback(async (emailOrKey, maybeKey) => {
+    const hasPair = maybeKey !== undefined
+    const email = hasPair ? String(emailOrKey || '').trim() : sessionStorage.getItem(EMAIL_STORAGE) || ''
+    const adminKey = hasPair ? maybeKey : emailOrKey
     setLoading(true)
     setError('')
     try {
+      if (email) setAdminEmail(email)
       const res = await api.adminData(adminKey)
       sessionStorage.setItem(KEY_STORAGE, adminKey)
+      if (email) sessionStorage.setItem(EMAIL_STORAGE, email)
       setKey(adminKey)
       setData(res)
     } catch (err) {
       if (err.status === 401 || err.status === 503) {
         sessionStorage.removeItem(KEY_STORAGE)
+        sessionStorage.removeItem(EMAIL_STORAGE)
+        setAdminEmail('')
         setKey('')
         setData(null)
       }
@@ -1177,8 +1285,12 @@ export default function Admin() {
   }, [])
 
   useEffect(() => {
-    const saved = sessionStorage.getItem(KEY_STORAGE)
-    if (saved) load(saved)
+    const savedKey = sessionStorage.getItem(KEY_STORAGE)
+    const savedEmail = sessionStorage.getItem(EMAIL_STORAGE)
+    if (savedKey && savedEmail) {
+      setAdminEmail(savedEmail)
+      load(savedEmail, savedKey)
+    }
   }, [load])
 
   async function changeStatus(item, status) {
@@ -1219,6 +1331,8 @@ export default function Admin() {
 
   function logout() {
     sessionStorage.removeItem(KEY_STORAGE)
+    sessionStorage.removeItem(EMAIL_STORAGE)
+    setAdminEmail('')
     setKey('')
     setData(null)
   }
@@ -1271,6 +1385,15 @@ export default function Admin() {
     return byStatus.filter(matchQ)
   }, [data, tab, statusFilter, programFilter, stageFilter, query])
 
+  useEffect(() => {
+    if (autoOpenedTab.current === tab) return
+    autoOpenedTab.current = tab
+    const priority = items.find((i) =>
+      ['pending_payment', 'pending', 'paid'].includes(i.status),
+    )
+    if (priority) setOpenId(priority.id)
+  }, [items, tab])
+
   if (!data) {
     return (
       <div className="admin-page">
@@ -1302,7 +1425,7 @@ export default function Admin() {
   const coursePending = (data.enrollments || []).filter((e) => {
     const isCourse =
       e.kind === 'course' || (!e.kind && COURSE_OPTIONS.some((c) => c.id === e.courseId))
-    return isCourse && e.status === 'pending'
+    return isCourse && (e.status === 'pending' || e.status === 'pending_payment')
   }).length
   const aupairPending = (data.enrollments || []).filter((e) => {
     const isCountry =
@@ -1315,11 +1438,15 @@ export default function Admin() {
       <div className="container">
         <PageHeader
           title="Админ"
-          text="Хөтөлбөр, элсэлт, хүсэлт, захиалгыг нэг дороос удирдах"
+          text="Гар утсаас шалгах · төлбөр · суудал"
           right={
             <div className="admin-actions">
-              <button type="button" className="btn btn-ghost" onClick={() => load(key)}>
-                {loading ? '...' : 'Шинэчлэх'}
+              <button
+                type="button"
+                className="btn btn-ghost admin-actions__icon"
+                onClick={() => load(sessionStorage.getItem(EMAIL_STORAGE) || '', key)}
+              >
+                {loading ? '…' : '↻'}
               </button>
               <button type="button" className="btn btn-ghost" onClick={logout}>
                 Гарах
@@ -1354,18 +1481,20 @@ export default function Admin() {
                 type="button"
                 role="tab"
                 aria-selected={tab === t.id}
-                className={`admin-tab${tab === t.id ? ' is-active' : ''}`}
+                className={`admin-tab${tab === t.id ? ' is-active' : ''}${badge > 0 ? ' has-badge' : ''}`}
                 onClick={() => {
                   setTab(t.id)
                   setStatusFilter('all')
                   setProgramFilter('all')
                   setStageFilter('all')
                   setQuery('')
+                  setOpenId(null)
                 }}
               >
-                {t.label}
+                <span className="admin-tab__label admin-tab__label--full">{t.label}</span>
+                <span className="admin-tab__label admin-tab__label--short">{t.short}</span>
                 <span>{count}</span>
-                {badge > 0 && <em>{badge} шинэ</em>}
+                {badge > 0 && <em>{badge}</em>}
               </button>
             )
           })}
@@ -1458,62 +1587,114 @@ export default function Admin() {
               <p className="admin-empty">Одоогоор бүртгэл алга.</p>
             ) : (
               <ul className="admin-list">
-                {items.map((item) => (
-                  <li
-                    key={item.id}
-                    className={`admin-item admin-item--${item.status || (item.inProgram ? 'program' : 'user')}`}
-                  >
-                    <div className="admin-item__head">
-                      <div>
-                        <strong>{item.name}</strong>
-                        <a href={`tel:${item.phone.replace(/\s/g, '')}`}>{item.phone}</a>
-                        {ENROLL_TABS.has(tab) ? (
-                          <span className="admin-item__from">
-                            → {item.courseTitle || item.courseId}
+                {items.map((item) => {
+                  const isOpen = openId === item.id
+                  const tel = phoneHref(item.phone, 'tel')
+                  const sms = phoneHref(item.phone, 'sms')
+                  const statusText =
+                    (labels && labels[item.status]) ||
+                    STATUS_LABELS.enrollments?.[item.status] ||
+                    item.status ||
+                    ''
+                  return (
+                    <li
+                      key={item.id}
+                      className={`admin-item admin-item--${item.status || (item.inProgram ? 'program' : 'user')}${isOpen ? ' is-open' : ''}`}
+                    >
+                      <button
+                        type="button"
+                        className="admin-item__toggle"
+                        aria-expanded={isOpen}
+                        onClick={() => setOpenId(isOpen ? null : item.id)}
+                      >
+                        <div className="admin-item__who">
+                          <strong>{item.name}</strong>
+                          <span className="admin-item__phone">{item.phone}</span>
+                          {ENROLL_TABS.has(tab) ? (
+                            <span className="admin-item__from">
+                              {item.courseTitle || item.courseId}
+                              {item.amountMnt
+                                ? ` · ₮${Number(item.amountMnt).toLocaleString('en-US')}`
+                                : ''}
+                            </span>
+                          ) : null}
+                          {(tab === 'program' || tab === 'users') && item.inProgram ? (
+                            <span className="admin-item__from">
+                              {PROGRAM_CATEGORY_LABELS[item.programCategory] || 'Хөтөлбөр'} · шат{' '}
+                              {item.programStage}/5
+                            </span>
+                          ) : null}
+                        </div>
+                        <div className="admin-item__chips">
+                          {statusText ? (
+                            <span className={`admin-item__status admin-item__status--${item.status || 'user'}`}>
+                              {statusText}
+                            </span>
+                          ) : null}
+                          {ENROLL_TABS.has(tab) ? (
+                            <span className={`admin-item__pill admin-item__pill--${item.kind || 'course'}`}>
+                              {item.kind === 'country' ? 'Au Pair' : 'Сургалт'}
+                            </span>
+                          ) : null}
+                          <span className="admin-item__chev" aria-hidden>
+                            {isOpen ? '▾' : '▸'}
                           </span>
+                        </div>
+                      </button>
+
+                      <div className="admin-item__quick">
+                        {tel ? (
+                          <a className="admin-quick-btn" href={tel}>
+                            Залгах
+                          </a>
                         ) : null}
-                      </div>
-                      {labels && (
-                        <select
-                          value={item.status}
-                          onChange={(e) => changeStatus(item, e.target.value)}
-                          aria-label="Төлөв"
+                        {sms ? (
+                          <a className="admin-quick-btn" href={sms}>
+                            SMS
+                          </a>
+                        ) : null}
+                        {labels ? (
+                          <select
+                            className="admin-item__status-select"
+                            value={item.status}
+                            onChange={(e) => changeStatus(item, e.target.value)}
+                            aria-label="Төлөв"
+                          >
+                            {Object.entries(labels).map(([value, label]) => (
+                              <option key={value} value={value}>
+                                {label}
+                              </option>
+                            ))}
+                          </select>
+                        ) : null}
+                        <button
+                          type="button"
+                          className="admin-quick-btn admin-quick-btn--ghost"
+                          onClick={() => setOpenId(isOpen ? null : item.id)}
                         >
-                          {Object.entries(labels).map(([value, label]) => (
-                            <option key={value} value={value}>
-                              {label}
-                            </option>
-                          ))}
-                        </select>
-                      )}
-                      {ENROLL_TABS.has(tab) ? (
-                        <span className={`admin-item__pill admin-item__pill--${item.kind || 'course'}`}>
-                          {item.kind === 'country' ? 'Au Pair' : 'Сургалт'}
-                        </span>
+                          {isOpen ? 'Хураах' : 'Дэлгэрэнгүй'}
+                        </button>
+                      </div>
+
+                      {isOpen ? (
+                        <div className="admin-item__body">
+                          <ItemDetails
+                            tab={tab}
+                            item={item}
+                            adminKey={key}
+                            onUserUpdated={onUserUpdated}
+                            onEnrollmentUpdated={onEnrollmentUpdated}
+                            onError={setError}
+                            enrollments={data.enrollments || []}
+                          />
+                        </div>
                       ) : null}
-                      {(tab === 'program' || tab === 'users') && item.inProgram ? (
-                        <span className="admin-item__pill">
-                          {PROGRAM_CATEGORY_LABELS[item.programCategory] || 'Хөтөлбөр'} ·{' '}
-                          {item.programStage}/5
-                        </span>
-                      ) : null}
-                    </div>
-                    <div className="admin-item__body">
-                      <ItemDetails
-                        tab={tab}
-                        item={item}
-                        adminKey={key}
-                        onUserUpdated={onUserUpdated}
-                        onEnrollmentUpdated={onEnrollmentUpdated}
-                        onError={setError}
-                        enrollments={data.enrollments || []}
-                      />
-                    </div>
-                    <small className="admin-item__meta">
-                      {formatDate(item.createdAt)} · {item.id}
-                    </small>
-                  </li>
-                ))}
+                      <small className="admin-item__meta">
+                        {formatDate(item.createdAt)} · {item.id}
+                      </small>
+                    </li>
+                  )
+                })}
               </ul>
             )}
           </>

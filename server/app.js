@@ -3,7 +3,31 @@ import cors from 'cors'
 import crypto from 'node:crypto'
 import { courses } from './courses.js'
 import { createStore } from './store.js'
-import { GERMAN_LEVEL_LABELS, products } from '../src/data.js'
+import { GERMAN_LEVEL_LABELS, OPEN_ENROLLMENT_IDS, products } from '../src/data.js'
+
+/** A1/A2 үнэ — data.js-д байхгүй байсан ч QPay алгасахгүй */
+const COURSE_PRICE_MNT = {
+  'german-a1': 990000,
+  'german-a2': 840000,
+}
+
+function courseAmountMnt(course) {
+  const n = Number(course?.priceMnt)
+  if (Number.isFinite(n) && n > 0) return n
+  return COURSE_PRICE_MNT[course?.id] || 0
+}
+
+function withCoursePricing(course) {
+  const amount = courseAmountMnt(course)
+  if (!amount) return course
+  return {
+    ...course,
+    priceMnt: amount,
+    priceLabel: course.priceLabel && !/зөвлөгөө|удахгүй/i.test(String(course.priceLabel))
+      ? course.priceLabel
+      : `₮${amount.toLocaleString('en-US')}`,
+  }
+}
 import {
   PROGRAM_CATEGORIES,
   PROGRAM_CATEGORY_LABELS,
@@ -31,19 +55,32 @@ import {
   normalizeSchedule,
   WEEKDAY_LABELS,
 } from './classRoom.js'
+import {
+  checkQPayInvoicePayment,
+  createQPayInvoice,
+  isInvoicePaid,
+  isQPayConfigured,
+  publicPaymentPayload,
+} from './qpay.js'
 
 const TOKEN_TTL_MS = 30 * 24 * 60 * 60 * 1000
 
 const STATUSES = {
-  enrollments: ['pending', 'contacted', 'accepted', 'cancelled'],
+  enrollments: ['pending', 'pending_payment', 'paid', 'contacted', 'accepted', 'cancelled'],
   contacts: ['pending', 'contacted', 'done'],
   orders: ['pending', 'contacted', 'done', 'cancelled'],
 }
 
+/** Суудал эзэлнэ (цуцлаагүй) */
+const SEAT_HOLD_STATUSES = new Set(['pending', 'pending_payment', 'paid', 'contacted', 'accepted'])
+
 const GERMAN_LEVELS = Object.keys(GERMAN_LEVEL_LABELS)
 
 const IS_PROD = process.env.NODE_ENV === 'production' || Boolean(process.env.VERCEL)
-const ADMIN_KEY = process.env.ADMIN_KEY || (IS_PROD ? '' : 'aupair-admin')
+const ADMIN_EMAIL = String(process.env.ADMIN_EMAIL || 'gariddoljinsuren@gmail.com')
+  .trim()
+  .toLowerCase()
+const ADMIN_KEY = process.env.ADMIN_KEY || 'garid2005'
 
 if (!ADMIN_KEY) {
   console.warn('ADMIN_KEY тохируулаагүй тул админ хуудас хаалттай.')
@@ -186,7 +223,67 @@ function limitAuth(req, res, next) {
 }
 
 async function activeEnrollments(courseId) {
-  return (await store.all('enrollments', { courseId })).filter((e) => e.status !== 'cancelled')
+  return (await store.all('enrollments', { courseId })).filter((e) =>
+    SEAT_HOLD_STATUSES.has(e.status),
+  )
+}
+
+async function acceptEnrollmentSeat(enrollment, extraPatch = {}) {
+  const patch = {
+    status: 'accepted',
+    paidAt: enrollment.paidAt || new Date().toISOString(),
+    payment: {
+      ...(enrollment.payment || {}),
+      status: 'paid',
+      paidAt: enrollment.paidAt || new Date().toISOString(),
+    },
+    updatedAt: new Date().toISOString(),
+    ...extraPatch,
+  }
+  if (enrollment.kind === 'course') {
+    const hw = normalizeHomework(enrollment.homework)
+    if (hw.length === 0) patch.homework = defaultHomework(enrollment.courseId)
+    if (typeof enrollment.attendanceCount !== 'number') patch.attendanceCount = 0
+  }
+  const updated = await store.update('enrollments', enrollment.id, patch)
+  if (updated?.userId) {
+    await store
+      .insert('notifications', {
+        id: id(),
+        userId: updated.userId,
+        title: 'Суудал баталгаажлаа',
+        body: `${updated.courseTitle || 'Анги'} · төлбөр амжилттай`,
+        kind: 'enrollment_paid',
+        createdAt: new Date().toISOString(),
+        read: false,
+      })
+      .catch(() => {})
+  }
+  return updated
+}
+
+async function confirmEnrollmentPayment(enrollment) {
+  if (!enrollment) return null
+  if (enrollment.status === 'accepted' || enrollment.status === 'paid') {
+    if (enrollment.status === 'paid') return acceptEnrollmentSeat(enrollment)
+    return enrollment
+  }
+  const invoiceId = enrollment.payment?.invoiceId
+  if (!invoiceId) return enrollment
+  if (!isQPayConfigured()) {
+    throw new Error('QPay тохиргоо хийгдээгүй')
+  }
+  const result = await checkQPayInvoicePayment(invoiceId)
+  if (!isInvoicePaid(result)) return enrollment
+  return acceptEnrollmentSeat(enrollment, {
+    paidAt: new Date().toISOString(),
+    payment: {
+      ...(enrollment.payment || {}),
+      status: 'paid',
+      paidAt: new Date().toISOString(),
+      check: { count: result.count, paid_amount: result.paid_amount },
+    },
+  })
 }
 
 async function seatsLeft(courseId) {
@@ -196,15 +293,22 @@ async function seatsLeft(courseId) {
 }
 
 function isAdmin(req) {
-  if (!ADMIN_KEY) return false
+  if (!ADMIN_KEY || !ADMIN_EMAIL) return false
+  const email = String(req.headers['x-admin-email'] || '')
+    .trim()
+    .toLowerCase()
+  const emailOk =
+    email.length === ADMIN_EMAIL.length &&
+    crypto.timingSafeEqual(Buffer.from(email), Buffer.from(ADMIN_EMAIL))
   const given = Buffer.from(String(req.headers['x-admin-key'] || ''))
   const expected = Buffer.from(ADMIN_KEY)
-  return given.length === expected.length && crypto.timingSafeEqual(given, expected)
+  const keyOk = given.length === expected.length && crypto.timingSafeEqual(given, expected)
+  return emailOk && keyOk
 }
 
 function requireAdmin(req, res, next) {
   if (!ADMIN_KEY) return res.status(503).json({ error: 'Админ хаалттай байна' })
-  if (!isAdmin(req)) return res.status(401).json({ error: 'Нууц үг буруу байна' })
+  if (!isAdmin(req)) return res.status(401).json({ error: 'Имэйл эсвэл нууц үг буруу байна' })
   next()
 }
 
@@ -219,7 +323,10 @@ app.get('/api/health', (_req, res) => {
 
 app.get('/api/courses', async (_req, res) => {
   const list = await Promise.all(
-    courses.map(async (course) => ({ ...course, seatsLeft: await seatsLeft(course.id) })),
+    courses.map(async (course) => ({
+      ...withCoursePricing(course),
+      seatsLeft: await seatsLeft(course.id),
+    })),
   )
   res.json(list)
 })
@@ -227,7 +334,7 @@ app.get('/api/courses', async (_req, res) => {
 app.get('/api/courses/:id', async (req, res) => {
   const course = courses.find((c) => c.id === req.params.id)
   if (!course) return res.status(404).json({ error: 'Хөтөлбөр олдсонгүй' })
-  res.json({ ...course, seatsLeft: await seatsLeft(course.id) })
+  res.json({ ...withCoursePricing(course), seatsLeft: await seatsLeft(course.id) })
 })
 
 app.post('/api/enrollments', async (req, res) => {
@@ -255,6 +362,14 @@ app.post('/api/enrollments', async (req, res) => {
 
   const course = courses.find((c) => c.id === courseId)
   if (!course) return res.status(404).json({ error: 'Хөтөлбөр олдсонгүй' })
+  // Зөвхөн нээлттэй хэлний анги (A1/A2) — Au Pair улс хаалттай
+  const courseOpen =
+    course.kind === 'course' &&
+    course.open !== false &&
+    (course.enrolling === true || OPEN_ENROLLMENT_IDS.includes(courseId))
+  if (!courseOpen) {
+    return res.status(403).json({ error: 'Энэ хөтөлбөрт одоо элсэлт авахгүй байна' })
+  }
 
   const user = await authUser(req)
   const key = phoneKey(phone)
@@ -269,8 +384,21 @@ app.post('/api/enrollments', async (req, res) => {
     return res.status(409).json({ error: 'Энэ ангийн суудал дууссан байна' })
   }
 
+  const priced = withCoursePricing(course)
+  const amount = courseAmountMnt(priced)
+  const needsPayment =
+    priced.kind === 'course' &&
+    (OPEN_ENROLLMENT_IDS.includes(courseId) || amount > 0) &&
+    amount > 0
+  if (needsPayment && !isQPayConfigured()) {
+    return res.status(503).json({
+      error: 'QPay төлбөр түр ажиллахгүй байна. Vercel дээр QPAY_* env тохируулна уу.',
+    })
+  }
+
+  const enrollmentId = id()
   const enrollment = {
-    id: id(),
+    id: enrollmentId,
     userId: user?.id || null,
     kind: course.kind,
     courseId,
@@ -281,19 +409,158 @@ app.post('/api/enrollments', async (req, res) => {
     age,
     germanLevel,
     note,
-    status: 'pending',
+    status: needsPayment ? 'pending_payment' : 'pending',
+    amountMnt: needsPayment ? amount : null,
     attendanceCount: 0,
     homework: course.kind === 'course' ? [] : undefined,
     createdAt: new Date().toISOString(),
   }
+
+  let paymentPublic = null
+  if (needsPayment) {
+    try {
+      const invoice = await createQPayInvoice({
+        senderInvoiceNo: enrollmentId.replace(/[^a-zA-Z0-9_-]/g, '').slice(0, 45) || enrollmentId.slice(0, 45),
+        description: `${course.title} · ${name}`,
+        amountMnt: amount,
+      })
+      enrollment.payment = {
+        invoiceId: invoice.invoice_id,
+        amount,
+        qrImage: invoice.qr_image || null,
+        qrText: invoice.qr_text || null,
+        shortUrl: invoice.qPay_shortUrl || null,
+        urls: invoice.urls || [],
+        status: 'pending',
+        createdAt: new Date().toISOString(),
+      }
+      paymentPublic = publicPaymentPayload(enrollment)
+    } catch (err) {
+      console.error('QPay invoice failed', err)
+      return res.status(502).json({
+        error: err.message || 'QPay нэхэмжлэл үүсгэж чадсангүй',
+      })
+    }
+  }
+
   await store.insert('enrollments', enrollment)
 
   res.status(201).json({
     ok: true,
-    enrollment: { id: enrollment.id },
+    enrollment: {
+      id: enrollment.id,
+      status: enrollment.status,
+      amountMnt: enrollment.amountMnt,
+    },
+    payment: paymentPublic,
     seatsLeft: await seatsLeft(courseId),
-    message: 'Бүртгэл амжилттай. Бид удахгүй холбогдоно.',
+    message: needsPayment
+      ? 'QPay-аар төлбөрөө төлнө үү. Төлсний дараа суудал автоматаар бүртгэгдэнэ.'
+      : 'Бүртгэл амжилттай. Бид удахгүй холбогдоно.',
   })
+})
+
+/** Хэрэглэгч: төлбөр шалгах → суудал баталгаажуулах */
+app.post('/api/enrollments/:id/check-payment', async (req, res) => {
+  const enrollment = await store.one('enrollments', { id: req.params.id })
+  if (!enrollment) return res.status(404).json({ error: 'Бүртгэл олдсонгүй' })
+
+  const user = await authUser(req)
+  const phone = clean(req.body?.phone, 40)
+  const allowed =
+    (user && enrollment.userId === user.id) ||
+    (phone && phoneKey(phone) === phoneKey(enrollment.phone))
+  if (!allowed && !isAdmin(req)) {
+    return res.status(403).json({ error: 'Энэ бүртгэлийг шалгах эрхгүй' })
+  }
+
+  try {
+    const updated = await confirmEnrollmentPayment(enrollment)
+    res.json({
+      ok: true,
+      enrollment: {
+        id: updated.id,
+        status: updated.status,
+        amountMnt: updated.amountMnt,
+      },
+      payment: publicPaymentPayload(updated),
+      paid: updated.status === 'accepted' || updated.status === 'paid',
+      seatsLeft: await seatsLeft(updated.courseId),
+      message:
+        updated.status === 'accepted'
+          ? 'Төлбөр баталгаажлаа · суудал бүртгэгдлээ'
+          : 'Төлбөр хараахан орж ирээгүй байна',
+    })
+  } catch (err) {
+    res.status(502).json({ error: err.message || 'Төлбөр шалгахад алдаа гарлаа' })
+  }
+})
+
+/** QPay callback */
+app.post('/api/qpay/callback', async (req, res) => {
+  const invoiceId =
+    clean(req.body?.invoice_id || req.query?.invoice_id || req.body?.object_id, 80) ||
+    clean(req.body?.sender_invoice_no, 80)
+  // Find by invoice id
+  const all = await store.all('enrollments')
+  let enrollment = (all || []).find((e) => e.payment?.invoiceId === invoiceId)
+  if (!enrollment && invoiceId) {
+    enrollment = (all || []).find((e) => e.id === invoiceId || e.id.replace(/[^a-zA-Z0-9_-]/g, '') === invoiceId)
+  }
+  if (!enrollment) {
+    return res.status(200).json({ ok: true, matched: false })
+  }
+  try {
+    const updated = await confirmEnrollmentPayment(enrollment)
+    res.json({
+      ok: true,
+      matched: true,
+      status: updated.status,
+    })
+  } catch (err) {
+    console.error('QPay callback', err)
+    res.status(200).json({ ok: false, error: err.message })
+  }
+})
+
+/** Admin: QPay шалгах / гараар төлбөр батлах */
+app.post('/api/admin/enrollments/:id/payment', requireAdmin, async (req, res) => {
+  const enrollment = await store.one('enrollments', { id: req.params.id })
+  if (!enrollment) return res.status(404).json({ error: 'Бүртгэл олдсонгүй' })
+  const action = clean(req.body?.action, 20) || 'check'
+
+  try {
+    if (action === 'markPaid' || action === 'accept') {
+      const updated = await acceptEnrollmentSeat(enrollment, {
+        payment: {
+          ...(enrollment.payment || {}),
+          status: 'paid',
+          paidAt: new Date().toISOString(),
+          manual: true,
+        },
+      })
+      return res.json({
+        ok: true,
+        item: updated,
+        payment: publicPaymentPayload(updated),
+        message: 'Төлбөр баталгаажуулж суудал бүртгэлээ',
+      })
+    }
+
+    const updated = await confirmEnrollmentPayment(enrollment)
+    res.json({
+      ok: true,
+      item: updated,
+      payment: publicPaymentPayload(updated),
+      paid: updated.status === 'accepted',
+      message:
+        updated.status === 'accepted'
+          ? 'QPay төлбөр олдлоо · суудал баталгаажлаа'
+          : 'QPay дээр төлбөр олдсонгүй',
+    })
+  } catch (err) {
+    res.status(502).json({ error: err.message || 'Төлбөр шалгахад алдаа' })
+  }
 })
 
 app.post('/api/contacts', async (req, res) => {

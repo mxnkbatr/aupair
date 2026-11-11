@@ -31,6 +31,7 @@ export default function NavBar({
   backLabel = 'Буцах',
   onBack,
   trailing = null,
+  brand = false,
 }) {
   const navigate = useNavigate()
   const { pathname } = useLocation()
@@ -55,6 +56,7 @@ export default function NavBar({
     'navbar',
     root && 'navbar--root',
     useSearchChrome && 'navbar--search',
+    brand && 'navbar--brand',
     largeTitle && 'navbar--large',
     transparent && 'navbar--transparent',
     (scrolled || pushSolid) && 'is-scrolled',
@@ -82,6 +84,9 @@ export default function NavBar({
             <img src="/logo.png" alt="" width={36} height={36} />
           </Link>
 
+          {brand ? (
+            <span className="navbar__brandname">Mongolian Au Pair</span>
+          ) : (
           <label className="navbar__search">
             <MagnifyingGlass size={18} weight="bold" aria-hidden />
             <input
@@ -101,6 +106,7 @@ export default function NavBar({
               }}
             />
           </label>
+          )}
 
           <div className="navbar__actions">
             <NotificationMenu variant="icon" />

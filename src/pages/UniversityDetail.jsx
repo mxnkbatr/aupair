@@ -100,6 +100,18 @@ export default function UniversityDetail() {
             <small>Элсэлт</small>
             <strong>{uni.intake}</strong>
           </div>
+          {uni.classTime ? (
+            <div>
+              <small>Хичээлийн цаг</small>
+              <strong>{uni.classTime} танхим</strong>
+            </div>
+          ) : null}
+          {uni.startDate ? (
+            <div>
+              <small>Эхлэх өдөр</small>
+              <strong>{uni.startDate}</strong>
+            </div>
+          ) : null}
           <div>
             <small>Хот</small>
             <strong>{uni.city}</strong>
@@ -150,19 +162,26 @@ export default function UniversityDetail() {
       <div className="ud-bar">
         <div className="ud-bar__meta">
           <small>Au Pair бүртгэл</small>
-          <strong>{isOpen ? 'Нээлттэй' : 'Урьдчилсан'}</strong>
+          <strong>{isOpen ? 'Нээлттэй' : 'Элсэлт хаалттай'}</strong>
         </div>
-        <button type="button" className="btn btn-primary ud-bar__cta" onClick={() => setOpen(true)}>
-          {isOpen ? 'Бүртгүүлэх' : 'Урьдчилсан бүртгэл'}
+        <button
+          type="button"
+          className="btn btn-primary ud-bar__cta"
+          onClick={() => setOpen(true)}
+          disabled={!isOpen}
+        >
+          {isOpen ? 'Бүртгүүлэх' : 'Одоо элсэлтгүй'}
         </button>
       </div>
 
-      <Sheet open={open} onClose={() => setOpen(false)} title={`${uni.nameMn} Au Pair бүртгэл`}>
-        <p className="ud-sheet-lead">
-          {uni.nameMn} улсын Au Pair хөтөлбөрт бүртгүүлнэ. Бид тантай холбогдож дараагийн алхмыг хэлнэ.
-        </p>
-        <EnrollForm course={course} />
-      </Sheet>
+      {isOpen ? (
+        <Sheet open={open} onClose={() => setOpen(false)} title={`${uni.nameMn} Au Pair бүртгэл`}>
+          <p className="ud-sheet-lead">
+            {uni.nameMn} улсын Au Pair хөтөлбөрт бүртгүүлнэ. Бид тантай холбогдож дараагийн алхмыг хэлнэ.
+          </p>
+          <EnrollForm course={course} steps={['Мэдээлэл', 'Илгээх', 'Холбогдоно']} />
+        </Sheet>
+      ) : null}
     </div>
   )
 }

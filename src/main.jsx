@@ -21,7 +21,7 @@ import { initPushNotifications, navigateFromNative } from './push'
 
 document.documentElement.setAttribute('data-theme', 'light')
 document.documentElement.style.colorScheme = 'light only'
-if (Capacitor.isNativePlatform()) document.documentElement.classList.add('is-native')
+if (Capacitor.isNativePlatform()) document.documentElement.classList.add('is-native', `is-${Capacitor.getPlatform()}`)
 if ('scrollRestoration' in window.history) window.history.scrollRestoration = 'manual'
 // iOS WebKit only applies :active styles when a touch listener exists
 document.addEventListener('touchstart', () => {}, { passive: true })

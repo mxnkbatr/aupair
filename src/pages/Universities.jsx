@@ -1,18 +1,12 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { motion, useReducedMotion } from 'motion/react'
-import {
-  ArrowRight,
-  CaretRight,
-  CheckCircle,
-  MagnifyingGlass,
-  SealCheck,
-  X,
-} from '@phosphor-icons/react'
+import { ArrowUpRight, MagnifyingGlass, SealCheck, X } from '@phosphor-icons/react'
 import { countries } from '../data'
 import CountryMatch from '../components/CountryMatch'
 import MyAuPairPanel from '../components/MyAuPairPanel'
 import Pressable from '../components/Pressable'
+import SoftImage from '../components/SoftImage'
+import { GlassCard, GlassChips, RedHero, Reveal, SectionHead } from '../components/glass/Glass'
 import { useAuth } from '../auth'
 import useMyData from '../hooks/useMyData'
 import { haptic } from '../native'
@@ -36,6 +30,12 @@ const FLAGS = {
   denmark: '🇩🇰',
 }
 
+const STEPS = [
+  { n: 1, t: 'Улс тохируулах', s: '5 асуулт' },
+  { n: 2, t: 'Хүсэлт илгээх', s: 'Аппаар шууд' },
+  { n: 3, t: 'Материал бүрдүүлэх', s: 'Бид хамт' },
+]
+
 function matchesFilter(country, filter) {
   if (filter === 'all') return true
   return country.langGroup === filter
@@ -52,49 +52,32 @@ export default function Universities() {
   const myData = useMyData()
   const [filter, setFilter] = useState('all')
   const [query, setQuery] = useState('')
-  const [searching, setSearching] = useState(false)
   const inputRef = useRef(null)
-  const reduce = useReducedMotion()
 
   const countryAccepted = useMemo(
-    () =>
-      (myData?.enrollments || []).some(
-        (e) => e.kind === 'country' && e.status === 'accepted',
-      ),
+    () => (myData?.enrollments || []).some((e) => e.kind === 'country' && e.status === 'accepted'),
     [myData?.enrollments],
   )
   // Зөвхөн нэвтэрсэн + админ улс зөвшөөрсөн / хөтөлбөрт оруулсан үед
   const isEnrolled = Boolean(user) && (Boolean(user.inProgram) || countryAccepted)
 
+  // Search requests from Home / navbar focus the hero search field.
   useEffect(() => {
-    function onToggle() {
-      setSearching((v) => {
-        const next = !v
-        if (!next) setQuery('')
-        return next
-      })
-    }
-    function onOpen() {
-      setSearching(true)
-    }
+    const focus = () => setTimeout(() => inputRef.current?.focus(), 30)
     function onQuery(e) {
       const next = String(e?.detail || '')
-      setSearching(true)
       if (next) setQuery(next)
+      focus()
     }
-    window.addEventListener('aupair:countries-search', onToggle)
-    window.addEventListener('aupair:countries-search-open', onOpen)
+    window.addEventListener('aupair:countries-search', focus)
+    window.addEventListener('aupair:countries-search-open', focus)
     window.addEventListener('aupair:countries-search-query', onQuery)
     return () => {
-      window.removeEventListener('aupair:countries-search', onToggle)
-      window.removeEventListener('aupair:countries-search-open', onOpen)
+      window.removeEventListener('aupair:countries-search', focus)
+      window.removeEventListener('aupair:countries-search-open', focus)
       window.removeEventListener('aupair:countries-search-query', onQuery)
     }
   }, [])
-
-  useEffect(() => {
-    if (searching) inputRef.current?.focus()
-  }, [searching])
 
   const q = query.trim().toLowerCase()
   const list = useMemo(
@@ -106,14 +89,14 @@ export default function Universities() {
     [],
   )
   const showFeatured = featured && filter === 'all' && !q
-  const rows = showFeatured ? list.filter((u) => u.id !== featured.id) : list
   const openCount = countries.filter((c) => c.open !== false).length
 
   // Элссэн: зөвхөн үйл явц + бүрдүүлэх материал (улсын жагсаалт нуугдана)
   if (isEnrolled) {
     return (
       <div className="uni-page">
-        <div className="container">
+        <RedHero kicker="Миний хөтөлбөр" title="Au Pair" lead="Үйл явц · бүрдүүлэх материал" />
+        <div className="container ap-enrolled">
           <MyAuPairPanel user={user} standalone />
         </div>
       </div>
@@ -122,175 +105,140 @@ export default function Universities() {
 
   return (
     <div className="uni-page">
-      <div className="container">
-        <header className="uni-head">
-          <p className="uni-head__kicker">Албан ёсны хөтөлбөр · IAPA</p>
-          <h1>Au Pair</h1>
-          <p>
-            Асуултад хариулаад тохирох улсаа олоорой — эсвэл доороос шууд сонгоно.
-          </p>
-        </header>
-
-        <CountryMatch />
-
-        <div className="uni-howto" aria-label="Яаж бүртгүүлэх вэ">
-          <div>
-            <i>1</i>
-            <span>Улс тохируулах</span>
-          </div>
-          <div>
-            <i>2</i>
-            <span>Хүсэлт илгээх</span>
-          </div>
-          <div>
-            <i>3</i>
-            <span>Материал аппаар</span>
-          </div>
-        </div>
-
-        <div className="uni-banner">
-          <SealCheck weight="fill" size={22} aria-hidden />
-          <div>
-            <strong>{openCount} улсад элсэлт нээлттэй</strong>
-            <small>Улс руу ороод шаардлагаа үзээд шууд бүртгүүлнэ</small>
-          </div>
-        </div>
-
-        {searching ? (
-          <div className="uni-search">
-            <MagnifyingGlass size={18} weight="bold" aria-hidden />
-            <input
-              ref={inputRef}
-              type="search"
-              inputMode="search"
-              placeholder="Улс хайх…"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              aria-label="Улс хайх"
-            />
+      <RedHero
+        kicker="Албан ёсны хөтөлбөр · IAPA"
+        title="Au Pair"
+        lead="Гэр бүлд амьдарч, хэл сурч, Европт туршлага хуримтлуул."
+      >
+        <label className="rh-search">
+          <MagnifyingGlass size={20} weight="bold" aria-hidden />
+          <input
+            ref={inputRef}
+            type="search"
+            inputMode="search"
+            enterKeyHint="search"
+            placeholder="Улс, хот, хэл хайх"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            aria-label="Улс хайх"
+          />
+          {query ? (
             <button
               type="button"
-              className="uni-search__clear"
-              aria-label="Хайх хаах"
+              aria-label="Цэвэрлэх"
               onClick={() => {
                 haptic('light')
-                setSearching(false)
                 setQuery('')
+                inputRef.current?.focus()
               }}
             >
-              <X size={16} weight="bold" aria-hidden />
+              <X size={14} weight="bold" aria-hidden />
             </button>
-          </div>
-        ) : null}
+          ) : null}
+        </label>
+      </RedHero>
 
-        <div className="uni-seg" role="tablist" aria-label="Хэлний шүүлтүүр">
-          {FILTERS.map((f) => (
-            <button
-              key={f.id}
-              type="button"
-              role="tab"
-              aria-selected={filter === f.id}
-              className={filter === f.id ? 'is-active' : ''}
-              onClick={() => {
-                haptic('selection')
-                setFilter(f.id)
-              }}
-            >
-              {filter === f.id ? (
-                <motion.i
-                  layoutId="uni-seg"
-                  className="uni-seg__pill"
-                  transition={{ type: 'spring', stiffness: 520, damping: 40 }}
-                />
-              ) : null}
-              <span>{f.label}</span>
-            </button>
-          ))}
-        </div>
+      <GlassChips items={FILTERS} value={filter} onChange={setFilter} layoutId="uni-seg" label="Хэл" overlap />
 
-        {showFeatured ? (
-          <Pressable
-            as={Link}
-            to={`/countries/${featured.id}`}
-            className="uni-featured"
-            scale={0.97}
-          >
-            <motion.img
-              src={featured.image}
-              alt=""
-              transition={{ type: 'spring', stiffness: 380, damping: 38 }}
-              onError={(e) => {
-                e.currentTarget.src = '/cover.jpg'
-              }}
-            />
-            <span className="uni-featured__shade" aria-hidden />
-            <em className="uni-featured__badge">Бүртгэл нээлттэй</em>
-            <span className="uni-featured__body">
-              <strong>
-                {FLAGS[featured.id]} {featured.nameMn} Au Pair
-              </strong>
-              <small>
-                {featured.hsk} · {featured.duration} · {featured.city}
-              </small>
-              <span className="uni-featured__cta">
-                Сонгоод бүртгүүлэх <ArrowRight weight="bold" size={14} aria-hidden />
+      {showFeatured ? (
+        <div className="container ap-grid">
+          <Reveal className="ap-grid__a">
+            <Pressable as={Link} to={`/countries/${featured.id}`} scale={0.97} className="ap-feature">
+              <SoftImage src={featured.image} alt="" />
+              <span className="ap-pill">
+                <i className={featured.open !== false ? 'is-open' : ''} aria-hidden />
+                {featured.open !== false ? 'Нээлттэй' : 'Удахгүй'}
               </span>
-            </span>
-          </Pressable>
-        ) : null}
+              <span className="ap-feature__body">
+                <small>Онцлох</small>
+                <strong>
+                  {FLAGS[featured.id]} {featured.nameMn}
+                </strong>
+                <em>
+                  {featured.hsk} · {featured.duration}
+                </em>
+              </span>
+            </Pressable>
+          </Reveal>
 
-        <h2 className="uni-section-title">Улс сонгох</h2>
+          <Reveal i={1} className="ap-grid__b">
+            <GlassCard tone="ink" className="ap-stat">
+              <span className="ap-stat__top">
+                <span>Элсэлт</span>
+                <SealCheck size={18} weight="fill" aria-hidden />
+              </span>
+              <strong>
+                {openCount}
+                <em> / {countries.length} улс</em>
+              </strong>
+              <small>{openCount > 0 ? 'нээлттэй байна' : 'удахгүй нээгдэнэ'}</small>
+            </GlassCard>
+          </Reveal>
 
-        <ul className="uni-list">
-          {rows.map((uni) => {
+          <Reveal i={2} className="ap-grid__c">
+            <GlassCard className="ap-steps">
+              <span className="ap-stat__top">
+                <span>3 алхам</span>
+              </span>
+              <ol>
+                {STEPS.map((s) => (
+                  <li key={s.n}>
+                    <b>{s.n}</b>
+                    <span>{s.t}</span>
+                  </li>
+                ))}
+              </ol>
+            </GlassCard>
+          </Reveal>
+        </div>
+      ) : null}
+
+      {showFeatured ? (
+        <section className="ap-section">
+          <SectionHead title="Тохирох улсаа ол" />
+          <div className="container">
+            <CountryMatch />
+          </div>
+        </section>
+      ) : null}
+
+      <section className="ap-section">
+        <SectionHead title={q || filter !== 'all' ? `${list.length} улс` : 'Бүх улс'} />
+        <ul className="container ap-tiles">
+          {list.map((uni, i) => {
             const open = uni.open !== false
-            const reqPreview = (uni.requirements || []).slice(0, 2)
             return (
               <li key={uni.id}>
-                <Pressable
-                  as={Link}
-                  to={`/countries/${uni.id}`}
-                  className="uni-row"
-                  scale={0.97}
-                  aria-label={`${uni.nameMn} Au Pair — бүртгүүлэх`}
-                >
-                  <motion.img
-                    className="uni-row__photo"
-                    src={uni.image}
-                    alt=""
-                    loading="lazy"
-                    transition={{ type: 'spring', stiffness: 380, damping: 38 }}
-                    onError={(e) => {
-                      e.currentTarget.src = '/cover.jpg'
-                    }}
-                  />
-                  <div className="uni-row__body">
-                    <strong>
-                      {FLAGS[uni.id] || ''} {uni.nameMn}
-                    </strong>
-                    <span>
-                      {uni.language} · {uni.duration}
+                <Reveal i={i % 4}>
+                  <Pressable
+                    as={Link}
+                    to={`/countries/${uni.id}`}
+                    className="ap-tile"
+                    scale={0.96}
+                    aria-label={`${uni.nameMn} Au Pair`}
+                  >
+                    <SoftImage src={uni.image} alt="" />
+                    <span className="ap-tile__go" aria-hidden>
+                      <ArrowUpRight size={14} weight="bold" />
                     </span>
-                    <div className="uni-row__pills">
-                      <em className={open ? 'is-open' : ''}>{open ? 'Бүртгэл нээлттэй' : 'Урьдчилсан'}</em>
-                      {uni.hsk ? <em>{uni.hsk}</em> : null}
-                    </div>
-                    {reqPreview.length > 0 ? (
-                      <small className="uni-row__reqs">
-                        <CheckCircle size={12} weight="fill" aria-hidden />
-                        {reqPreview.join(' · ')}
+                    <span className="ap-tile__glass">
+                      <strong>
+                        {FLAGS[uni.id] || '🇪🇺'} {uni.nameMn}
+                      </strong>
+                      <small>
+                        <i className={open ? 'is-open' : ''} aria-hidden />
+                        {open ? 'Нээлттэй' : uni.duration}
                       </small>
-                    ) : null}
-                  </div>
-                  <CaretRight className="uni-row__chev" size={18} weight="bold" aria-hidden />
-                </Pressable>
+                    </span>
+                  </Pressable>
+                </Reveal>
               </li>
             )
           })}
         </ul>
 
         {list.length === 0 ? (
-          <div className="uni-empty">
+          <div className="container ap-empty">
             <p>Улс олдсонгүй</p>
             <button
               type="button"
@@ -298,14 +246,13 @@ export default function Universities() {
               onClick={() => {
                 setFilter('all')
                 setQuery('')
-                setSearching(false)
               }}
             >
               Бүгдийг харах
             </button>
           </div>
         ) : null}
-      </div>
+      </section>
     </div>
   )
 }

@@ -3,7 +3,7 @@ import { Link, useParams } from 'react-router-dom'
 import { motion } from 'motion/react'
 import { CaretDown, Fire } from '@phosphor-icons/react'
 import { api } from '../api'
-import { coursesFallback, social } from '../data'
+import { coursesFallback, isEnrollmentOpen, social } from '../data'
 import EnrollForm from '../components/EnrollForm'
 import Sheet from '../components/Sheet'
 import ShareButton from '../components/ShareButton'
@@ -11,9 +11,15 @@ import Skeleton from '../components/Skeleton'
 import './CourseDetail.css'
 
 const FAQ = [
-  { q: 'Төлбөр хэд вэ?', a: 'Зөвлөгөө үнэгүй. Ангийн төлбөрийг бүртгэлийн дараа тохиролцоно.' },
+  {
+    q: 'Яаж суудал авах вэ?',
+    a: 'Нэр, утас бөглөөд QPay-аар төлнө. Төлбөр ормогц суудал автоматаар бүртгэгдэнэ — админ зөвшөөрөл хэрэггүй. A1 ₮990,000 · A2 ₮840,000.',
+  },
   { q: 'Хаана сурна вэ?', a: 'Улаанбаатар дахь танхимд. Хуваарийг доорх мэдээллээс харна уу.' },
-  { q: 'Хэзээ эхлэх вэ?', a: 'Элсэлт нээлттэй үед шинэ бүлэг нээгдэнэ. Бүртгүүлээд бидэнтэй холбогдоорой.' },
+  {
+    q: 'Хэзээ эхлэх вэ?',
+    a: '2027.01.25-нд эхэлнэ. Хичээллэх цаг 15:00–18:15 танхим. Төлбөр төлсний дараа суудал шууд бүртгэгдэнэ.',
+  },
 ]
 
 export default function CourseDetail() {
@@ -70,6 +76,7 @@ export default function CourseDetail() {
   const seats = course.seatsLeft ?? course.seats
   const hasSeats = typeof seats === 'number'
   const full = hasSeats && seats <= 0
+  const canEnroll = isEnrollmentOpen(course.id) && course.enrolling !== false && !full
   const level = String(course.level || course.hsk || 'A1').replace(/^DE\s*/i, '')
   const hero = course.image || '/cover.jpg'
 
@@ -167,13 +174,19 @@ export default function CourseDetail() {
           type="button"
           className="btn btn-primary cd-bar__cta cd-bar__cta--full"
           onClick={() => setOpen(true)}
-          disabled={full}
+          disabled={!canEnroll}
         >
-          {full ? 'Суудал дууссан' : 'Бүртгүүлэх'}
+          {full
+            ? 'Суудал дууссан'
+            : canEnroll
+              ? course.priceLabel
+                ? `Төлбөр төлөх · ${course.priceLabel}`
+                : 'Төлбөр төлөх'
+              : 'Элсэлт хаалттай'}
         </button>
       </div>
 
-      <Sheet open={open} onClose={() => setOpen(false)} title="Бүртгүүлэх">
+      <Sheet open={open && canEnroll} onClose={() => setOpen(false)} title="Төлбөр · суудал">
         <EnrollForm
           course={course}
           onSuccess={(res) => {

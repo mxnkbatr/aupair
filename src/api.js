@@ -14,8 +14,33 @@ const API_BASE = API_ORIGIN ? `${API_ORIGIN}/api` : '/api'
 const TIMEOUT_MS = 15000
 
 const TOKEN_STORAGE = 'aupair-token'
+const ADMIN_EMAIL_STORAGE = 'aupair-admin-email'
 
 export const OFFLINE_MESSAGE = `Сервертэй холбогдож чадсангүй. Интернэтээ шалгаад дахин оролдоно уу, эсвэл ${social.phone} утсаар холбогдоно уу.`
+
+export function setAdminEmail(email) {
+  try {
+    if (email) sessionStorage.setItem(ADMIN_EMAIL_STORAGE, String(email).trim())
+    else sessionStorage.removeItem(ADMIN_EMAIL_STORAGE)
+  } catch {
+    /* ignore */
+  }
+}
+
+export function getAdminEmail() {
+  try {
+    return sessionStorage.getItem(ADMIN_EMAIL_STORAGE) || ''
+  } catch {
+    return ''
+  }
+}
+
+function adminHeaders(key) {
+  return {
+    'x-admin-key': key,
+    'x-admin-email': getAdminEmail(),
+  }
+}
 
 export function getToken() {
   try {
@@ -100,6 +125,17 @@ export const api = {
   getCourses: () => request('/courses'),
   getCourse: (id) => request(`/courses/${id}`),
   enroll: (payload) => post('/enrollments', payload),
+  checkEnrollmentPayment: (id, payload = {}) =>
+    request(`/enrollments/${id}/check-payment`, {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }),
+  adminEnrollmentPayment: (key, id, payload) =>
+    request(`/admin/enrollments/${id}/payment`, {
+      method: 'POST',
+      body: JSON.stringify(payload || {}),
+      headers: adminHeaders(key),
+    }),
   contact: (payload) => post('/contacts', payload),
   order: (payload) => post('/orders', payload),
   register: (payload) => post('/auth/register', payload),
@@ -117,42 +153,42 @@ export const api = {
       method: 'POST',
       body: JSON.stringify(payload),
     }),
-  adminData: (key) => request('/admin/data', { headers: { 'x-admin-key': key } }),
+  adminData: (key) => request('/admin/data', { headers: adminHeaders(key) }),
   adminNotify: (key, payload) =>
     request('/admin/notify', {
       method: 'POST',
       body: JSON.stringify(payload),
-      headers: { 'x-admin-key': key },
+      headers: adminHeaders(key),
     }),
   adminSetStatus: (key, collection, id, status) =>
     request(`/admin/${collection}/${id}`, {
       method: 'PATCH',
       body: JSON.stringify({ status }),
-      headers: { 'x-admin-key': key },
+      headers: adminHeaders(key),
     }),
   adminUpdateEnrollment: (key, id, payload) =>
     request(`/admin/enrollments/${id}/assign`, {
       method: 'PATCH',
       body: JSON.stringify(payload),
-      headers: { 'x-admin-key': key },
+      headers: adminHeaders(key),
     }),
   adminEnrollmentProgress: (key, id, payload) =>
     request(`/admin/enrollments/${id}/progress`, {
       method: 'PATCH',
       body: JSON.stringify(payload),
-      headers: { 'x-admin-key': key },
+      headers: adminHeaders(key),
     }),
   adminSetProgram: (key, userId, payload) =>
     request(`/admin/users/${userId}/program`, {
       method: 'PATCH',
       body: JSON.stringify(payload),
-      headers: { 'x-admin-key': key },
+      headers: adminHeaders(key),
     }),
   adminReviewDoc: (key, userId, docKey, payload) =>
     request(`/admin/users/${userId}/program-docs/${docKey}`, {
       method: 'PATCH',
       body: JSON.stringify(payload),
-      headers: { 'x-admin-key': key },
+      headers: adminHeaders(key),
     }),
   markHomework: (enrollmentId, hwId, status) =>
     request(`/me/enrollments/${enrollmentId}/homework/${hwId}`, {
@@ -170,25 +206,25 @@ export const api = {
     request(`/admin/classes/${courseId}`, {
       method: 'PUT',
       body: JSON.stringify(payload),
-      headers: { 'x-admin-key': key },
+      headers: adminHeaders(key),
     }),
   adminNotifyClass: (key, courseId, payload = {}) =>
     request(`/admin/classes/${courseId}/notify`, {
       method: 'POST',
       body: JSON.stringify(payload),
-      headers: { 'x-admin-key': key },
+      headers: adminHeaders(key),
     }),
   adminClassMessage: (key, courseId, payload) =>
     request(`/admin/classes/${courseId}/messages`, {
       method: 'POST',
       body: JSON.stringify(payload),
-      headers: { 'x-admin-key': key },
+      headers: adminHeaders(key),
     }),
   adminAssignHomework: (key, courseId, payload) =>
     request(`/admin/classes/${courseId}/homework`, {
       method: 'POST',
       body: JSON.stringify(payload),
-      headers: { 'x-admin-key': key },
+      headers: adminHeaders(key),
     }),
   placementAssign: (payload) =>
     request('/me/placement-assign', {
@@ -205,12 +241,12 @@ export const api = {
     request(`/admin/dm/${userId}`, {
       method: 'POST',
       body: JSON.stringify(payload),
-      headers: { 'x-admin-key': key },
+      headers: adminHeaders(key),
     }),
   adminVisaAppointment: (key, userId, payload) =>
     request(`/admin/users/${userId}/visa-appointment`, {
       method: 'POST',
       body: JSON.stringify(payload),
-      headers: { 'x-admin-key': key },
+      headers: adminHeaders(key),
     }),
 }

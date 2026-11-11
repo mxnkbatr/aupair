@@ -42,6 +42,7 @@ import News from './pages/News'
 import NewsDetail from './pages/NewsDetail'
 import { AuthProvider, useAuth } from './auth'
 import './theme.css'
+import './styles/glass.css'
 
 const Router = Capacitor.isNativePlatform() ? HashRouter : BrowserRouter
 
@@ -269,6 +270,7 @@ function AppFrame() {
   const siteClass = [
     'site',
     isPush && 'site--push',
+    isHome && 'site--home',
     flushNav && 'site--flush-nav',
   ]
     .filter(Boolean)
@@ -285,6 +287,7 @@ function AppFrame() {
         backLabel={meta.backLabel}
         onBack={goBack}
         trailing={trailing}
+        brand={['/', '/learn', '/countries'].includes(pathname)}
       />
       <OfflineBanner />
       <main className="site__main">

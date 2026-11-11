@@ -125,8 +125,10 @@ export const GERMAN_LEVEL_LABELS = {
 export const STATUS_LABELS = {
   enrollments: {
     pending: 'Шинэ',
+    pending_payment: 'Төлбөр хүлээж',
+    paid: 'Төлсөн',
     contacted: 'Холбогдсон',
-    accepted: 'Элсүүлсэн',
+    accepted: 'Суудал баталгаажсан',
     cancelled: 'Цуцалсан',
   },
   contacts: {
@@ -146,15 +148,48 @@ export const INTEREST_LABELS = {
   country: 'Au Pair улс',
   'german-a1': 'Герман хэл A1',
   'german-a2': 'Герман хэл A2',
+  'english-b1': 'Англи хэл B1',
+  'english-b2': 'Англи хэл B2',
   course: 'Хэлний анги',
   other: 'Бусад',
+}
+
+/** Зөвхөн эдгээр ID дээр элсэлт + QPay авна */
+export const OPEN_ENROLLMENT_IDS = ['german-a1', 'german-a2']
+
+export function isEnrollmentOpen(id) {
+  return OPEN_ENROLLMENT_IDS.includes(String(id || ''))
+}
+
+export function formatMnt(amount) {
+  const n = Number(amount)
+  if (!Number.isFinite(n)) return ''
+  return `₮${Math.round(n).toLocaleString('en-US')}`
+}
+
+/** Одоогийн нээлттэй элсэлт — Home / Learn opening banner */
+export const enrollmentOpening = {
+  id: 'intake-2027-01-25',
+  tag: 'Элсэлт нээлттэй',
+  title: '2027 Герман элсэлт · 01/25',
+  lead: 'A1/A2 · 15:00–18:15 танхим · QPay',
+  startLabel: 'Эхлэх: 2027.01.25',
+  seats: 14,
+  to: '/learn',
+  courseIds: OPEN_ENROLLMENT_IDS,
+  highlights: [
+    'Эхлэх: 2027.01.25 · Хичээл 15:00–18:15 танхим',
+    'Герман A1 — 10 долоо хоног · 128 цаг · ₮990,000',
+    'Герман A2 — 8 долоо хоног · 120 цаг · ₮840,000',
+    'QPay төлбөр → суудал автоматаар бүртгэгдэнэ',
+  ],
 }
 
 export const feed = {
   featured: {
     tag: 'Элсэлт авч байна',
-    title: 'Герман хэлний A1, A2 анги',
-    meta: 'Au Pair-т бэлтгэх · бүртгэл нээлттэй',
+    title: '2027 Герман элсэлт · 01/25',
+    meta: '15:00–18:15 танхим · QPay',
     to: '/learn',
     image:
       'https://images.unsplash.com/photo-1467269204594-9661b134dd2b?auto=format&fit=crop&w=1400&q=80',
@@ -166,41 +201,118 @@ export const coursesFallback = [
   {
     id: 'german-a1',
     type: 'language',
+    lang: 'de',
     level: 'A1',
     hsk: 'A1',
-    title: 'Герман хэлний анхан шат',
-    subtitle: 'Герман, Австри, Швейцарьт бэлтгэх',
-    duration: '3 сар',
+    title: 'Герман хэл A1',
+    subtitle: 'Эрчимжүүлсэн · ном сурах бичиг багтсан',
+    duration: '10 долоо хоног',
+    hours: 128,
     mode: 'Танхим',
-    schedule: 'Өдөр / Орой',
-    priceLabel: 'Зөвлөгөө аваарай',
+    schedule: '2027.01.25 · 15:00–18:15',
+    classTime: '15:00–18:15',
+    startDate: '2027-01-25',
+    priceMnt: 990000,
+    priceLabel: '₮990,000',
     seats: 14,
     seatsLeft: 14,
     image:
       'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=1400&q=80',
-    points: ['A1 яриа, сонсох', 'Хүүхэд харах үгийн сан', 'Визийн ярилцлага'],
-    badge: 'Элсэлт нээлттэй',
+    points: [
+      'Эхлэх: 2027.01.25 · 15:00–18:15 танхим',
+      '10 долоо хоног эрчимжүүлсэн сургалт',
+      'A1 шалгалтын бэлтгэл 2 долоо хоног багтсан',
+      'Нийт 128 цаг · ном сурах бичиг багтсан',
+      'QPay төлбөрөөр суудал баталгаажна',
+    ],
+    badge: '01/25 · 15:00–18:15',
+    enrolling: true,
     description:
-      'Герман хэлтэй орнуудад Au Pair хийх суурь бэлтгэл. Өдөр тутмын яриа, гэр бүлийн орчин, энгийн дүрэм.',
+      'Герман хэл A1 эрчимжүүлсэн сургалт — 2027 оны шинэ элсэлт 2027.01.25-нд эхэлнэ. Хичээллэх цаг 15:00–18:15 танхим. A1 шалгалтын бэлтгэл 2 долоо хоногтой нийлээд нийт 10 долоо хоног, 128 цаг. Ном сурах бичиг багтана. Үнэ ₮990,000 — QPay-аар төлсний дараа суудал баталгаажна.',
   },
   {
     id: 'german-a2',
     type: 'language',
+    lang: 'de',
     level: 'A2',
     hsk: 'A2',
     title: 'Герман хэл A2',
-    subtitle: 'Гэр бүл, сургууль, өдөр тутмын харилцаа',
-    duration: '3 сар',
+    subtitle: 'Эрчимжүүлсэн · 120 цаг',
+    duration: '8 долоо хоног',
+    hours: 120,
     mode: 'Танхим',
-    schedule: 'Оройн анги',
-    priceLabel: 'Зөвлөгөө аваарай',
-    seats: 12,
-    seatsLeft: 12,
+    schedule: '2027.01.25 · 15:00–18:15',
+    classTime: '15:00–18:15',
+    startDate: '2027-01-25',
+    priceMnt: 840000,
+    priceLabel: '₮840,000',
+    seats: 14,
+    seatsLeft: 14,
     image:
       'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=1400&q=80',
-    points: ['A2 түвшин', 'Хүүхэдтэй харилцах', 'Бичиг баримтын хэл'],
-    badge: 'Элсэлт нээлттэй',
-    description: 'Герман Au Pair-т шаардлагатай A2 түвшинд бэлтгэнэ. Goethe A2 шалгалтад бэлтгэнэ.',
+    points: [
+      'Эхлэх: 2027.01.25 · 15:00–18:15 танхим',
+      '8 долоо хоног эрчимжүүлсэн сургалт',
+      'Нийт 120 цаг',
+      'Au Pair, гэр бүл, өдөр тутмын харилцаа',
+      'QPay төлбөрөөр суудал баталгаажна',
+    ],
+    badge: '01/25 · 15:00–18:15',
+    enrolling: true,
+    description:
+      'Герман хэл A2 эрчимжүүлсэн сургалт — 2027 оны шинэ элсэлт 2027.01.25-нд эхэлнэ. Хичээллэх цаг 15:00–18:15 танхим. 8 долоо хоног, нийт 120 цаг. Үнэ ₮840,000 — QPay-аар төлсний дараа суудал баталгаажна.',
+  },
+  {
+    id: 'english-b1',
+    type: 'language',
+    lang: 'en',
+    level: 'B1',
+    hsk: 'B1',
+    title: 'Англи хэл B1',
+    subtitle: 'One Way Ticket-Flight үнэд багтсан',
+    duration: 'Курс',
+    mode: 'Танхим',
+    schedule: 'Удахгүй',
+    priceLabel: 'Удахгүй',
+    seats: null,
+    seatsLeft: null,
+    image:
+      'https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=1400&q=80',
+    points: [
+      'Англи хэл B1 түвшин',
+      'One Way Ticket-Flight үнэд багтах',
+      'Одоо элсэлт хаалттай',
+    ],
+    badge: 'Элсэлт хаалттай',
+    enrolling: false,
+    description:
+      'Англи хэл B1 сургалт. One Way Ticket-Flight үнэд багтана. Одоогоор элсэлт хаалттай.',
+  },
+  {
+    id: 'english-b2',
+    type: 'language',
+    lang: 'en',
+    level: 'B2',
+    hsk: 'B2',
+    title: 'Англи хэл B2',
+    subtitle: 'Return Flight Ticket үнэд багтсан',
+    duration: 'Курс',
+    mode: 'Танхим',
+    schedule: 'Удахгүй',
+    priceLabel: 'Удахгүй',
+    seats: null,
+    seatsLeft: null,
+    image:
+      'https://images.unsplash.com/photo-1529070538774-1843cb3265df?auto=format&fit=crop&w=1400&q=80',
+    points: [
+      'Англи хэл B2 түвшин',
+      'Return Flight Ticket үнэд багтах',
+      'Одоо элсэлт хаалттай',
+    ],
+    badge: 'Элсэлт хаалттай',
+    enrolling: false,
+    description:
+      'Англи хэл B2 сургалт. Return Flight Ticket үнэд багтана. Одоогоор элсэлт хаалттай.',
   },
 ]
 
@@ -220,14 +332,16 @@ export const countries = [
     language: 'Герман хэл',
     langGroup: 'german',
     focus: 'Au Pair · хэл, соёл',
-    intake: 'Элсэлт нээлттэй',
+    intake: 'Хэлний бэлтгэл 2027.01.25 · 15:00–18:15 танхим',
     hsk: 'A1–A2',
     duration: '6–12 сар',
     tuition: 'Хоол, байр + халаасны мөнгө',
     priceLabel: 'Зөвлөгөө үнэгүй',
-    badge: 'Эрэлттэй',
+    badge: '2027.01.25',
     featured: true,
-    open: true,
+    open: false,
+    classTime: '15:00–18:15',
+    startDate: '2027-01-25',
     image:
       'https://images.unsplash.com/photo-1467269204594-9661b134dd2b?auto=format&fit=crop&w=1400&q=80',
     description:
@@ -263,7 +377,7 @@ export const countries = [
     priceLabel: 'Зөвлөгөө үнэгүй',
     badge: 'АНУ',
     featured: true,
-    open: true,
+    open: false,
     image:
       'https://images.unsplash.com/photo-1485871981521-5b1fd3805ebe?auto=format&fit=crop&w=1400&q=80',
     description:
@@ -292,19 +406,22 @@ export const countries = [
     language: 'Франц хэл',
     langGroup: 'french',
     focus: 'Au Pair · гэр бүл',
-    intake: 'Элсэлт нээлттэй',
+    intake: 'Элсэлт 2026.12.11 · 16:00–19:10 танхим',
     hsk: 'A1+',
     duration: '12 сар',
     tuition: 'Хоол, байр + халаасны мөнгө',
     priceLabel: 'Зөвлөгөө үнэгүй',
-    badge: null,
-    featured: false,
+    badge: '2026.12.11',
+    featured: true,
     open: true,
+    classTime: '16:00–19:10',
+    startDate: '2026-12-11',
     image:
       'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=1400&q=80',
     description:
-      'Францын гэр бүлд Au Pair-аар амьдарч, франц хэл, соёлтой танилцана.',
+      'Францын гэр бүлд Au Pair-аар амьдарч, франц хэл, соёлтой танилцана. Шинэ элсэлт 2026.12.11-нд эхэлнэ. Хичээллэх цаг 16:00–19:10 танхим.',
     points: [
+      'Эхлэх: 2026.12.11 · 16:00–19:10 танхим',
       'Парис болон бусад хотууд',
       'Alliance Française-тай хамтын ажиллагаа',
       'Франц хэлний орчин',
@@ -335,7 +452,7 @@ export const countries = [
     priceLabel: 'Зөвлөгөө үнэгүй',
     badge: null,
     featured: true,
-    open: true,
+    open: false,
     image:
       'https://images.unsplash.com/photo-1609856878074-cf31e21ccb6b?auto=format&fit=crop&w=1400&q=80',
     description:
@@ -371,7 +488,7 @@ export const countries = [
     priceLabel: 'Зөвлөгөө үнэгүй',
     badge: null,
     featured: true,
-    open: true,
+    open: false,
     image:
       'https://images.unsplash.com/photo-1515488764276-beab7607c1e6?auto=format&fit=crop&w=1400&q=80',
     description:
@@ -403,7 +520,7 @@ export const countries = [
     priceLabel: 'Зөвлөгөө үнэгүй',
     badge: null,
     featured: false,
-    open: true,
+    open: false,
     image:
       'https://images.unsplash.com/photo-1559113202-c916b8e44373?auto=format&fit=crop&w=1400&q=80',
     description:
@@ -435,7 +552,7 @@ export const countries = [
     priceLabel: 'Зөвлөгөө үнэгүй',
     badge: null,
     featured: true,
-    open: true,
+    open: false,
     image:
       'https://images.unsplash.com/photo-1576924542622-772281b13aa8?auto=format&fit=crop&w=1400&q=80',
     description:
@@ -467,7 +584,7 @@ export const countries = [
     priceLabel: 'Зөвлөгөө үнэгүй',
     badge: 'Скандинав',
     featured: false,
-    open: true,
+    open: false,
     image:
       'https://images.unsplash.com/photo-1552560880-2482cef14240?auto=format&fit=crop&w=1400&q=80',
     description:
@@ -489,6 +606,40 @@ export const universities = countries
 /** Мэдээ мэдээлэл — элсэлт, зар, агентлагийн нийтлэл */
 export const newsItems = [
   {
+    id: 'n0',
+    title: '2027 Герман элсэлт · 01/25',
+    excerpt: '15:00–18:15 танхим · A1/A2 · QPay.',
+    body: [
+      '2027 оны Германы шинэ элсэлт 2027.01.25-нд эхэлнэ.',
+      'Хичээллэх цаг: 15:00–18:15 танхим.',
+      'Герман A1: 10 долоо хоног, 128 цаг · ₮990,000. Ном сурах бичиг багтана.',
+      'Герман A2: 8 долоо хоног, 120 цаг · ₮840,000.',
+      'QPay-аар төлсний дараа суудал автоматаар баталгаажна.',
+    ],
+    date: '2026-11-11',
+    dateLabel: '11 сарын 11',
+    tag: 'Элсэлт',
+    image:
+      'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=900&q=80',
+    cta: { to: '/learn', label: 'Сургалт харах' },
+  },
+  {
+    id: 'n0b',
+    title: 'Франц элсэлт · 12/11',
+    excerpt: '16:00–19:10 танхим · 2026.12.11.',
+    body: [
+      'Франц Au Pair элсэлт 2026.12.11-нд эхэлнэ.',
+      'Хичээллэх цаг: 16:00–19:10 танхим.',
+      'Парис болон бусад хотуудад гэр бүлд Au Pair хийх боломжтой.',
+    ],
+    date: '2026-11-11',
+    dateLabel: '11 сарын 11',
+    tag: 'Элсэлт',
+    image:
+      'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=900&q=80',
+    cta: { to: '/countries/france', label: 'Франц Au Pair' },
+  },
+  {
     id: 'n1',
     title: 'Герман элсэлт нээлттэй',
     excerpt: 'A2 · 18–26 нас. Бүртгүүлээд зөвлөгөө авна.',
@@ -506,13 +657,13 @@ export const newsItems = [
   {
     id: 'n2',
     title: 'A1, A2 анги эхэлнэ',
-    excerpt: 'Улаанбаатар · суудал хязгаартай.',
+    excerpt: '2027.01.25 · 15:00–18:15 танхим.',
     body: [
-      'Шинэ A1, A2 герман хэлний ангиуд эхэлнэ. Хичээл Улаанбаатарт, суудал хязгаартай.',
-      'Сургалт табаас ангиа сонгоод бүртгүүлнэ үү. Админ зөвшөөрсний дараа хуваарь, чат нээгдэнэ.',
+      'Герман A1 (10 долоо хоног, 128 цаг) болон A2 (8 долоо хоног, 120 цаг) эрчимжүүлсэн ангиуд 2027.01.25-нд эхэлнэ.',
+      'Хичээллэх цаг: 15:00–18:15 танхим. Сургалт табаас ангиа сонгоод бүртгүүлнэ үү.',
     ],
-    date: '2026-03-05',
-    dateLabel: '3 сарын 5',
+    date: '2026-11-11',
+    dateLabel: '11 сарын 11',
     tag: 'Сургалт',
     image:
       'https://images.unsplash.com/photo-1576924542622-772281b13aa8?auto=format&fit=crop&w=900&q=80',

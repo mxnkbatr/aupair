@@ -1,15 +1,16 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
-import { motion } from 'motion/react'
 import {
   ArrowRight,
+  ArrowUpRight,
+  CalendarBlank,
   Clock,
   Exam,
-  Gift,
+  FileText,
   MapPin,
-  Sparkle,
 } from '@phosphor-icons/react'
-import { products } from '../data'
+import { coursesFallback, enrollmentOpening, products } from '../data'
+import { GlassCard, GlassChips, RedHero, Reveal, SectionHead } from '../components/glass/Glass'
 import MyClassHub from '../components/MyClassHub'
 import PlacementTest from '../components/PlacementTest'
 import Pressable from '../components/Pressable'
@@ -38,45 +39,62 @@ const LEVEL_FILTERS = [
   { id: 'all', label: 'Бүгд' },
   { id: 'A1', label: 'A1' },
   { id: 'A2', label: 'A2' },
-  { id: 'B1', label: 'B1+' },
+  { id: 'B1', label: 'B1' },
+  { id: 'B2', label: 'B2' },
 ]
 
 function courseLevel(course) {
   return String(course.level || course.hsk || '').replace(/^DE\s*/i, '').toUpperCase()
 }
 
-function CourseCard({ course }) {
+function CourseCard({ course, i }) {
   const seats = course.seatsLeft ?? course.seats
   const full = typeof seats === 'number' && seats <= 0
   const level = courseLevel(course)
 
   return (
-    <Pressable as={Link} to={`/learn/course/${course.id}`} className="learn-card">
-      <div className="learn-card__media">
-        <SoftImage src={course.image || '/cover.jpg'} alt="" />
-        <span className="learn-card__level">{level || 'A1'}</span>
-        {course.badge ? <span className="learn-card__badge">{course.badge}</span> : null}
-      </div>
-      <div className="learn-card__body">
-        <h3>{course.title}</h3>
-        {course.subtitle ? <p>{course.subtitle}</p> : null}
-        <ul className="learn-card__facts">
-          <li>
-            <Clock size={15} weight="bold" aria-hidden /> {course.duration}
-          </li>
-          <li>
-            <MapPin size={15} weight="bold" aria-hidden /> {course.mode}
-          </li>
-        </ul>
-        {typeof seats === 'number' && !full ? (
-          <span className="learn-card__seats">🔥 {seats} суудал үлдсэн</span>
-        ) : null}
-        <span className="learn-card__cta">
-          {full ? 'Дууссан' : 'Дэлгэрэнгүй'} <ArrowRight weight="bold" size={15} aria-hidden />
-        </span>
-      </div>
-    </Pressable>
+    <Reveal i={i}>
+      <Pressable as={Link} to={`/learn/course/${course.id}`} scale={0.98} className="lc">
+        <div className="lc__media">
+          <SoftImage src={course.image || '/cover.jpg'} alt="" />
+          <span className="lc__tag">{level || 'A1'}</span>
+          {course.badge ? <span className="lc__when">{course.badge}</span> : null}
+        </div>
+        <div className="lc__body">
+          <h3>{course.title}</h3>
+          {course.subtitle ? <p>{course.subtitle}</p> : null}
+          <ul className="lc__facts">
+            <li>
+              <Clock size={14} weight="bold" aria-hidden /> {course.duration}
+            </li>
+            <li>
+              <MapPin size={14} weight="bold" aria-hidden /> {course.mode}
+            </li>
+            {course.hours ? <li>{course.hours} цаг</li> : null}
+          </ul>
+          <div className="lc__foot">
+            <span className="lc__price">
+              <strong>{course.priceLabel || 'Үнэгүй зөвлөгөө'}</strong>
+              {typeof seats === 'number' ? (
+                <small className={full ? 'is-full' : ''}>
+                  {full ? 'Суудал дууссан' : `${seats} суудал үлдсэн`}
+                </small>
+              ) : null}
+            </span>
+            <span className="lc__go" aria-hidden>
+              <ArrowUpRight size={18} weight="bold" />
+            </span>
+          </div>
+        </div>
+      </Pressable>
+    </Reveal>
   )
+}
+
+function daysUntil(iso) {
+  if (!iso) return null
+  const ms = new Date(`${iso}T00:00:00`).getTime() - Date.now()
+  return ms > 0 ? Math.ceil(ms / 86400000) : 0
 }
 
 export default function Learn() {
@@ -124,45 +142,24 @@ export default function Learn() {
     return courses.filter((c) => {
       const lv = courseLevel(c)
       if (level === 'all') return true
-      if (level === 'B1') return lv.startsWith('B') || lv.includes('B1')
-      return lv.startsWith(level)
+      return lv === level || lv.startsWith(level)
     })
   }, [courses, level])
 
   const checklist = products.find((p) => p.id === 'p3')
+  const base = coursesFallback.find((c) => c.id === 'german-a1') || {}
+  const intakeIso = courses.find((c) => c.startDate)?.startDate || base.startDate
+  const intakeDays = daysUntil(intakeIso)
+  const intakeDate = intakeIso ? intakeIso.replaceAll('-', '.') : ''
+  const intakeTime = base.classTime || '15:00–18:15'
+  const intakeSeats =
+    courses.reduce((n, c) => n + (Number(c.seatsLeft ?? 0) || 0), 0) || enrollmentOpening.seats
 
   if (isEnrolled) {
     return (
       <div className="learn">
-        <header className="learn-hero container">
-          <p className="learn-hero__kicker">Миний анги</p>
-          <h1>Сургалт</h1>
-          <p className="learn-hero__lead">Хуваарь · ангийн чат</p>
-        </header>
-
-        <div className="container">
-          <div className="seg" role="tablist" aria-label="Анги">
-            {segments.map((s) => (
-              <button
-                key={s.id}
-                type="button"
-                role="tab"
-                aria-selected={tab === s.id}
-                className={tab === s.id ? 'is-active' : ''}
-                onClick={() => pick(s.id)}
-              >
-                {tab === s.id && (
-                  <motion.i
-                    layoutId="learn-seg"
-                    className="seg__pill"
-                    transition={{ type: 'spring', stiffness: 520, damping: 40 }}
-                  />
-                )}
-                <span>{s.label}</span>
-              </button>
-            ))}
-          </div>
-        </div>
+        <RedHero kicker="Миний анги" title="Сургалт" lead="Хуваарь · ангийн чат · багш" />
+        <GlassChips items={segments} value={tab} onChange={pick} layoutId="learn-seg" label="Анги" overlap />
 
         <section className="container">
           <MyClassHub
@@ -180,112 +177,108 @@ export default function Learn() {
 
   return (
     <div className="learn">
-      <header className="learn-hero container">
-        <p className="learn-hero__kicker">Герман хэл · Au Pair бэлтгэл</p>
-        <h1>Сургалт</h1>
-        <p className="learn-hero__lead">Түвшиндээ тохирсон ангиа сонгоод бүртгүүлнэ.</p>
-      </header>
-
-      <div className="container">
-        <div className="seg" role="tablist" aria-label="Сургалт хэсэг">
-          {segments.map((s) => (
-            <button
-              key={s.id}
-              type="button"
-              role="tab"
-              aria-selected={tab === s.id}
-              className={tab === s.id ? 'is-active' : ''}
-              onClick={() => pick(s.id)}
-            >
-              {tab === s.id && (
-                <motion.i
-                  layoutId="learn-seg"
-                  className="seg__pill"
-                  transition={{ type: 'spring', stiffness: 520, damping: 40 }}
-                />
-              )}
-              <span>{s.label}</span>
-            </button>
-          ))}
-        </div>
-      </div>
+      <RedHero
+        kicker="Герман · Англи · Au Pair бэлтгэл"
+        title="Сургалт"
+        lead="Түвшиндээ тохирсон ангиа сонгоод QPay-аар шууд суудлаа ав."
+      />
+      <GlassChips items={segments} value={tab} onChange={pick} layoutId="learn-seg" label="Сургалт хэсэг" overlap />
 
       {tab === 'courses' && (
         <>
-          <section className="container learn-test-banner">
-            <button
-              type="button"
-              className="learn-test-cta"
-              onClick={() => {
-                haptic('light')
-                setParams({ tab: 'test' }, { replace: true })
-              }}
-            >
-              <span className="learn-test-cta__icon">
-                <Exam weight="fill" size={22} aria-hidden />
-              </span>
-              <span className="learn-test-cta__text">
-                <strong>Түвшин тогтоох тест</strong>
-                <small>6 асуулт · тохирох сургалт санал болгоно</small>
-              </span>
-              <Sparkle weight="fill" size={18} aria-hidden />
-            </button>
-          </section>
-
-          <section className="container learn-levels" aria-label="Түвшин">
-            <div className="learn-seg" role="toolbar">
-              {LEVEL_FILTERS.map((f) => (
+          <div className="container lgrid">
+            <Reveal className="lgrid__wide">
+              <GlassCard tone="ink" className="lintake">
+                <span className="lintake__top">
+                  <span className="lintake__live">
+                    <i aria-hidden /> {enrollmentOpening.tag}
+                  </span>
+                  <CalendarBlank size={18} aria-hidden />
+                </span>
+                <strong className="lintake__date">{intakeDate}</strong>
+                <span className="lintake__title">{enrollmentOpening.title}</span>
+                <div className="lintake__stats">
+                  <div>
+                    <b>{intakeDays ?? '—'}</b>
+                    <small>хоног үлдсэн</small>
+                  </div>
+                  <div>
+                    <b>{intakeSeats}</b>
+                    <small>сул суудал</small>
+                  </div>
+                  <div>
+                    <b>{intakeTime.split('–')[0]}</b>
+                    <small>эхлэх цаг</small>
+                  </div>
+                </div>
                 <button
-                  key={f.id}
                   type="button"
-                  className={level === f.id ? 'is-active' : ''}
+                  className="lintake__cta"
                   onClick={() => {
-                    haptic('selection')
-                    setLevel(f.id)
+                    haptic('light')
+                    document
+                      .getElementById('learn-classes')
+                      ?.scrollIntoView({ behavior: 'smooth', block: 'start' })
                   }}
                 >
-                  {level === f.id ? (
-                    <motion.i
-                      layoutId="learn-level"
-                      className="learn-seg__pill"
-                      transition={{ type: 'spring', stiffness: 520, damping: 40 }}
-                    />
-                  ) : null}
-                  <span>{f.label}</span>
+                  Анги сонгох <ArrowRight weight="bold" size={16} aria-hidden />
                 </button>
-              ))}
-            </div>
-          </section>
+              </GlassCard>
+            </Reveal>
 
-          <section className="container learn-list" aria-label="Герман хэлний сургалт">
-            {loading ? (
-              <SkeletonList count={2} h={220} />
-            ) : filtered.length === 0 ? (
-              <div className="learn-empty">
-                <p>Энэ түвшинд тохирох сургалт алга.</p>
-                <button type="button" className="learn-empty__reset" onClick={() => setLevel('all')}>
-                  Бүгдийг харах
-                </button>
-              </div>
-            ) : (
-              filtered.map((course) => <CourseCard key={course.id} course={course} />)
-            )}
-          </section>
-
-          {checklist ? (
-            <div className="container">
-              <Pressable as={Link} to={`/learn/item/${checklist.id}`} className="learn-teaser">
-                <span className="learn-teaser__icon">
-                  <Gift weight="fill" size={26} aria-hidden />
+            <Reveal i={1}>
+              <GlassCard
+                as="button"
+                className="lmini"
+                onClick={() => setParams({ tab: 'test' }, { replace: true })}
+              >
+                <span className="lmini__icon">
+                  <Exam size={20} weight="fill" aria-hidden />
                 </span>
-                <div>
+                <strong>Түвшин тест</strong>
+                <small>6 асуулт · 2 минут</small>
+              </GlassCard>
+            </Reveal>
+
+            {checklist ? (
+              <Reveal i={2}>
+                <GlassCard as={Link} to={`/learn/item/${checklist.id}`} className="lmini">
+                  <span className="lmini__icon lmini__icon--ink">
+                    <FileText size={20} weight="fill" aria-hidden />
+                  </span>
                   <strong>Үнэгүй чеклист</strong>
-                  <span>Au Pair бичиг баримтын жагсаалт</span>
-                </div>
-                <ArrowRight weight="bold" size={18} aria-hidden />
-              </Pressable>
+                  <small>Бичиг баримт</small>
+                </GlassCard>
+              </Reveal>
+            ) : null}
+          </div>
+
+          <section id="learn-classes" className="learn-classes">
+            <SectionHead title="Ангиууд" />
+            <div className="gchips--small">
+              <GlassChips
+                items={LEVEL_FILTERS}
+                value={level}
+                onChange={setLevel}
+                layoutId="learn-level"
+                label="Түвшин"
+              />
             </div>
-          ) : null}
+            <div className="container lc-list">
+              {loading ? (
+                <SkeletonList count={2} h={300} />
+              ) : filtered.length === 0 ? (
+                <div className="learn-empty">
+                  <p>Энэ түвшинд тохирох сургалт алга.</p>
+                  <button type="button" className="learn-empty__reset" onClick={() => setLevel('all')}>
+                    Бүгдийг харах
+                  </button>
+                </div>
+              ) : (
+                filtered.map((course, i) => <CourseCard key={course.id} course={course} i={i} />)
+              )}
+            </div>
+          </section>
         </>
       )}
 

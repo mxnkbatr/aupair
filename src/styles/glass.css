@@ -1,0 +1,813 @@
+/*
+ * Glassmorphism layer — loaded last (after theme.css).
+ * Ambient colour mesh behind the app + frosted translucent surfaces on top.
+ */
+
+:root {
+  /* Red · white · black */
+  --brand: #d3122a;
+  --brand-press: #a80e20;
+  --brand-deep: #8c0a18;
+  --brand-bright: #ff3347;
+  --brand-tint: #fde8ea;
+  --accent: #111113;
+  --accent-ink: #111113;
+  --label: #0b0b0c;
+  --ink-glass: rgba(17, 17, 19, 0.9);
+
+  --bg: #f7f7f8;
+  --bg-solid: #f7f7f8;
+
+  /* Translucent surfaces (cards read as frosted over the mesh) */
+  --surface: rgba(255, 255, 255, 0.8);
+  --surface-2: rgba(0, 0, 0, 0.045);
+  --surface-elevated: rgba(255, 255, 255, 0.82);
+  --card-bg: var(--surface);
+
+  --glass-tint: rgba(255, 255, 255, 0.8);
+  --glass-tint-strong: rgba(255, 255, 255, 0.92);
+  --glass-edge: 1px solid rgba(255, 255, 255, 0.95);
+  --glass-hl: inset 0 1px 0 rgba(255, 255, 255, 0.9), inset 0 -1px 0 rgba(255, 255, 255, 0.25);
+  --glass-blur-card: blur(18px) saturate(170%);
+  --glass-blur: blur(28px) saturate(190%);
+  --glass-blur-strong: blur(40px) saturate(210%);
+
+  --card-border: var(--glass-edge);
+  --e1: var(--glass-hl), 0 1px 2px rgba(0, 0, 0, 0.04), 0 8px 24px -6px rgba(0, 0, 0, 0.1);
+  --e2: var(--glass-hl), 0 16px 40px -10px rgba(0, 0, 0, 0.18);
+  --e3: inset 0 1px 0 rgba(255, 255, 255, 0.9), 0 -10px 40px -8px rgba(0, 0, 0, 0.16);
+
+  --brand-grad: linear-gradient(160deg, #e3192f 0%, #b80f22 100%);
+  --brand-glow: 0 10px 26px -8px rgba(200, 16, 40, 0.55);
+
+  --chrome-bg: rgba(255, 255, 255, 0.55);
+  --chrome-border: rgba(255, 255, 255, 0.6);
+}
+
+/* ---------- Ambient mesh ---------- */
+html,
+body {
+  background: var(--bg-solid);
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: -10vmax;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(40vmax 30vmax at 100% 0%, rgba(211, 18, 42, 0.07), transparent 62%),
+    radial-gradient(40vmax 30vmax at 0% 100%, rgba(0, 0, 0, 0.04), transparent 62%),
+    var(--bg-solid);
+  animation: glass-drift 28s ease-in-out infinite alternate;
+}
+
+@keyframes glass-drift {
+  from { transform: translate3d(0, 0, 0) scale(1); }
+  to { transform: translate3d(-3vmax, 2vmax, 0) scale(1.06); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body::before { animation: none; }
+}
+
+#root,
+.site,
+.site__main {
+  background: transparent;
+}
+
+/* Full-screen overlays keep their own opaque mesh */
+.onb,
+.auth {
+  background:
+    radial-gradient(80% 40% at 100% 0%, rgba(211, 18, 42, 0.14), transparent 70%),
+    var(--bg-solid);
+}
+
+/* Swipe-back needs opaque layers so the two pages don't bleed together */
+.swipe-under,
+html[data-swipe] .site__main > .page {
+  background: var(--bg-solid);
+}
+
+/* ---------- Shared glass recipe ---------- */
+.glass,
+.home-shortcut,
+.home-course,
+.home-video,
+.home-uni,
+.home-card,
+.portal__side-item,
+.portal__chip,
+.course-card,
+.uni-card,
+.product,
+.cd-stat,
+.cd-seats,
+.cd-block,
+.ud-facts > div,
+.ud-block,
+.pd-block,
+.contact-form,
+.admin-login,
+.pf-card,
+.pf-enroll,
+.pf-menu,
+.pf-stats div,
+.journey-card,
+.learn-card,
+.story-card {
+  background: var(--glass-tint);
+  border: var(--glass-edge);
+  box-shadow: var(--e1);
+  backdrop-filter: var(--glass-blur-card);
+  -webkit-backdrop-filter: var(--glass-blur-card);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .home-shortcut:hover,
+  .home-course:hover,
+  .home-video:hover,
+  .home-uni:hover,
+  .portal__side-item:hover,
+  .course-card:hover,
+  .uni-card:hover,
+  .product:hover {
+    background: var(--glass-tint-strong);
+    box-shadow: var(--e2);
+    transform: translateY(-2px);
+  }
+}
+
+/* ---------- Chrome: header / navbar ---------- */
+.app-header,
+.navbar__bg {
+  background: var(--chrome-bg);
+  border-bottom: 0.5px solid var(--chrome-border);
+  box-shadow: inset 0 -0.5px 0 rgba(0, 0, 0, 0.04);
+  backdrop-filter: var(--glass-blur-strong);
+  -webkit-backdrop-filter: var(--glass-blur-strong);
+}
+
+.navbar--transparent:not(.is-scrolled) .navbar__bg {
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.app-header__icon,
+.navbar__back,
+.sheet__close-circle {
+  background: rgba(255, 255, 255, 0.55);
+  border: var(--glass-edge);
+  box-shadow: var(--glass-hl), 0 4px 12px -4px rgba(0, 0, 0, 0.12);
+  backdrop-filter: var(--glass-blur-card);
+  -webkit-backdrop-filter: var(--glass-blur-card);
+}
+
+/* ---------- Floating tab bar ---------- */
+.tabbar {
+  left: 16px;
+  right: 16px;
+  height: 68px;
+  padding: 6px;
+  border-radius: 26px;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.95);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.95),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.3),
+    0 18px 44px -12px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(30px) saturate(200%);
+  -webkit-backdrop-filter: blur(30px) saturate(200%);
+}
+
+.tabbar__item {
+  border-radius: 21px;
+  color: rgba(40, 30, 50, 0.6);
+}
+
+.tabbar__item.is-active {
+  color: #fff;
+}
+
+.tabbar__pill {
+  inset: 0 4px;
+  border-radius: 18px;
+  background: var(--brand-grad);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.3),
+    0 8px 18px -6px rgba(200, 16, 40, 0.55);
+}
+
+/* ---------- Buttons ---------- */
+.btn-primary,
+.tabbar-cta,
+.uni-card__cta {
+  background: var(--brand-grad);
+  border: 0;
+  color: #fff;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), var(--brand-glow);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .btn-primary:hover:not(:disabled) {
+    background: var(--brand-grad);
+    filter: brightness(1.06);
+  }
+}
+
+.btn-ghost,
+.pf-hero__edit,
+.share-btn,
+.chip {
+  background: rgba(255, 255, 255, 0.55);
+  border: var(--glass-edge);
+  box-shadow: var(--glass-hl), 0 4px 14px -6px rgba(0, 0, 0, 0.14);
+  backdrop-filter: var(--glass-blur-card);
+  -webkit-backdrop-filter: var(--glass-blur-card);
+}
+
+.chip.is-active {
+  background: rgba(232, 23, 63, 0.12);
+  border-color: rgba(232, 23, 63, 0.45);
+}
+
+/* ---------- Filters / segmented ---------- */
+.page-filters,
+.course-filters,
+.admin-tabs {
+  background: transparent;
+}
+
+.page-filters__btn,
+.course-filters__btn,
+.admin-tab,
+.app-header__chip {
+  background: rgba(255, 255, 255, 0.55);
+  border: var(--glass-edge);
+  box-shadow: var(--glass-hl), 0 4px 12px -6px rgba(0, 0, 0, 0.12);
+  backdrop-filter: var(--glass-blur-card);
+  -webkit-backdrop-filter: var(--glass-blur-card);
+}
+
+.page-filters__btn.is-active,
+.course-filters__btn.is-active,
+.admin-tab.is-active {
+  background: linear-gradient(180deg, #2a2a2e, #111113);
+  border-color: transparent;
+  color: #fff;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14), 0 8px 18px -8px rgba(0, 0, 0, 0.55);
+}
+
+.pf-segment {
+  background: rgba(255, 255, 255, 0.4);
+  border: var(--glass-edge);
+  backdrop-filter: var(--glass-blur-card);
+  -webkit-backdrop-filter: var(--glass-blur-card);
+}
+
+.pf-segment button.is-active {
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: inset 0 1px 0 #fff, 0 4px 12px -4px rgba(0, 0, 0, 0.18);
+}
+
+/* ---------- Inner tiles ---------- */
+.cd-why > div,
+.cd-list li,
+.ud-list li,
+.ud-reqs li,
+.pd-list li,
+.pd-note,
+.pd-form__item,
+.shop-checkout__list li,
+.app-header__quick-card {
+  background: rgba(255, 255, 255, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+}
+
+.cd-schedule,
+.ud-help {
+  background: linear-gradient(135deg, rgba(255, 232, 236, 0.75), rgba(255, 255, 255, 0.5));
+  border: 1px solid rgba(255, 255, 255, 0.75);
+  box-shadow: var(--e1);
+  backdrop-filter: var(--glass-blur-card);
+  -webkit-backdrop-filter: var(--glass-blur-card);
+}
+
+/* Media badges become frosted chips */
+.cd-hero__hsk,
+.ud-hero__badge,
+.uni-card__badge,
+.cd-hero__status,
+.pd-hero__visual span {
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(14px) saturate(180%);
+  -webkit-backdrop-filter: blur(14px) saturate(180%);
+}
+
+.hero__banner,
+.portal__featured,
+.uni-banner__frame,
+.ud-hero__media,
+.cd-hero__banner,
+.pd-hero__visual,
+.reel-card__media,
+.uni-cta,
+.pf-welcome,
+.pf-hero,
+.contact-aside > div {
+  box-shadow: 0 20px 44px -16px rgba(0, 0, 0, 0.32);
+}
+
+/* ---------- Fields ---------- */
+.field input,
+.field select,
+.field textarea,
+.contact-form input,
+.contact-form select,
+.contact-form textarea,
+.admin-toolbar select,
+.admin-item__head select,
+.sheet .field input,
+.sheet .field select,
+.sheet .field textarea {
+  background: rgba(255, 255, 255, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.06);
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus,
+.contact-form input:focus,
+.contact-form select:focus,
+.contact-form textarea:focus {
+  background: rgba(255, 255, 255, 0.85);
+  border-color: rgba(232, 23, 63, 0.4);
+  box-shadow: 0 0 0 4px rgba(232, 23, 63, 0.12);
+}
+
+/* ---------- Overlays: sheets, drawers, menus, sticky bars ---------- */
+.sheet__backdrop,
+.app-notif-sheet__backdrop,
+.app-menu__backdrop,
+.app-drawer__backdrop {
+  background: rgba(30, 16, 40, 0.28);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.sheet__panel,
+.app-notif-sheet__panel,
+.app-menu__panel,
+.app-drawer__panel,
+.app-header__result {
+  background: rgba(255, 255, 255, 0.76);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  box-shadow: var(--e3);
+  backdrop-filter: var(--glass-blur-strong);
+  -webkit-backdrop-filter: var(--glass-blur-strong);
+}
+
+.cd-bar,
+.ud-bar,
+.pd-bar {
+  background: rgba(255, 255, 255, 0.66);
+  border-top: 1px solid rgba(255, 255, 255, 0.8);
+  box-shadow: var(--e3);
+  backdrop-filter: var(--glass-blur-strong);
+  -webkit-backdrop-filter: var(--glass-blur-strong);
+}
+
+.offline-banner {
+  background: rgba(20, 16, 28, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+}
+
+.offline-banner.is-online {
+  background: rgba(22, 163, 74, 0.78);
+}
+
+/* ---------- Typography polish ---------- */
+.page-header h1,
+.page-hero > h1 {
+  color: var(--label);
+}
+
+/* Lower-end Android WebViews: lighter blur on cards to keep scrolling smooth */
+html.is-native.is-android .home-course,
+html.is-native.is-android .course-card,
+html.is-native.is-android .uni-card,
+html.is-native.is-android .product {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  background: rgba(255, 255, 255, 0.72);
+}
+
+/* ---------- Native press feedback (RN Pressable feel) ---------- */
+:where(
+  .home-shortcut, .home-course, .home-video, .home-uni, .home-card,
+  .portal__side-item, .course-card, .uni-card, .product, .journey-card,
+  .learn-card, .story-card, .pf-menu a, .pf-menu button, .btn, .chip,
+  .page-filters__btn, .course-filters__btn, .app-header__icon
+) {
+  transition: transform 0.22s var(--ease-spring), box-shadow 0.22s ease, background 0.22s ease;
+}
+
+html.is-native :where(
+  .home-shortcut, .home-course, .home-video, .home-uni, .home-card,
+  .portal__side-item, .course-card, .uni-card, .product, .journey-card,
+  .learn-card, .story-card, .btn, .chip,
+  .page-filters__btn, .course-filters__btn, .app-header__icon
+):active,
+html:not(.is-native) :where(
+  .home-shortcut, .home-course, .home-video, .home-uni, .home-card,
+  .portal__side-item, .course-card, .uni-card, .product, .journey-card,
+  .learn-card, .story-card
+):active {
+  transform: scale(0.965);
+  transition-duration: 0.1s;
+}
+
+html.is-native :where(.pf-menu a, .pf-menu button):active {
+  background: rgba(118, 118, 140, 0.12);
+}
+
+.tabbar__item:active .tabbar__icon {
+  transform: scale(0.86);
+}
+
+.tabbar__icon {
+  transition: transform 0.2s var(--ease-spring);
+}
+
+/* Hide scrollbars on touch screens too (PWA / mobile browser) */
+@media (hover: none), (max-width: 899px) {
+  html, * { scrollbar-width: none; }
+  *::-webkit-scrollbar { display: none; width: 0; height: 0; }
+}
+
+/* ---------- Ink (black glass) tone ---------- */
+.gx--ink {
+  background:
+    radial-gradient(90% 80% at 100% 0%, rgba(255, 255, 255, 0.08), transparent 60%),
+    linear-gradient(165deg, rgba(38, 38, 42, 0.94), rgba(14, 14, 16, 0.96));
+  border-color: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    0 18px 36px -16px rgba(0, 0, 0, 0.55);
+}
+
+.gx--ink .gx__sheen {
+  background: radial-gradient(55% 65% at var(--mx) var(--my), rgba(255, 255, 255, 0.14), transparent 70%);
+}
+
+/* ---------- Red brand navbar on Home ---------- */
+.navbar--brand .navbar__bg {
+  background: var(--brand-deep) !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.navbar--brand.is-scrolled .navbar__bg {
+  background: rgba(140, 10, 24, 0.86) !important;
+  backdrop-filter: var(--glass-blur-strong);
+  -webkit-backdrop-filter: var(--glass-blur-strong);
+}
+
+.navbar--brand .navbar__logo {
+  background: #fff;
+}
+
+.navbar__brandname {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.navbar--brand .navbar__actions .notif-bell,
+.navbar--brand .navbar__actions .notif-bell svg {
+  color: #fff;
+}
+
+.navbar--brand .navbar__avatar {
+  background: rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #fff;
+}
+
+/* Learn/older banners → black glass instead of blue */
+.open-banner,
+.learn .open-banner {
+  background:
+    radial-gradient(90% 80% at 100% 0%, rgba(211, 18, 42, 0.45), transparent 60%),
+    linear-gradient(165deg, #26262a, #0e0e10);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 18px 36px -16px rgba(0, 0, 0, 0.55);
+}
+
+.navbar--brand .navbar__bg {
+  border-radius: 0 !important;
+}
+
+.hx-search {
+  background: rgba(255, 255, 255, 0.9);
+}
+
+/* Badges on photos → dark glass, readable */
+.cd-hero__hsk,
+.ud-hero__badge,
+.uni-card__badge,
+.cd-hero__status,
+.pd-hero__visual span {
+  background: rgba(17, 17, 19, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  color: #fff;
+}
+
+.cd-hero__status.is-open,
+.ud-hero__badge.is-open {
+  background: rgba(255, 255, 255, 0.92);
+  color: #111113;
+}
+
+/* ---------- Premium polish ---------- */
+.tabbar__item {
+  min-height: 56px;
+  border-radius: 18px;
+}
+
+.tabbar__label {
+  font-size: 10.5px;
+  font-weight: 600;
+}
+
+.tabbar__item.is-active .tabbar__icon {
+  transform: translateY(-1px);
+}
+
+.navbar--brand .navbar__brandname {
+  font-size: 0.8rem;
+  font-weight: 650;
+  letter-spacing: 0.12em;
+}
+
+.navbar--brand .navbar__logo {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+}
+
+/* Light cards: hairline + layered soft shadow (Apple/Airbnb style) */
+.hx-course,
+.hx-list,
+.home-card,
+.learn-card,
+.course-card,
+.uni-card,
+.product,
+.pf-card,
+.pf-menu,
+.cd-block,
+.cd-stat,
+.cd-seats,
+.ud-block,
+.ud-facts > div,
+.pd-block {
+  background: rgba(255, 255, 255, 0.94);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 10px 28px -16px rgba(0, 0, 0, 0.18);
+}
+
+h1, h2, h3 {
+  text-wrap: balance;
+}
+
+/* Flat, clean page background (no tinted mesh seams under the hero fade) */
+body::before {
+  background: var(--bg-solid);
+  animation: none;
+}
+
+/* =====================================================================
+   iOS 26 · Liquid Glass
+   Clearer than frosted glass: low blur, high saturation, bright specular
+   rim, inner light pooling at the bottom edge, floating capsules.
+   ===================================================================== */
+:root {
+  --lg-fill: rgba(255, 255, 255, 0.46);
+  --lg-fill-strong: rgba(255, 255, 255, 0.7);
+  --lg-blur: blur(12px) saturate(200%) brightness(1.05);
+  --lg-rim:
+    inset 0 1px 0.5px rgba(255, 255, 255, 0.95),
+    inset 0 -1px 0.5px rgba(255, 255, 255, 0.4),
+    inset 1px 0 0.5px rgba(255, 255, 255, 0.35),
+    inset -1px 0 0.5px rgba(255, 255, 255, 0.35),
+    inset 0 -12px 22px -14px rgba(255, 255, 255, 0.85);
+  --lg-drop: 0 2px 6px rgba(0, 0, 0, 0.06), 0 12px 36px -8px rgba(0, 0, 0, 0.22);
+}
+
+/* Floating capsule tab bar */
+.tabbar {
+  left: 14px;
+  right: 14px;
+  height: 64px;
+  padding: 5px;
+  border-radius: 999px;
+  background: var(--lg-fill);
+  border: 0.5px solid rgba(0, 0, 0, 0.06);
+  box-shadow: var(--lg-rim), var(--lg-drop);
+  backdrop-filter: var(--lg-blur);
+  -webkit-backdrop-filter: var(--lg-blur);
+}
+
+.tabbar__item {
+  min-height: 54px;
+  border-radius: 999px;
+  color: rgba(20, 20, 22, 0.78);
+}
+
+.tabbar__item.is-active {
+  color: var(--brand);
+}
+
+/* Active tab = glass lens (iOS 26), tinted red */
+.tabbar__pill {
+  inset: 0;
+  border-radius: 999px;
+  background: rgba(211, 18, 42, 0.1);
+  box-shadow:
+    inset 0 1px 0.5px rgba(255, 255, 255, 0.9),
+    inset 0 -1px 0.5px rgba(255, 255, 255, 0.5),
+    inset 0 0 0 0.5px rgba(211, 18, 42, 0.12),
+    0 4px 14px -6px rgba(211, 18, 42, 0.35);
+}
+
+.tabbar__label {
+  font-size: 10px;
+  font-weight: 600;
+}
+
+/* Header buttons → glass circles */
+.navbar__actions .notif-bell,
+.navbar__avatar,
+.navbar__back,
+.app-header__icon,
+.share-btn {
+  border-radius: 999px;
+  background: var(--lg-fill);
+  border: 0.5px solid rgba(0, 0, 0, 0.06);
+  box-shadow: var(--lg-rim), 0 4px 14px -6px rgba(0, 0, 0, 0.2);
+  backdrop-filter: var(--lg-blur);
+  -webkit-backdrop-filter: var(--lg-blur);
+}
+
+.navbar__actions .notif-bell {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+}
+
+.navbar--brand .navbar__actions .notif-bell,
+.navbar--brand .navbar__avatar {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.18);
+  box-shadow:
+    inset 0 1px 0.5px rgba(255, 255, 255, 0.45),
+    inset 0 -8px 16px -12px rgba(255, 255, 255, 0.5),
+    0 4px 14px -6px rgba(60, 0, 8, 0.4);
+  color: #fff;
+}
+
+/* Liquid search capsule */
+.rh-search,
+.navbar__search {
+  background: var(--lg-fill-strong);
+  border: 0.5px solid rgba(255, 255, 255, 0.6);
+  box-shadow: var(--lg-rim), 0 10px 30px -12px rgba(60, 0, 8, 0.45);
+  backdrop-filter: var(--lg-blur);
+  -webkit-backdrop-filter: var(--lg-blur);
+}
+
+/* Chips → liquid capsules */
+.gchip,
+.page-filters__btn,
+.course-filters__btn {
+  background: var(--lg-fill-strong);
+  border: 0.5px solid rgba(0, 0, 0, 0.06);
+  box-shadow: var(--lg-rim), 0 2px 8px -2px rgba(0, 0, 0, 0.1);
+  backdrop-filter: var(--lg-blur);
+  -webkit-backdrop-filter: var(--lg-blur);
+}
+
+/* Buttons: capsule + specular rim */
+.btn {
+  border-radius: 999px;
+}
+
+.btn-primary {
+  background: var(--brand-grad);
+  box-shadow:
+    inset 0 1px 0.5px rgba(255, 255, 255, 0.45),
+    inset 0 -10px 18px -12px rgba(255, 255, 255, 0.35),
+    0 10px 24px -10px rgba(200, 16, 40, 0.6);
+}
+
+.btn-ghost {
+  background: var(--lg-fill-strong);
+  border: 0.5px solid rgba(0, 0, 0, 0.06);
+  box-shadow: var(--lg-rim), 0 4px 14px -8px rgba(0, 0, 0, 0.2);
+  backdrop-filter: var(--lg-blur);
+  -webkit-backdrop-filter: var(--lg-blur);
+}
+
+/* Floating sheet (iOS 26 sheets detach from the screen edges) */
+.sheet__panel {
+  left: 8px;
+  right: 8px;
+  bottom: 8px;
+  width: min(100% - 16px, 520px);
+  border-radius: 34px;
+  background: rgba(255, 255, 255, 0.78);
+  border: 0.5px solid rgba(255, 255, 255, 0.7);
+  box-shadow: var(--lg-rim), 0 24px 60px -12px rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(30px) saturate(200%);
+  -webkit-backdrop-filter: blur(30px) saturate(200%);
+  padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+}
+
+/* Sticky bottom CTA bars → floating glass capsule */
+.cd-bar,
+.ud-bar,
+.pd-bar {
+  left: 12px;
+  right: 12px;
+  bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+  padding: 8px;
+  border-radius: 999px;
+  border: 0.5px solid rgba(0, 0, 0, 0.06);
+  background: var(--lg-fill);
+  box-shadow: var(--lg-rim), var(--lg-drop);
+  backdrop-filter: var(--lg-blur);
+  -webkit-backdrop-filter: var(--lg-blur);
+}
+
+.site--push .cd-bar,
+.site--push .ud-bar,
+.site--push .pd-bar {
+  bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+}
+
+.ud-bar {
+  padding-left: 20px;
+}
+
+.navbar--brand .navbar__actions .notif-bell,
+.navbar--brand .navbar__avatar {
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* Tab bar: a touch more body so labels stay legible over photos */
+.tabbar {
+  background: rgba(255, 255, 255, 0.62);
+  backdrop-filter: blur(16px) saturate(190%) brightness(1.04);
+  -webkit-backdrop-filter: blur(16px) saturate(190%) brightness(1.04);
+}
+
+.rh::after {
+  bottom: -1px;
+  height: 88px;
+}
+
+/* Search over red: keep it crisp white (saturate would tint it pink) */
+.rh-search {
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.rh {
+  overflow: visible;
+  overflow-x: clip;
+}
+
+.rh::after {
+  bottom: -2px;
+}

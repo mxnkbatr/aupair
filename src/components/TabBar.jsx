@@ -1,6 +1,7 @@
 import { NavLink, useLocation } from 'react-router-dom'
 import {
   BookOpenText,
+  House,
   GlobeHemisphereEast,
   Newspaper,
   Storefront,
@@ -9,6 +10,7 @@ import { haptic } from '../native'
 import './TabBar.css'
 
 export const TAB_ITEMS = [
+  { to: '/', label: 'Нүүр', icon: House },
   { to: '/news', label: 'Мэдээ', icon: Newspaper },
   { to: '/learn', label: 'Сургалт', icon: BookOpenText },
   { to: '/countries', label: 'Au Pair', icon: GlobeHemisphereEast },
