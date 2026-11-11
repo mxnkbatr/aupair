@@ -570,3 +570,52 @@
     display: none;
   }
 }
+
+/* Compact one-line greeting */
+.hh-hello {
+  padding-top: 2px;
+  padding-bottom: 10px;
+}
+
+.hh-hello h1 {
+  display: grid;
+  gap: 0;
+  font-size: 1.5rem;
+}
+
+.hh-hello h1 small {
+  color: var(--label-2);
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+
+.hx .gchips {
+  padding-top: 14px;
+}
+
+/* Info-first grid: course photo + Au Pair on the first row */
+.bento {
+  grid-template-areas:
+    'a e'
+    'a b'
+    'd c';
+}
+
+.bento-photo {
+  min-height: 280px;
+}
+
+.bento__e .bento-card--spark,
+.bento__b .bento-card {
+  min-height: 0;
+}
+
+.gx--ink .bento-dot--idle {
+  background: #fff;
+  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.14);
+}
+
+.bento-card .bento-card__row svg {
+  color: var(--label-3);
+}

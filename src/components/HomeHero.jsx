@@ -83,10 +83,18 @@ function Slide({ slide, index, x, width }) {
         </span>
         <h2>{slide.title}</h2>
         {slide.lead ? <p>{slide.lead}</p> : null}
-        {slide.countdown ? <Countdown iso={slide.countdown} /> : null}
-        <Link to={slide.to} state={slide.state} className="hh-cta" draggable={false}>
-          {slide.cta} <ArrowRight size={16} weight="bold" aria-hidden />
-        </Link>
+        {slide.countdown ? (
+          <div className="hh-row">
+            <Countdown iso={slide.countdown} />
+            <Link to={slide.to} state={slide.state} className="hh-cta" draggable={false} aria-label={slide.cta}>
+              <ArrowRight size={18} weight="bold" aria-hidden />
+            </Link>
+          </div>
+        ) : (
+          <Link to={slide.to} state={slide.state} className="hh-cta" draggable={false}>
+            {slide.cta} <ArrowRight size={16} weight="bold" aria-hidden />
+          </Link>
+        )}
       </div>
     </div>
   )

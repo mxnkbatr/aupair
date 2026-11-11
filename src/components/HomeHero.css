@@ -267,3 +267,91 @@
     min-height: 420px;
   }
 }
+
+/* ---------- Compact banner: keep the info grid above the fold ---------- */
+.hh-viewport {
+  border-radius: 26px;
+}
+
+.hh-slide {
+  min-height: 236px;
+}
+
+.hh-slide__body {
+  gap: 6px;
+  padding: 16px 18px 18px;
+}
+
+.hh-tag {
+  padding: 5px 10px 5px 8px;
+  font-size: 0.7rem;
+}
+
+.hh-slide__body h2 {
+  max-width: 18ch;
+  font-size: 1.4rem;
+}
+
+.hh-slide__body p {
+  font-size: 0.85rem;
+}
+
+/* countdown + CTA share one row */
+.hh-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  margin-top: 6px;
+}
+
+.hh-row .hh-cd {
+  flex: 1;
+  gap: 6px;
+  margin: 0;
+}
+
+.hh-cd__cell {
+  padding: 6px 0 5px;
+  border-radius: 12px;
+}
+
+.hh-cd__num {
+  height: 1.3rem;
+}
+
+.hh-cd__num b {
+  font-size: 1.1rem;
+  line-height: 1.3rem;
+}
+
+.hh-cd__cell small {
+  font-size: 0.6rem;
+}
+
+.hh-cta {
+  min-height: 40px;
+  margin-top: 4px;
+  padding: 0 16px;
+  font-size: 0.85rem;
+}
+
+.hh-row .hh-cta {
+  flex: none;
+  width: 44px;
+  height: 44px;
+  min-height: 44px;
+  margin: 0;
+  padding: 0;
+  justify-content: center;
+}
+
+.hh-dots {
+  margin-top: 10px;
+}
+
+@media (min-width: 900px) {
+  .hh-slide {
+    min-height: 280px;
+  }
+}

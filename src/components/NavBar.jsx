@@ -119,6 +119,16 @@ export default function NavBar({
           )}
 
           <div className="navbar__actions">
+            {brand ? (
+              <button
+                type="button"
+                className="navbar__search-btn"
+                aria-label="Хайх"
+                onClick={() => openSearch('')}
+              >
+                <MagnifyingGlass size={20} weight="bold" aria-hidden />
+              </button>
+            ) : null}
             <NotificationMenu variant="icon" />
             <Link
               to="/me"

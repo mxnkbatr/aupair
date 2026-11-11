@@ -6,7 +6,6 @@ import {
   CalendarBlank,
   CaretRight,
   Exam,
-  MagnifyingGlass,
   MessengerLogo,
   Path,
   Phone,
@@ -25,14 +24,12 @@ import {
 import { JOURNEY_STEPS, journeyIndex, programStageIndex } from '../components/JourneyTimeline'
 import { GlassCard, GlassChips, Reveal, SectionHead } from '../components/glass/Glass'
 import HomeHero from '../components/HomeHero'
-import { openSearch as openGlobalSearch } from '../components/SearchOverlay'
 import Pressable from '../components/Pressable'
 import SoftImage from '../components/SoftImage'
 import { SkeletonRow } from '../components/Skeleton'
 import { PROGRAM_STAGES } from '../data/program'
 import useCourses from '../hooks/useCourses'
 import useMyData from '../hooks/useMyData'
-import { haptic } from '../native'
 import '../styles/shared-blocks.css'
 import './Home.css'
 
@@ -129,11 +126,6 @@ export default function Home() {
   const pay = payState(enrollments)
   const show = (id) => chip === 'all' || chip === id
 
-  function openSearch() {
-    haptic('light')
-    openGlobalSearch()
-  }
-
   const firstName = (user?.name || '').trim().split(/\s+/).pop()
   const germany = countries.find((c) => c.id === 'germany') || countries[0]
   const slides = [
@@ -182,19 +174,13 @@ export default function Home() {
   return (
     <div className="hx">
       <header className="container hh-hello">
-        <small>{greeting()}</small>
-        <h1>{firstName || 'Тавтай морил'}</h1>
+        <h1>
+          <small>{greeting()}</small>
+          {firstName || 'Тавтай морил'}
+        </h1>
       </header>
 
       <HomeHero slides={slides} />
-
-      <div className="container">
-        <button type="button" className="hh-search" onClick={openSearch}>
-          <MagnifyingGlass size={19} weight="bold" aria-hidden />
-          <span>Сургалт, улс, мэдээ хайх</span>
-          <kbd>⌘K</kbd>
-        </button>
-      </div>
 
       <GlassChips items={CHIPS} value={chip} onChange={setChip} layoutId="hx-chip" label="Шүүлтүүр" />
 
@@ -216,7 +202,7 @@ export default function Home() {
         )}
 
         <Reveal i={1} className="bento__b">
-          <GlassCard as={Link} to={enrollmentOpening.to} tone="ink" className="bento-card">
+          <GlassCard as={Link} to={enrollmentOpening.to} className="bento-card">
             <span className="bento-card__top">
               <span className="bento-label">Дараагийн элсэлт</span>
               <CalendarBlank size={18} aria-hidden />
@@ -230,7 +216,7 @@ export default function Home() {
         </Reveal>
 
         <Reveal i={2} className="bento__c">
-          <GlassCard as={Link} to={user ? '/me' : '/learn'} className="bento-card">
+          <GlassCard as={Link} to={user ? '/me' : '/learn'} tone="ink" className="bento-card">
             <span className="bento-card__top">
               <span className="bento-label">Төлбөр</span>
               <span className={`bento-dot bento-dot--${pay.tone}`} aria-hidden />
