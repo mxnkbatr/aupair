@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { AnimatePresence, motion } from 'motion/react'
 import {
   ArrowUpRight,
+  MagnifyingGlass,
   CalendarBlank,
   CaretRight,
   Exam,
@@ -24,6 +25,7 @@ import {
 import { JOURNEY_STEPS, journeyIndex, programStageIndex } from '../components/JourneyTimeline'
 import { GlassCard, GlassChips, Reveal, SectionHead } from '../components/glass/Glass'
 import HomeHero from '../components/HomeHero'
+import { openSearch } from '../components/SearchOverlay'
 import Pressable from '../components/Pressable'
 import SoftImage from '../components/SoftImage'
 import { SkeletonRow } from '../components/Skeleton'
@@ -181,6 +183,13 @@ export default function Home() {
       </header>
 
       <HomeHero slides={slides} />
+
+      <div className="container">
+        <button type="button" className="rh-search hh-search" onClick={() => openSearch()}>
+          <MagnifyingGlass size={20} weight="bold" aria-hidden />
+          <span>Сургалт, улс, хөтөлбөр хайх</span>
+        </button>
+      </div>
 
       <GlassChips items={CHIPS} value={chip} onChange={setChip} layoutId="hx-chip" label="Шүүлтүүр" />
 

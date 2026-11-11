@@ -355,3 +355,37 @@
     min-height: 280px;
   }
 }
+
+/* Titles only */
+.hh-row--title {
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+.hh-row--title h2 {
+  flex: 1;
+  min-width: 0;
+}
+
+.hh-row .hh-cta {
+  width: 44px;
+  height: 44px;
+  min-height: 44px;
+  margin: 0;
+  padding: 0;
+  justify-content: center;
+}
+
+.hh-slide {
+  min-height: 210px;
+}
+
+/* photo always covers the card while swiping */
+.hh-slide__img {
+  inset: 0 -25%;
+  width: 150%;
+}
+
+.hh-slide__img {
+  max-width: none;
+}

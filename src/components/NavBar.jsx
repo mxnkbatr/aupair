@@ -119,7 +119,7 @@ export default function NavBar({
           )}
 
           <div className="navbar__actions">
-            {brand ? (
+            {brand && !light ? (
               <button
                 type="button"
                 className="navbar__search-btn"

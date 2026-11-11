@@ -68,7 +68,7 @@ function Countdown({ iso }) {
 
 function Slide({ slide, index, x, width }) {
   // Parallax: the photo drifts slower than the card while dragging.
-  const imgX = useTransform(x, (v) => (v + index * width) * -0.35)
+  const imgX = useTransform(x, (v) => (v + index * width) * -0.18)
   return (
     <div className={`hh-slide hh-slide--${slide.tone}`} aria-roledescription="slide">
       {slide.image ? (
@@ -77,23 +77,23 @@ function Slide({ slide, index, x, width }) {
       <span className="hh-slide__shade" aria-hidden />
       <span className="hh-slide__glow" aria-hidden />
       <div className="hh-slide__body">
-        <span className="hh-tag">
-          {slide.live ? <i aria-hidden /> : null}
-          {slide.tag}
-        </span>
-        <h2>{slide.title}</h2>
-        {slide.lead ? <p>{slide.lead}</p> : null}
         {slide.countdown ? (
-          <div className="hh-row">
-            <Countdown iso={slide.countdown} />
+          <>
+            <h2>{slide.title}</h2>
+            <div className="hh-row">
+              <Countdown iso={slide.countdown} />
+              <Link to={slide.to} state={slide.state} className="hh-cta" draggable={false} aria-label={slide.cta}>
+                <ArrowRight size={18} weight="bold" aria-hidden />
+              </Link>
+            </div>
+          </>
+        ) : (
+          <div className="hh-row hh-row--title">
+            <h2>{slide.title}</h2>
             <Link to={slide.to} state={slide.state} className="hh-cta" draggable={false} aria-label={slide.cta}>
               <ArrowRight size={18} weight="bold" aria-hidden />
             </Link>
           </div>
-        ) : (
-          <Link to={slide.to} state={slide.state} className="hh-cta" draggable={false}>
-            {slide.cta} <ArrowRight size={16} weight="bold" aria-hidden />
-          </Link>
         )}
       </div>
     </div>
