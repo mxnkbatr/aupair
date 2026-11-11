@@ -143,3 +143,45 @@ export function GlassChips({ items, value, onChange, layoutId, label, overlap = 
     </div>
   )
 }
+
+/**
+ * Vertical numbered timeline — explains a process step by step.
+ * steps: [{ title, text, icon?: PhosphorIcon }]
+ */
+export function StepsTimeline({ steps, current = -1 }) {
+  return (
+    <ol className="gsteps">
+      {steps.map((s, i) => {
+        const Icon = s.icon
+        const state = i < current ? 'is-done' : i === current ? 'is-now' : ''
+        return (
+          <motion.li
+            key={s.title}
+            className={state}
+            initial={{ opacity: 0, x: -10 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: '0px 0px -30px 0px' }}
+            transition={{ type: 'spring', stiffness: 300, damping: 28, delay: i * 0.06 }}
+          >
+            <span className="gsteps__node">{Icon ? <Icon size={16} weight="fill" aria-hidden /> : i + 1}</span>
+            <span className="gsteps__text">
+              <strong>{s.title}</strong>
+              {s.text ? <small>{s.text}</small> : null}
+            </span>
+          </motion.li>
+        )
+      })}
+    </ol>
+  )
+}
+
+/** Clean iOS-style large title for tab roots (no colour block). */
+export function PageTitle({ title, lead, children }) {
+  return (
+    <header className="container ptitle">
+      <h1>{title}</h1>
+      {lead ? <p>{lead}</p> : null}
+      {children}
+    </header>
+  )
+}

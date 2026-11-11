@@ -811,3 +811,150 @@ body::before {
 .rh::after {
   bottom: -2px;
 }
+
+/* ---------- Light glass navbar (Home) ---------- */
+.navbar--light .navbar__bg {
+  background: transparent !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+}
+
+.navbar--light.is-scrolled .navbar__bg {
+  background: rgba(247, 247, 248, 0.72) !important;
+  border-bottom: 0.5px solid rgba(0, 0, 0, 0.06) !important;
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+}
+
+.navbar--light .navbar__brandname {
+  color: var(--label);
+}
+
+.navbar--light .navbar__logo {
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+}
+
+/* =====================================================================
+   Tone-down: less see-through. Solid-ish white surfaces, glass kept
+   subtle (frosted edge) — real transparency only over photos.
+   ===================================================================== */
+.tabbar {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+}
+
+.gchip,
+.page-filters__btn,
+.course-filters__btn,
+.hh-search,
+.btn-ghost,
+.navbar__actions .notif-bell,
+.navbar__avatar,
+.navbar__back,
+.share-btn {
+  background: #fff;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.rh-search,
+.navbar__search {
+  background: #fff;
+}
+
+.cd-bar,
+.ud-bar,
+.pd-bar {
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+}
+
+.sheet__panel {
+  background: rgba(255, 255, 255, 0.96);
+}
+
+.search-ov {
+  background: rgba(247, 247, 248, 0.94);
+}
+
+.pf .pf-stats {
+  background: #fff;
+}
+
+/* Header icons on the red bar: soft tint, not a clear lens */
+.navbar--brand .navbar__actions .notif-bell,
+.navbar--brand .navbar__avatar {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+/* Light cards: fully opaque */
+.gx:not(.gx--ink):not(.gx--brand):not(.gx--night),
+.hx-course,
+.hx-list,
+.lc,
+.gsteps,
+.gchoice__card,
+.gperks > * > div,
+.pf-group__list,
+.pf .pf-enroll {
+  background: #fff;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+/* Navbar brand ↔ page title swap on scroll (iOS large-title collapse) */
+.navbar__brandname {
+  position: relative;
+  display: grid;
+  overflow: hidden;
+  height: 1.4em;
+  align-items: center;
+}
+
+.nb-swap {
+  grid-area: 1 / 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transition: transform 0.32s var(--ease-out), opacity 0.24s ease;
+}
+
+.nb-swap.is-out {
+  opacity: 0;
+  transform: translateY(-110%);
+}
+
+.nb-swap--title {
+  opacity: 0;
+  transform: translateY(110%);
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  text-transform: none;
+}
+
+.nb-swap--title.is-in {
+  opacity: 1;
+  transform: none;
+}
+
+/* Light bar header icons: white circles with hairline */
+.navbar--light .navbar__actions .notif-bell,
+.navbar--light .navbar__avatar {
+  background: #fff;
+  border: 0.5px solid rgba(0, 0, 0, 0.06);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), 0 6px 16px -10px rgba(0, 0, 0, 0.3);
+  color: var(--label);
+}
+
+.navbar--light .navbar__avatar {
+  color: var(--brand);
+}
+
+.navbar--light.is-scrolled .navbar__bg {
+  background: rgba(247, 247, 248, 0.94) !important;
+}

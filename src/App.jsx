@@ -20,6 +20,7 @@ import TabBar, { TAB_PATHS, isDockRoute } from './components/TabBar'
 import Footer from './components/Footer'
 import OfflineBanner from './components/OfflineBanner'
 import Onboarding from './components/Onboarding'
+import SearchOverlay from './components/SearchOverlay'
 import PullIndicator from './components/PullIndicator'
 import usePullToRefresh from './hooks/usePullToRefresh'
 import useSwipeBack from './hooks/useSwipeBack'
@@ -287,7 +288,8 @@ function AppFrame() {
         backLabel={meta.backLabel}
         onBack={goBack}
         trailing={trailing}
-        brand={['/', '/learn', '/countries'].includes(pathname)}
+        brand={['/', '/learn', '/countries', '/me'].includes(pathname)}
+        light={['/', '/learn', '/countries'].includes(pathname)}
       />
       <OfflineBanner />
       <main className="site__main">
@@ -306,6 +308,7 @@ function AppFrame() {
       <Footer />
       <TabBar />
       <Onboarding />
+      <SearchOverlay />
     </div>
   )
 }

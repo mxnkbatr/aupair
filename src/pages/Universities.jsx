@@ -1,12 +1,33 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { ArrowUpRight, MagnifyingGlass, SealCheck, X } from '@phosphor-icons/react'
+import {
+  AirplaneTilt,
+  ArrowUpRight,
+  BookOpenText,
+  ChatsTeardrop,
+  FileText,
+  HouseLine,
+  IdentificationCard,
+  MagnifyingGlass,
+  SealCheck,
+  Translate,
+  UsersThree,
+  Wallet,
+  X,
+} from '@phosphor-icons/react'
 import { countries } from '../data'
 import CountryMatch from '../components/CountryMatch'
 import MyAuPairPanel from '../components/MyAuPairPanel'
 import Pressable from '../components/Pressable'
 import SoftImage from '../components/SoftImage'
-import { GlassCard, GlassChips, RedHero, Reveal, SectionHead } from '../components/glass/Glass'
+import {
+  GlassCard,
+  GlassChips,
+  PageTitle,
+  Reveal,
+  SectionHead,
+  StepsTimeline,
+} from '../components/glass/Glass'
 import { useAuth } from '../auth'
 import useMyData from '../hooks/useMyData'
 import { haptic } from '../native'
@@ -34,6 +55,24 @@ const STEPS = [
   { n: 1, t: 'Улс тохируулах', s: '5 асуулт' },
   { n: 2, t: 'Хүсэлт илгээх', s: 'Аппаар шууд' },
   { n: 3, t: 'Материал бүрдүүлэх', s: 'Бид хамт' },
+]
+
+/** Au Pair-аар юу авах вэ — data.js дахь нөхцөлөөс */
+const GETS = [
+  { icon: HouseLine, title: 'Байр, хоол', text: 'Гэр бүлтэйгээ хамт амьдарна' },
+  { icon: Wallet, title: 'Халаасны мөнгө', text: 'Сар бүр гэр бүлээс' },
+  { icon: Translate, title: 'Хэлний курс', text: 'Тухайн улсын хэлийг сурна' },
+  { icon: UsersThree, title: 'Соёлын туршлага', text: '6–12 сар Европт' },
+]
+
+/** Хөтөлбөрийн бүтэн явц — хэлний бэлтгэлээс нисэх хүртэл */
+const JOURNEY = [
+  { icon: BookOpenText, title: 'Хэлний бэлтгэл', text: 'Герман A1–A2 анги · манай танхимд' },
+  { icon: FileText, title: 'Бичиг баримт', text: 'Паспорт · CV · зураг — аппаар илгээнэ' },
+  { icon: UsersThree, title: 'Гэр бүл тохироо', text: 'Профайл үүсгэж тохирох гэр бүл хайна' },
+  { icon: ChatsTeardrop, title: 'Ярилцлага', text: 'Гэр бүлтэй онлайн ярилцаж гэрээ хийнэ' },
+  { icon: IdentificationCard, title: 'Виз', text: 'Виз · даатгал · элчин сайдын тов' },
+  { icon: AirplaneTilt, title: 'Нисэх', text: 'Тийз · явах бэлтгэл · шинэ амьдрал' },
 ]
 
 function matchesFilter(country, filter) {
@@ -95,7 +134,7 @@ export default function Universities() {
   if (isEnrolled) {
     return (
       <div className="uni-page">
-        <RedHero kicker="Миний хөтөлбөр" title="Au Pair" lead="Үйл явц · бүрдүүлэх материал" />
+        <PageTitle title="Au Pair" lead="Үйл явц · бүрдүүлэх материал" />
         <div className="container ap-enrolled">
           <MyAuPairPanel user={user} standalone />
         </div>
@@ -105,8 +144,8 @@ export default function Universities() {
 
   return (
     <div className="uni-page">
-      <RedHero
-        kicker="Албан ёсны хөтөлбөр · IAPA"
+      <PageTitle
+       
         title="Au Pair"
         lead="Гэр бүлд амьдарч, хэл сурч, Европт туршлага хуримтлуул."
       >
@@ -136,9 +175,9 @@ export default function Universities() {
             </button>
           ) : null}
         </label>
-      </RedHero>
+      </PageTitle>
 
-      <GlassChips items={FILTERS} value={filter} onChange={setFilter} layoutId="uni-seg" label="Хэл" overlap />
+      <GlassChips items={FILTERS} value={filter} onChange={setFilter} layoutId="uni-seg" label="Хэл" />
 
       {showFeatured ? (
         <div className="container ap-grid">
@@ -191,6 +230,57 @@ export default function Universities() {
             </GlassCard>
           </Reveal>
         </div>
+      ) : null}
+
+      {showFeatured ? (
+        <section className="ap-section">
+          <div className="container">
+            <Reveal>
+              <GlassCard tone="ink" className="ap-intro">
+                <span className="ap-intro__kicker">Au Pair гэж юу вэ?</span>
+                <strong>Европын гэр бүлд амьдарч, хэл соёлоо сур</strong>
+                <ul className="ap-intro__facts">
+                  <li>
+                    <b>6–12</b>
+                    <small>сар</small>
+                  </li>
+                  <li>
+                    <b>{countries.length}</b>
+                    <small>улс</small>
+                  </li>
+                  <li>
+                    <b>₮0</b>
+                    <small>байр, хоол</small>
+                  </li>
+                </ul>
+                <p>Гэр бүлийн хүүхдийг харахад тусалж, хариуд нь байр, хоол, халаасны мөнгө авна.</p>
+              </GlassCard>
+            </Reveal>
+            <div className="gperks">
+              {GETS.map(({ icon: Icon, title, text }, i) => (
+                <Reveal key={title} i={i}>
+                  <div>
+                    <span>
+                      <Icon size={20} weight="fill" aria-hidden />
+                    </span>
+                    <strong>{title}</strong>
+                    <small>{text}</small>
+                  </div>
+                </Reveal>
+              ))}
+            </div>
+          </div>
+        </section>
+      ) : null}
+
+      {showFeatured ? (
+        <section className="ap-section">
+          <SectionHead title="Хөтөлбөрийн явц" />
+          <div className="container">
+            <StepsTimeline steps={JOURNEY} />
+            <p className="ap-note">Алхам бүрт манай зөвлөх тантай хамт ажиллана · нас, шаардлага улс бүрт өөр</p>
+          </div>
+        </section>
       ) : null}
 
       {showFeatured ? (

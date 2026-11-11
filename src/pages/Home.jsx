@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { AnimatePresence, motion } from 'motion/react'
 import {
   ArrowUpRight,
@@ -23,7 +23,9 @@ import {
   social,
 } from '../data'
 import { JOURNEY_STEPS, journeyIndex, programStageIndex } from '../components/JourneyTimeline'
-import { GlassCard, GlassChips, RedHero, Reveal, SectionHead } from '../components/glass/Glass'
+import { GlassCard, GlassChips, Reveal, SectionHead } from '../components/glass/Glass'
+import HomeHero from '../components/HomeHero'
+import { openSearch as openGlobalSearch } from '../components/SearchOverlay'
 import Pressable from '../components/Pressable'
 import SoftImage from '../components/SoftImage'
 import { SkeletonRow } from '../components/Skeleton'
@@ -51,6 +53,15 @@ const CHIPS = [
   { id: 'aupair', label: 'Au Pair' },
   { id: 'news', label: 'Мэдээ' },
 ]
+
+
+function greeting() {
+  const h = new Date().getHours()
+  if (h < 5) return 'Сайн байна уу 🌙'
+  if (h < 12) return 'Өглөөний мэнд ☀️'
+  if (h < 18) return 'Сайн байна уу 👋'
+  return 'Оройн мэнд 🌙'
+}
 
 function shortDate(iso) {
   if (!iso) return ''
@@ -98,7 +109,6 @@ function Spark() {
 }
 
 export default function Home() {
-  const navigate = useNavigate()
   const { user } = useAuth()
   const data = useMyData()
   const { courses, loading } = useCourses()
@@ -121,20 +131,72 @@ export default function Home() {
 
   function openSearch() {
     haptic('light')
-    navigate('/countries')
-    setTimeout(() => window.dispatchEvent(new Event('aupair:countries-search-open')), 60)
+    openGlobalSearch()
   }
+
+  const firstName = (user?.name || '').trim().split(/\s+/).pop()
+  const germany = countries.find((c) => c.id === 'germany') || countries[0]
+  const slides = [
+    {
+      id: 'intake',
+      tone: 'red',
+      image: featured?.image || base.image,
+      live: true,
+      tag: enrollmentOpening.tag,
+      title: '2027 Герман элсэлт',
+      countdown: next.date,
+      to: '/learn',
+      cta: 'Суудлаа авах',
+    },
+    {
+      id: 'aupair',
+      tone: 'photo',
+      image: germany?.image,
+      tag: `Au Pair · ${countries.length} улс`,
+      title: 'Европт гэр бүлтэй амьдар',
+      lead: 'Хэл сурч, соёл мэдэрч, 6–12 сар туршлага хуримтлуул.',
+      to: '/countries',
+      cta: 'Улсаа сонгох',
+    },
+    user
+      ? {
+          id: 'journey',
+          tone: 'ink',
+          tag: `Алхам ${step + 1}/${steps.length}`,
+          title: steps[step]?.label || 'Миний аялал',
+          lead: steps[step]?.hint || 'Дараагийн алхмаа харах',
+          to: inProgram ? '/me/program' : '/me',
+          cta: 'Аяллаа харах',
+        }
+      : {
+          id: 'test',
+          tone: 'ink',
+          tag: '2 минут · 6 асуулт',
+          title: 'Түвшнээ мэдээд зөв ангиа сонго',
+          lead: 'Герман хэлний түвшин тогтоох тест — үнэгүй.',
+          to: '/learn?tab=test',
+          cta: 'Тест өгөх',
+        },
+  ]
 
   return (
     <div className="hx">
-      <RedHero kicker="Mongolian Au Pair · 2005 оноос" title="Европ руу хаалгаа өнөөдөр нээ">
-        <button type="button" className="rh-search" onClick={openSearch}>
-          <MagnifyingGlass size={20} weight="bold" aria-hidden />
-          <span>Сургалт, улс, хөтөлбөр хайх</span>
-        </button>
-      </RedHero>
+      <header className="container hh-hello">
+        <small>{greeting()}</small>
+        <h1>{firstName || 'Тавтай морил'}</h1>
+      </header>
 
-      <GlassChips items={CHIPS} value={chip} onChange={setChip} layoutId="hx-chip" label="Шүүлтүүр" overlap />
+      <HomeHero slides={slides} />
+
+      <div className="container">
+        <button type="button" className="hh-search" onClick={openSearch}>
+          <MagnifyingGlass size={19} weight="bold" aria-hidden />
+          <span>Сургалт, улс, мэдээ хайх</span>
+          <kbd>⌘K</kbd>
+        </button>
+      </div>
+
+      <GlassChips items={CHIPS} value={chip} onChange={setChip} layoutId="hx-chip" label="Шүүлтүүр" />
 
       {/* Bento */}
       <div className="container bento">

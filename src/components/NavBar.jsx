@@ -1,10 +1,11 @@
 import { useState } from 'react'
-import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { motion, useMotionValueEvent, useScroll, useTransform } from 'motion/react'
 import { CaretLeft, MagnifyingGlass, UserCircle } from '@phosphor-icons/react'
 import { useAuth } from '../auth'
 import { haptic } from '../native'
 import NotificationMenu from './NotificationMenu'
+import { openSearch as openGlobalSearch } from './SearchOverlay'
 import './NavBar.css'
 
 const COLLAPSE_AT = 48
@@ -32,18 +33,20 @@ export default function NavBar({
   onBack,
   trailing = null,
   brand = false,
+  light = false,
 }) {
-  const navigate = useNavigate()
-  const { pathname } = useLocation()
   const { user } = useAuth()
   const { scrollY } = useScroll()
   const progress = useTransform(scrollY, [0, COLLAPSE_AT], [0, 1], { clamp: true })
   const [scrolled, setScrolled] = useState(false)
+  const [titled, setTitled] = useState(false)
   const [query, setQuery] = useState('')
 
   useMotionValueEvent(scrollY, 'change', (y) => {
     const next = y > 6
     setScrolled((prev) => (prev === next ? prev : next))
+    const t = y > 64
+    setTitled((prev) => (prev === t ? prev : t))
   })
 
   const pushSolid = !root && !transparent
@@ -56,7 +59,7 @@ export default function NavBar({
     'navbar',
     root && 'navbar--root',
     useSearchChrome && 'navbar--search',
-    brand && 'navbar--brand',
+    brand && (light ? 'navbar--light' : 'navbar--brand'),
     largeTitle && 'navbar--large',
     transparent && 'navbar--transparent',
     (scrolled || pushSolid) && 'is-scrolled',
@@ -66,13 +69,8 @@ export default function NavBar({
 
   function openSearch(nextQuery = query) {
     haptic('light')
-    if (pathname !== '/countries') {
-      navigate('/countries')
-    }
-    window.dispatchEvent(new Event('aupair:countries-search-open'))
-    if (nextQuery.trim()) {
-      window.dispatchEvent(new CustomEvent('aupair:countries-search-query', { detail: nextQuery }))
-    }
+    openGlobalSearch(nextQuery.trim())
+    setQuery('')
   }
 
   return (
@@ -85,7 +83,16 @@ export default function NavBar({
           </Link>
 
           {brand ? (
-            <span className="navbar__brandname">Mongolian Au Pair</span>
+            <span className="navbar__brandname">
+              <span className={light && title && titled ? 'nb-swap is-out' : 'nb-swap'}>
+                Mongolian Au Pair
+              </span>
+              {light && title ? (
+                <span className={titled ? 'nb-swap nb-swap--title is-in' : 'nb-swap nb-swap--title'} aria-hidden={!titled}>
+                  {title}
+                </span>
+              ) : null}
+            </span>
           ) : (
           <label className="navbar__search">
             <MagnifyingGlass size={18} weight="bold" aria-hidden />
@@ -97,7 +104,10 @@ export default function NavBar({
               value={query}
               aria-label="Хайх"
               onChange={(e) => setQuery(e.target.value)}
-              onFocus={() => openSearch()}
+              onFocus={(e) => {
+                e.currentTarget.blur()
+                openSearch()
+              }}
               onKeyDown={(e) => {
                 if (e.key === 'Enter') {
                   e.preventDefault()

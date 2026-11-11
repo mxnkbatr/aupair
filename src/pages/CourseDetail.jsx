@@ -1,14 +1,22 @@
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { motion } from 'motion/react'
-import { CaretDown, Fire } from '@phosphor-icons/react'
+import { CaretDown, CheckCircle, Fire, ListBullets, Question, QrCode } from '@phosphor-icons/react'
 import { api } from '../api'
 import { coursesFallback, isEnrollmentOpen, social } from '../data'
 import EnrollForm from '../components/EnrollForm'
 import Sheet from '../components/Sheet'
 import ShareButton from '../components/ShareButton'
 import Skeleton from '../components/Skeleton'
+import { StepsTimeline } from '../components/glass/Glass'
 import './CourseDetail.css'
+
+const ENROLL_FLOW = [
+  { title: 'Энэ ангийг сонгосон', text: 'Та яг одоо энэ алхам дээр байна', icon: ListBullets },
+  { title: 'Мэдээллээ бөглөнө', text: 'Доорх товч → нэр, утас, нас', icon: Question },
+  { title: 'QPay-аар төлнө', text: 'Банкны аппаар QR уншуулна', icon: QrCode },
+  { title: 'Суудал баталгаажна', text: 'Автоматаар · админ хүлээх шаардлагагүй', icon: CheckCircle },
+]
 
 const FAQ = [
   {
@@ -139,6 +147,13 @@ export default function CourseDetail() {
             ))}
           </ul>
         </section>
+
+        {canEnroll ? (
+          <section className="cd-steps">
+            <h2>Хэрхэн суудал авах вэ?</h2>
+            <StepsTimeline steps={ENROLL_FLOW} current={1} />
+          </section>
+        ) : null}
 
         <section className="cd-block">
           <h2>Түгээмэл асуулт</h2>

@@ -6,11 +6,23 @@ import {
   CalendarBlank,
   Clock,
   Exam,
+  CaretRight,
+  CheckCircle,
   FileText,
+  ListBullets,
+  QrCode,
+  Question,
   MapPin,
 } from '@phosphor-icons/react'
 import { coursesFallback, enrollmentOpening, products } from '../data'
-import { GlassCard, GlassChips, RedHero, Reveal, SectionHead } from '../components/glass/Glass'
+import {
+  GlassCard,
+  GlassChips,
+  PageTitle,
+  Reveal,
+  SectionHead,
+  StepsTimeline,
+} from '../components/glass/Glass'
 import MyClassHub from '../components/MyClassHub'
 import PlacementTest from '../components/PlacementTest'
 import Pressable from '../components/Pressable'
@@ -33,6 +45,14 @@ const BROWSE_SEGMENTS = [
 const ENROLLED_SEGMENTS = [
   { id: 'schedule', label: 'Хуваарь' },
   { id: 'chat', label: 'Чат' },
+]
+
+/** Элсэх процесс — хэрэглэгчид ойлгомжтой 4 алхам */
+const ENROLL_FLOW = [
+  { title: 'Ангиа сонгоно', text: 'Түвшиндээ тохирох A1 эсвэл A2 анги', icon: ListBullets },
+  { title: 'Мэдээллээ бөглөнө', text: 'Нэр, утас, нас — 30 секунд', icon: Question },
+  { title: 'QPay-аар төлнө', text: 'Банкны аппаар QR уншуулах эсвэл линкээр', icon: QrCode },
+  { title: 'Суудал баталгаажна', text: 'Автоматаар · хуваарь, ангийн чат нээгдэнэ', icon: CheckCircle },
 ]
 
 const LEVEL_FILTERS = [
@@ -158,8 +178,8 @@ export default function Learn() {
   if (isEnrolled) {
     return (
       <div className="learn">
-        <RedHero kicker="Миний анги" title="Сургалт" lead="Хуваарь · ангийн чат · багш" />
-        <GlassChips items={segments} value={tab} onChange={pick} layoutId="learn-seg" label="Анги" overlap />
+        <PageTitle title="Сургалт" lead="Хуваарь · ангийн чат · багш" />
+        <GlassChips items={segments} value={tab} onChange={pick} layoutId="learn-seg" label="Анги" />
 
         <section className="container">
           <MyClassHub
@@ -177,12 +197,12 @@ export default function Learn() {
 
   return (
     <div className="learn">
-      <RedHero
-        kicker="Герман · Англи · Au Pair бэлтгэл"
+      <PageTitle
+       
         title="Сургалт"
         lead="Түвшиндээ тохирсон ангиа сонгоод QPay-аар шууд суудлаа ав."
       />
-      <GlassChips items={segments} value={tab} onChange={pick} layoutId="learn-seg" label="Сургалт хэсэг" overlap />
+      <GlassChips items={segments} value={tab} onChange={pick} layoutId="learn-seg" label="Сургалт хэсэг" />
 
       {tab === 'courses' && (
         <>
@@ -252,6 +272,56 @@ export default function Learn() {
               </Reveal>
             ) : null}
           </div>
+
+          <section className="learn-explain">
+            <SectionHead title="Хэрхэн элсэх вэ?" />
+            <div className="container">
+              <StepsTimeline steps={ENROLL_FLOW} />
+            </div>
+          </section>
+
+          <section className="learn-explain">
+            <SectionHead title="Аль ангид орох вэ?" />
+            <div className="container gchoice">
+              {[
+                { id: 'german-a1', who: 'Огт мэдэхгүй / шинээр эхэлж байна' },
+                { id: 'german-a2', who: 'A1 дүүргэсэн / үндэс мэднэ' },
+              ].map(({ id, who }, i) => {
+                const c = courses.find((x) => x.id === id) || coursesFallback.find((x) => x.id === id)
+                if (!c) return null
+                return (
+                  <Reveal key={id} i={i}>
+                    <Pressable as={Link} to={`/learn/course/${id}`} scale={0.98} className={i ? 'gchoice__card gchoice__card--ink' : 'gchoice__card'}>
+                      <span className="gchoice__badge">{courseLevel(c)}</span>
+                      <span className="gchoice__text">
+                        <em>{who}</em>
+                        <strong>{c.title}</strong>
+                        <small>
+                          {c.duration} · {c.hours} цаг · {c.priceLabel}
+                        </small>
+                      </span>
+                      <CaretRight size={16} weight="bold" aria-hidden />
+                    </Pressable>
+                  </Reveal>
+                )
+              })}
+              <Reveal i={2}>
+                <Pressable
+                  scale={0.98}
+                  className="gchoice__card gchoice__card--ghost"
+                  onClick={() => setParams({ tab: 'test' }, { replace: true })}
+                >
+                  <span className="gchoice__badge">?</span>
+                  <span className="gchoice__text">
+                    <em>Мэдэхгүй байна уу?</em>
+                    <strong>Түвшин тогтоох тест өгөх</strong>
+                    <small>6 асуулт · тохирох ангийг санал болгоно</small>
+                  </span>
+                  <CaretRight size={16} weight="bold" aria-hidden />
+                </Pressable>
+              </Reveal>
+            </div>
+          </section>
 
           <section id="learn-classes" className="learn-classes">
             <SectionHead title="Ангиууд" />

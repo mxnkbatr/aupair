@@ -764,3 +764,7 @@
     grid-template-columns: repeat(2, 1fr);
   }
 }
+
+.learn-explain {
+  margin-top: 28px;
+}

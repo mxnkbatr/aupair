@@ -206,6 +206,11 @@ export function interceptExternalLinks() {
  * Used by Android hardware back. Returns true if something closed.
  */
 export function dismissTopOverlay() {
+  if (document.querySelector('.search-ov')) {
+    window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }))
+    return true
+  }
+
   const storyClose = document.querySelector('.story-viewer__close')
   if (storyClose) {
     storyClose.click()

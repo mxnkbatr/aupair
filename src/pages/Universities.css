@@ -363,7 +363,7 @@
 
 /* ============ Au Pair — rebuilt ============ */
 .ap-enrolled {
-  margin-top: -12px;
+  margin-top: 0;
 }
 
 .ap-grid {
@@ -649,4 +649,74 @@
   .ap-tiles {
     grid-template-columns: repeat(4, 1fr);
   }
+}
+
+.ap-note {
+  margin: 10px 4px 0;
+  color: var(--label-2);
+  font-size: 0.8rem;
+  text-align: center;
+}
+
+/* Au Pair intro card */
+.ap-intro {
+  display: grid;
+  gap: 6px;
+  margin-bottom: 12px;
+  padding: 18px;
+  border-radius: 24px;
+}
+
+.ap-intro__kicker {
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 0.75rem;
+  font-weight: 650;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.ap-intro strong {
+  font-size: 1.35rem;
+  font-weight: 750;
+  letter-spacing: -0.025em;
+  line-height: 1.2;
+}
+
+.ap-intro__facts {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  margin: 12px 0 6px;
+  padding: 12px 0;
+  list-style: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.ap-intro__facts li {
+  display: grid;
+  gap: 2px;
+}
+
+.ap-intro__facts li + li {
+  padding-left: 12px;
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.ap-intro__facts b {
+  font-size: 1.4rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+}
+
+.ap-intro__facts small {
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 0.75rem;
+}
+
+.ap-intro p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.875rem;
+  line-height: 1.45;
 }
