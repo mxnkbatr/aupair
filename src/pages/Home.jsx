@@ -129,49 +129,16 @@ export default function Home() {
   const show = (id) => chip === 'all' || chip === id
 
   const firstName = (user?.name || '').trim().split(/\s+/).pop()
-  const germany = countries.find((c) => c.id === 'germany') || countries[0]
-  const slides = [
-    {
-      id: 'intake',
-      tone: 'red',
-      image: featured?.image || base.image,
-      live: true,
-      tag: enrollmentOpening.tag,
-      title: '2027 Герман элсэлт',
-      countdown: next.date,
-      to: '/learn',
-      cta: 'Суудлаа авах',
-    },
-    {
-      id: 'aupair',
-      tone: 'photo',
-      image: germany?.image,
-      tag: `Au Pair · ${countries.length} улс`,
-      title: 'Европт гэр бүлтэй амьдар',
-      lead: 'Хэл сурч, соёл мэдэрч, 6–12 сар туршлага хуримтлуул.',
-      to: '/countries',
-      cta: 'Улсаа сонгох',
-    },
-    user
-      ? {
-          id: 'journey',
-          tone: 'ink',
-          tag: `Алхам ${step + 1}/${steps.length}`,
-          title: steps[step]?.label || 'Миний аялал',
-          lead: steps[step]?.hint || 'Дараагийн алхмаа харах',
-          to: inProgram ? '/me/program' : '/me',
-          cta: 'Аяллаа харах',
-        }
-      : {
-          id: 'test',
-          tone: 'ink',
-          tag: '2 минут · 6 асуулт',
-          title: 'Түвшнээ мэдээд зөв ангиа сонго',
-          lead: 'Герман хэлний түвшин тогтоох тест — үнэгүй.',
-          to: '/learn?tab=test',
-          cta: 'Тест өгөх',
-        },
-  ]
+  // Banner = latest news. The intake news keeps the live countdown.
+  const slides = newsItems.slice(0, 5).map((n) => ({
+    id: n.id,
+    tone: n.id === 'n0' ? 'red' : 'photo',
+    image: n.image,
+    title: n.title,
+    countdown: n.id === 'n0' ? next.date : null,
+    to: `/news/${n.id}`,
+    cta: 'Мэдээ унших',
+  }))
 
   return (
     <div className="hx">
@@ -363,7 +330,7 @@ export default function Home() {
             <SectionHead title="Мэдээ" action={<Link to="/news">Бүгд</Link>} />
             <div className="container hx-list">
               {newsItems.slice(0, 4).map((item) => (
-                <Pressable key={item.id} as={Link} to={item.href} scale={0.98} className="hx-list__row">
+                <Pressable key={item.id} as={Link} to={`/news/${item.id}`} scale={0.98} className="hx-list__row">
                   <img
                     src={item.image}
                     alt=""
